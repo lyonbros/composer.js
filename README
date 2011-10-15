@@ -1,0 +1,8 @@
+Composer.js is an MVC framework for MooTools >= 1.3. While there are some very
+good MVC frameworks out there (backbone.js and Spine, which composer.js pulls a
+lot of functionality from), the options for MooTools are lacking. I needed
+something as good as the jQuery MVC frameworks but for MooTools.
+
+The framework is in early alpha, and not yet feature-complete, so I will be
+holding off on documentation until it's a bit more solid and viable.
+
