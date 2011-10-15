@@ -348,7 +348,7 @@
 
 		initialize: function(params)
 		{
-			this.el || (this.el = new Element(this.tag);
+			this.el || (this.el = new Element(this.tag));
 			if(this.className)
 			{
 				this.el.addClass(this.className);
