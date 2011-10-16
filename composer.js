@@ -439,6 +439,120 @@
 		}
 	});
 
+	Element.Events.hashchange = {
+		onAdd: function() {
+			var hash = self.location.hash;
+
+			var hashchange = function(){
+				if (hash == self.location.hash) return;
+				else hash = self.location.hash;
+
+				var value = (hash.indexOf('#') == 0 ? hash.substr(1) : hash);
+				window.fireEvent('hashchange', value);
+				document.fireEvent('hashchange', value);
+			};
+
+			if ("onhashchange" in window){
+				window.onhashchange = hashchange;
+			} else {
+				hashchange.periodical(50);
+			}
+		}
+	};
+
+	var Router	=	new Class({
+		last_hash:	false,
+		routes:		{},
+		callbacks:	[],
+
+		options: {
+			redirect_initial: true
+		},
+
+		initialize: function(routes, options)
+		{
+			for(x in options)
+			{
+				this.options[x]	=	options[x];
+			}
+
+			this.routes	=	routes;
+
+			this.register_callback(this.route.bind(this));
+
+			// load the initial hash value
+			var hash	=	self.location.hash;
+			var value	=	(hash.indexOf('#') == 0 ? hash.substr(1) : hash);
+			
+			// if setup and we don't have a hash, send the user to #!/
+			if(this.options.redirect_initial && hash.trim() == '')
+			{
+				window.location	=	'#!' + self.location.pathname;
+			}
+
+			// set up the hashchange event
+			window.addEvent('hashchange', this.hash_change.bind(this));
+
+			// run the initial route
+			window.fireEvent('hashchange', [value]);
+		},
+
+		register_callback: function(cb)
+		{
+			this.callbacks.push(cb);
+		},
+
+		route: function(url)
+		{
+			var url		=	'/' + url.replace(/^!?\//g, '');
+			var route	=	false;
+			var match	=	[];
+			for(var re in this.routes)
+			{
+				var regex	=	'/' + re.replace(/\//g, '\\\/') + '$/';
+				match		=	eval(regex).exec(url);
+				if(match)
+				{
+					route	=	this.routes[re];
+					break;
+				}
+			}
+			if(!route) return false;
+
+			var handler	=	route[0];
+			var action	=	route[1];
+			if(!window[handler]) return false;
+
+			var obj		=	window[handler];
+			if(!obj[action] || typeof(obj[action]) != 'function') return false;
+			var args	=	match;
+			args.shift();
+			obj[action].apply(this, args);
+		},
+
+		setup_routes: function(routes)
+		{
+			this.routes	=	routes;
+		},
+
+		hash_change: function(hash)
+		{
+			// remove the motherfucking ! at the beginning
+			hash	=	hash.replace(/^!/, '');
+			if(this.last_hash == hash)
+			{
+				// no need to reload
+				return false;
+			}
+			
+			this.last_hash	=	hash;
+			this.callbacks.each(function(fn) {
+				if(typeof(fn) == 'function') fn.call(this, hash);
+			}, this);
+		}
+	});
+
+
 	// Creates a simple object with an "extends" function which returns a class
 	// extended from class_type out of the given object
 	var make_instance	=	function(class_type)
@@ -459,5 +573,6 @@
 	exports.each(function(ex) {
 		Composer[ex]	=	make_instance(eval(ex));
 	});
+	Composer.Router	=	Router;
 	window.Composer	=	Composer;
 })();
