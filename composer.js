@@ -30,8 +30,8 @@
 	 *       collection.add()
 	 *     "clear" - Called when all models are cleared out of a via 
 	 *       collection.clear()
-	 *     "refresh" - Called when collection is refreshed with new model data via
-	 *       collection.refresh()
+	 *     "reset" - Called when collection is reset with new model data via
+	 *       collection.reset()
 	 *     "remove" - Called when collection.remove() is used to remove a model
 	 *       from the collection
 	 *   Controllers:
@@ -166,19 +166,18 @@
 		changed: false,
 		collections: [],
 
-		initialize: function(data)
-		{
-			if(typeof(data) == 'undefined')
-			{
-				data	=	this.defaults;
-			}
+		// what key to look under the data for the primary id for the object
+		id_key: 'id',
 
-			this.data	=	data;
-			this.init();
+		initialize: function(data, options)
+		{
+			data	=	Object.merge(this.defaults, data);
+
+			this.set(data, {silent: true});
+			this.init(options);
 		},
 
 		init: function() {},
-		validate: function() { return true; },
 
 		get: function(key)
 		{
@@ -189,6 +188,29 @@
 			return this.data[key];
 		},
 
+		escape: function(key)
+		{
+			var data	=	this.get(key);
+			if(data == null || typeof(data) != 'string')
+			{
+				return null;
+			}
+
+			// taken directly from backbone.js's escapeHTML() function... thanks!
+			return data
+				.replace(/&(?!\w+;|#\d+;|#x[\da-f]+;)/gi, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#x27;')
+				.replace(/\//g,'&#x2F;');
+		},
+
+		has: function(key)
+		{
+			return this.data[key] != null;
+		},
+
 		set: function(data, options)
 		{
 			options || (options = {});
@@ -196,10 +218,12 @@
 			var already_changing	=	this.changing;
 			this.changing			=	true;
 
+			// TODO: validation
+
 			for(x in data)
 			{
 				var val	=	data[x];
-				if(val != this.data.x)
+				if(val != this.data[x])
 				{
 					this.data[x]	=	val;
 					this.changed	=	true;
@@ -218,21 +242,76 @@
 			this.changing	=	false;
 		},
 
-		save: function(data)
+		unset: function(key, options)
 		{
-			this.set(data);
+			if(!(key in this.data)) return this;
+			options || (options = {});
 
+			// TODO: validation
+
+			delete this.data[key];
+			this.changed	=	true;
+			if(!options.silent)
+			{
+				this.trigger('change:'+key, this, void 0, options);
+				this.trigger('change', this, options);
+			}
+		},
+
+		clear: function(options)
+		{
+			options || (options = {});
+
+			// TODO: validation
+
+			var old			=	this.data;
+			this.data		=	{};
+			this.changed	=	true;
+			if(!options.silent)
+			{
+				for(key in old)
+				{
+					this.trigger('change:'+key, this, void 0, options)
+				}
+				this.trigger('change', this, options)
+			}
+		},
+
+		fetch: function(options)
+		{
+			options || (options = {});
+
+			// TODO: syncing shit
+		},
+
+		save: function(data, options)
+		{
+			options || (options = {});
+
+			this.set(data);
 
 			// TODO: syncing shit
 		},
 
 		destroy: function(options)
 		{
+			options || (options = {});
+
 			this.collections.each(function(collection) {
 				collection.remove(this);
 			}, this);
 			this.trigger('destroy', this, this.collections, options);
 			// TODO: syncing shit
+		},
+
+		parse: function(data)
+		{
+			return data;
+		},
+
+		clone: function()
+		{
+			return new this.$constructor(this.toJSON());
 		},
 
 		toJSON: function()
@@ -249,10 +328,12 @@
 		models: [],
 		length: 0,
 
-		type: 'MyModel',
-
-		initialize: function()
+		initialize: function(models, options)
 		{
+			if(models)
+			{
+				this.reset(models, options);
+			}
 			this.init();
 		},
 
@@ -261,6 +342,11 @@
 		toString: function()
 		{
 			return 'Composer.Model: ' + this.type + ': ' + models.length + ' models';
+		},
+
+		toJSON: function()
+		{
+			return this.models.map( function(model) { return model.toJSON(); } );
 		},
 
 		find: function(callback)
@@ -278,20 +364,20 @@
 
 		exists: function(callback)
 		{
-			return !!this.find(callback);
+			return this.models.some(callback);
 		},
 
 		findById: function(id)
 		{
-			return this.find(function(rec) {
-				if(typeof(rec.id) != 'undefined' && rec.id == id)
+			return this.find(function(model) {
+				if(typeof(model[model.id_key]) != 'undefined' && model[mode.id_key] == id)
 				{
 					return true;
 				}
 			});
 		},
 
-		refresh: function(values, options)
+		reset: function(values, options)
 		{
 			options || (options = {});
 
@@ -300,25 +386,22 @@
 				this.clear();
 			}
 
-			values.each(function(rec) {
-				this.models.push(new this.model(rec));
+			values.each(function(data) {
+				this.models.push(new this.model(data));
 			});
 			this.refresh_length();
 
-			this.trigger('refresh');
+			this.trigger('reset');
 		},
 
 		select: function(callback)
 		{
-			var matches	=	[];
-			this.models.each(function(rec) {
-				if(callback(rec))
-				{
-					matches.push(rec);
-				}
-			});
+			return this.models.filter(callback);
+		},
 
-			return matches;
+		models: function()
+		{
+			return this.models();
 		},
 
 		add: function(model, options)
@@ -568,10 +651,18 @@
 			var hash	=	self.location.hash;
 			var value	=	(hash.indexOf('#') == 0 ? hash.substr(1) : hash);
 			
-			// if setup and we don't have a hash, send the user to #!/
+			// if redirect_initial is true, then whatever page a user lands on, redirect
+			// them to the hash version, ie
+			//
+			// gonorrhea.com/users/display/42
+			// becomes:
+			// gonorrhea.com/#!/users/display/42
+			//
+			// the routing system will pick this new hash up after the redirect and route
+			// it normally
 			if(this.options.redirect_initial && hash.trim() == '')
 			{
-				window.location	=	'#!' + self.location.pathname;
+				window.location	=	'/#!' + self.location.pathname;
 			}
 
 			// set up the hashchange event
