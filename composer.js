@@ -649,7 +649,8 @@
 					var str	=	'You are creating a Composer object with an "initialize" method/' +
 								'parameter, which is reserved. Unless you know what you\'re doing ' +
 								'(and call this.parent.apply(this, arguments)), please rename ' +
-								'your parameter to something other than "initialize"!';
+								'your parameter to something other than "initialize"! Perhaps you' +
+								'were thinking of init()?';
 					console.log('----------WARNING----------');
 					console.log(str);
 					console.log('---------------------------');
