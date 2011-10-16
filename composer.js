@@ -1,22 +1,63 @@
 (function() {
 	var Composer	=	{};
 
-	var Log	=	new Class({
-		_log: function()
-		{
-			console.log.apply(this, arguments);
-		}
-	});
-
 	var Sync	=	function(method, model, success, error)
 	{
 	};
 
+	/**
+	 * The events class provides bindings to objects (Models and Collections,
+	 * mainly) and allows triggering of those events. For instance, a controller
+	 * can bind its "removeItemFromView" function to its model's "destroy" event.
+	 * Now when that model is destroyed, the destroyer doesn't have to remember to
+	 * also trigger the "removeItemFromView" function, but it will happen 
+	 * automatically as a result of the binding.
+	 *
+	 * Note that this class is meant to be extended and doesn't provide much use on
+	 * its own.
+	 *
+	 * Certain events are used by the framework itself:
+	 *   Models:
+	 *     "change" - called when a model's values are changed vie its set()
+	 *       function. 
+	 *     "change:[key]" - called when [key] is changed under model's data. For
+	 *       instance, if you did :
+	 *         model.bind("change:name", myfn);
+	 *         model.set({name: 'leonard'});    // <-- this will trigger the event
+	 *     "destroy" - called when model.destroy() is called.
+	 *   Collections:
+	 *     "add" - Called when a model is added to a collection via
+	 *       collection.add()
+	 *     "clear" - Called when all models are cleared out of a via 
+	 *       collection.clear()
+	 *     "refresh" - Called when collection is refreshed with new model data via
+	 *       collection.refresh()
+	 *     "remove" - Called when collection.remove() is used to remove a model
+	 *       from the collection
+	 *   Controllers:
+	 *     "release" - Called when controller.release() is called to remove the 
+	 *       controller from the view.
+	 *
+	 * Note that the "all" event will bubble up from model to collection...when a
+	 * model is added to a collection via collection.add(), the collection binds
+	 * an 'all' event to that model so that any events that happen on that model
+	 * will be triggered in the collection as well. This makes it easy for a 
+	 * controller to monitor changes on collections of items instead of each item
+	 * individually.
+	 */
 	var Events	=	new Class({
-		Implements: [Log],
-
 		_events: {},
 
+		/**
+		 * Bind a callback to a specific event for this object. Adds the callback to
+		 * an array instead of replacing other callbacks, so many callbacks can exist
+		 * under the same event for this object.
+		 *
+		 * Example: mymodel.bind("change", this.render.bind(this));
+		 *
+		 * Whenever mymodel is changed in any way, the "render" function for the 
+		 * current object (probably a controller in this instance) will be called.
+		 */
 		bind: function(name, callback)
 		{
 			// allow adding of multiple events split by space
@@ -31,6 +72,19 @@
 			return this;
 		},
 
+		/**
+		 * Trigger an event for this object, which in turn runs all callbacks for that
+		 * event WITH all parameters passed in to this function.
+		 *
+		 * For instance, you could do:
+		 * mymodel.bind("destroy", this.removeFromView.bind(this));
+		 * mymodel.trigger("destroy", "omg", "lol", "wtf");
+		 *
+		 * this.removeFromView will be called with the arguments "omg", "lol", "wtf".
+		 *
+		 * Note that any trigger event will also trigger the "all" event. the idea
+		 * being that you can subscribe to anything happening on an object.
+		 */
 		trigger: function()
 		{
 			if(arguments.length == 0) return this;
@@ -61,6 +115,9 @@
 			return this;
 		},
 
+		/**
+		 * Unbinds an event from the current object.
+		 */
 		unbind: function(ev, callback)
 		{
 			if(typeof(ev) == 'undefined')
@@ -93,8 +150,15 @@
 	});
 
 
+	/**
+	 * Models are the data class. They deal with loading and manipulating data from
+	 * various sources (ajax, local storage, etc). 
+	 *
+	 * Models tie in very closely with the Sync construct, which attempts to make
+	 * RESTful communication with a server or other data entity seamless.
+	 */
 	var Model	=	new Class({
-		Implements: [Log, Events],
+		Implements: [Events],
 
 		options: {},
 		defaults: {},
@@ -178,7 +242,7 @@
 	});
 
 	var Collection	=	new Class({
-		Implements: [Events, Log],
+		Implements: [Events],
 
 		model: Model,
 
@@ -281,6 +345,9 @@
 			// save to trigger change event if needed
 			var num_rec	=	this.models.length;
 
+			// don't listen to this model anymore
+			model.unbind('all', this.model_event.bind(this));
+
 			// remove the model from the collection
 			this.models.erase(model);
 			this.refresh_length();
@@ -327,9 +394,9 @@
 			this.length	=	this.models.length;
 		},
 
-		model_event: function(ev, model, collection, options)
+		model_event: function(ev, model, collections, options)
 		{
-			if((ev == 'add' || ev == 'remove') && collection != this) return;
+			if((ev == 'add' || ev == 'remove') && !collections.contains(this)) return;
 			if(ev == 'destroy')
 			{
 				this.remove(model, options);
@@ -339,7 +406,7 @@
 	});
 
 	var Controller	=	new Class({
-		Implements: [Events, Log],
+		Implements: [Events],
 
 		event_splitter:	/^(\w+)\s*(.*)$/,
 		tag: 'div',
@@ -577,6 +644,16 @@
 		return {
 			extend: function(obj)
 			{
+				if(obj.initialize)
+				{
+					var str	=	'You are creating a Composer object with an "initialize" method/' +
+								'parameter, which is reserved. Unless you know what you\'re doing ' +
+								'(and call this.parent.apply(this, arguments)), please rename ' +
+								'your parameter to something other than "initialize"!';
+					console.log('----------WARNING----------');
+					console.log(str);
+					console.log('---------------------------');
+				}
 				var obj	=	Object.merge({Extends: class_type}, obj);
 				return new Class(obj);
 			}
