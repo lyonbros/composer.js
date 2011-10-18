@@ -1,9 +1,10 @@
 (function() {
 	var Composer	=	{};
 
-	var Sync	=	function(method, model, success, error)
-	{
-	};
+	/**
+	 * You must override this function in your app.
+	 */
+	var Composer.sync	=	function(method, model, options) {};
 
 	/**
 	 * The events class provides bindings to objects (Models and Collections,
@@ -25,6 +26,8 @@
 	 *         model.bind("change:name", myfn);
 	 *         model.set({name: 'leonard'});    // <-- this will trigger the event
 	 *     "destroy" - called when model.destroy() is called.
+	 *     "error" - triggered when an error happens saving/reading/validating the
+	 *       model
 	 *   Collections:
 	 *     "add" - Called when a model is added to a collection via
 	 *       collection.add()
@@ -45,7 +48,7 @@
 	 * controller to monitor changes on collections of items instead of each item
 	 * individually.
 	 */
-	var Events	=	new Class({
+	Events	=	new Class({
 		_events: {},
 
 		/**
@@ -164,7 +167,7 @@
 		defaults: {},
 		data: {},
 		changed: false,
-		collections: [],
+		collection: null,
 
 		// what key to look under the data for the primary id for the object
 		id_key: 'id',
@@ -218,7 +221,7 @@
 			var already_changing	=	this.changing;
 			this.changing			=	true;
 
-			// TODO: validation
+			if(!options.silent && !this.perform_validation(data, options)) return false;			
 
 			for(x in data)
 			{
@@ -247,7 +250,9 @@
 			if(!(key in this.data)) return this;
 			options || (options = {});
 
-			// TODO: validation
+			var obj		=	{};
+			obj[key]	=	void(0);
+			if(!options.silent && !this.perform_validation(obj, options)) return false;			
 
 			delete this.data[key];
 			this.changed	=	true;
@@ -262,7 +267,10 @@
 		{
 			options || (options = {});
 
-			// TODO: validation
+			var old		=	this.data;
+			var obj		=	{};
+			for(key in old) obj[key] = void(0);
+			if(!options.silent && !this.perform_validation(obj, options)) return false;			
 
 			var old			=	this.data;
 			this.data		=	{};
@@ -281,32 +289,64 @@
 		{
 			options || (options = {});
 
-			// TODO: syncing shit
+			var success	=	options.success;
+			options.success	=	function(res)
+			{
+				this.set(this.parse(res), options);
+				if(success) success(model, res);
+			}.bind(this);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, model, options);
+			return (this.sync || Composer.sync).call(this, 'read', this, options);
 		},
 
 		save: function(data, options)
 		{
 			options || (options = {});
 
-			this.set(data);
+			this.set(data, options);
 
-			// TODO: syncing shit
+			var success	=	options.success;
+			options.success	=	function(res)
+			{
+				this.set(this.parse(res), options);
+				if(success) success(model, res);
+			}.bind(this);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, model, options);
+			return (this.sync || Composer.sync).call(this, (this.is_new() ? 'create' : 'update'), this, options);
 		},
 
 		destroy: function(options)
 		{
 			options || (options = {});
 
-			this.collections.each(function(collection) {
-				collection.remove(this);
-			}, this);
-			this.trigger('destroy', this, this.collections, options);
-			// TODO: syncing shit
+			if(this.is_new())
+			{
+				return this.trigger('destroy', this, this.collection, options);
+			}
+
+			var success	=	options.success;
+			options.success	=	function(res)
+			{
+				this.trigger('destroy', this, this.collection, options);
+				if(success) success(model, res);
+			}.bind(this);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, model, options);
+			return (this.sync || Composer.sync).call(this, 'delete', this, options);
 		},
 
 		parse: function(data)
 		{
 			return data;
+		},
+
+		id: function()
+		{
+			return this.get(this.id_key);
+		},
+
+		is_new: function()
+		{
+			return !this.get(this.id_key);
 		},
 
 		clone: function()
@@ -317,6 +357,24 @@
 		toJSON: function()
 		{
 			return Object.clone(this.data);
+		},
+
+		perform_validation: function(data, options)
+		{
+			var error	=	this.validate(data);
+			if(error)
+			{
+				if(options.error)
+				{
+					options.error(this, error, options);
+				}
+				else
+				{
+					this.trigger('error', this, error, options);
+				}
+				return false;
+			}
+			return true;
 		}
 	});
 
@@ -326,7 +384,8 @@
 		model: Model,
 
 		models: [],
-		length: 0,
+
+		sortfn: function(a, b) { return  0; },
 
 		initialize: function(models, options)
 		{
@@ -346,77 +405,34 @@
 
 		toJSON: function()
 		{
-			return this.models.map( function(model) { return model.toJSON(); } );
-		},
-
-		find: function(callback)
-		{
-			for(var i = 0; i < this.models.length; i++)
-			{
-				var rec	=	this.models[i];
-				if(callback(rec))
-				{
-					return rec;
-				}
-			}
-			return false;
-		},
-
-		exists: function(callback)
-		{
-			return this.models.some(callback);
-		},
-
-		findById: function(id)
-		{
-			return this.find(function(model) {
-				if(typeof(model[model.id_key]) != 'undefined' && model[mode.id_key] == id)
-				{
-					return true;
-				}
-			});
-		},
-
-		reset: function(values, options)
-		{
-			options || (options = {});
-
-			if(options.clear)
-			{
-				this.clear();
-			}
-
-			values.each(function(data) {
-				this.models.push(new this.model(data));
-			});
-			this.refresh_length();
-
-			this.trigger('reset');
-		},
-
-		select: function(callback)
-		{
-			return this.models.filter(callback);
+			return this.models().map( function(model) { return model.toJSON(); } );
 		},
 
 		models: function()
 		{
-			return this.models();
+			return this.models;
 		},
 
 		add: function(model, options)
 		{
 			// reference this collection to the model
-			if(!model.collections.contains(this))
+			if(!model.collection == this)
 			{
-				model.collections.push(this);
+				model.collection	=	this;
 			}
 
-			this.models.push(model);
-			this.refresh_length();
+			if(this.sortfn)
+			{
+				var index	=	options.at ? parseInt(options.at) : this.sort_index(model);
+				this.models.splice(index, 0, model);
+			}
+			else
+			{
+				this.models.push(model);
+			}
 
 			// trigger the change event
-			model.bind('all', this.model_event.bind(this));
+			model.bind('all', this._model_event.bind(this));
 			this.trigger('add', model, this, options);
 		},
 
@@ -428,18 +444,17 @@
 			// save to trigger change event if needed
 			var num_rec	=	this.models.length;
 
-			// don't listen to this model anymore
-			model.unbind('all', this.model_event.bind(this));
-
-			// remove the model from the collection
+			// remove hte model
 			this.models.erase(model);
-			this.refresh_length();
 
 			// if the number actually change, trigger our change event
 			if(this.models.length != num_rec)
 			{
 				this.trigger('remove');
 			}
+
+			// remove the model from the collection
+			this._remove_reference(model);
 		},
 
 		clear: function()
@@ -447,8 +462,10 @@
 			// save to trigger change event if needed
 			var num_rec	=	this.models.length;
 
+			this.models.each(function(model) {
+				this._remove_reference(model);
+			}, this);
 			this.models	=	[];
-			this.refresh_length();
 
 			// if the number actually change, trigger our change event
 			if(this.models.length != num_rec)
@@ -457,27 +474,137 @@
 			}
 		},
 
+		reset: functioes, options)
+		{
+			options || (options = {});
+
+			if(!options.append)
+			{
+				this.clear();
+			}
+
+			values.each(function(data) {
+				this.models.push(new this.model(data));
+			});
+
+			this.trigger('reset');
+		},
+
+		sort: function(options)
+		{
+			if(!this.sortfn) return false;
+
+			this.models.sort(this.sortfn);
+			if(!options.silent)
+			{
+				this.trigger('reset', this, options);
+			}
+		},
+
+		sort_index: function(model)
+		{
+			if(!this.sortfn) return false;
+
+			for(var i = 0; i < this.models.length; i++)
+			{
+				if(this.sortfn(this.models[i], model) > 0)
+				{
+					return i;
+				}
+			}
+			return this.models.length;
+		},
+
+		parse: function(data)
+		{
+			return data;
+		},
+
+		/**
+		 * Find the first model that satisfies the callback. An optional sort function
+		 * can be passed in to order the results of the find, which uses the usual 
+		 * fn(a,b){return (-1|0|1);} syntax.
+		 */
+		find: function(callback, sortfn)
+		{
+			if(sortfn)
+			{
+				var models	=	shallow_array_clone(this.models()).sort(sortfn);
+			}
+			else
+			{
+				var models	=	this.models();
+			}
+
+			for(var i = 0; i < models.length; i++)
+			{
+				var rec	=	models[i];
+				if(callback(rec))
+				{
+					return rec;
+				}
+			}
+			return false;
+		},
+
+		exists: function(callback)
+		{
+			return this.models().some(callback);
+		},
+
+		find_by_id: function(id)
+		{
+			return this.find(function(model) {
+				if(!!model.id())
+				{
+					return true;
+				}
+			});
+		},
+
+		select: function(callback)
+		{
+			return this.models.filter(callback);
+		},
+
 		first: function(n)
 		{
-			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? this.models.slice(0, n) : this.models[0];
+			var models	=	this.models();
+			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? models.slice(0, n) : models[0];
 		},
 
 		last: function(n)
 		{
-			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? this.models.slice(this.models.length - n) : this.models[0];
+			var models	=	this.models();
+			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? models.slice(models.length - n) : models[0];
 		},
 
-		// TODO
 		fetch: function(options)
 		{
+			options || (options = {});
+
+			var success	=	options.success;
+			options.success	=	function(res)
+			{
+				this.reset(this.parse(res), options);
+				if(success) success(model, res);
+			}.bind(this);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, model, options);
+			return (this.sync || Composer.sync).call(this, 'read', this, options);
 		},
 
-		refresh_length: function()
+		_remove_reference: function(model)
 		{
-			this.length	=	this.models.length;
+			if(model.collection == this)
+			{
+				delete model.collection;
+			}
+
+			// don't listen to this model anymore
+			model.unbind('all', this._model_event.bind(this));
 		},
 
-		model_event: function(ev, model, collections, options)
+		_model_event: function(ev, model, collections, options)
 		{
 			if((ev == 'add' || ev == 'remove') && !collections.contains(this)) return;
 			if(ev == 'destroy')
@@ -727,6 +854,33 @@
 		}
 	});
 
+
+	// wraps error callbacks for syncing functions
+	var wrap_error	=	function(callback, model, options)
+	{
+		return function(resp)
+		{
+			if(callback)
+			{
+				callback(model, resp, options);
+			}
+			else
+			{
+				model.trigger('error', model, resp, options);
+			}
+		};
+	};
+
+	// do a shallow clone of an array
+	var shallow_array_clone	=	function(from)
+	{
+		var to	=	new Array();
+		for(i in from)
+		{
+			to[i]	=	from[i];
+		}
+		return to;
+	};
 
 	// Creates a simple object with an "extends" function which returns a class
 	// extended from class_type out of the given object
