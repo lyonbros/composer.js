@@ -4,7 +4,7 @@
 	/**
 	 * You must override this function in your app.
 	 */
-	var Composer.sync	=	function(method, model, options) {};
+	Composer.sync	=	function(method, model, options) {};
 
 	/**
 	 * The events class provides bindings to objects (Models and Collections,
@@ -474,7 +474,7 @@
 			}
 		},
 
-		reset: functioes, options)
+		reset: function(options)
 		{
 			options || (options = {});
 
@@ -760,7 +760,9 @@
 		callbacks:	[],
 
 		options: {
-			redirect_initial: true
+			redirect_initial: true,
+			suppress_initial_route: false,
+			enable_cb: function() { return true; }
 		},
 
 		initialize: function(routes, options)
@@ -795,8 +797,11 @@
 			// set up the hashchange event
 			window.addEvent('hashchange', this.hash_change.bind(this));
 
-			// run the initial route
-			window.fireEvent('hashchange', [value]);
+			if(!this.options.suppress_initial_route)
+			{
+				// run the initial route
+				window.fireEvent('hashchange', [value]);
+			}
 		},
 
 		register_callback: function(cb)
@@ -806,6 +811,11 @@
 
 		route: function(url)
 		{
+			if(!this.options.enable_cb())
+			{
+				return false;
+			}
+
 			var url		=	'/' + url.replace(/^!?\//g, '');
 			var route	=	false;
 			var match	=	[];
@@ -829,7 +839,7 @@
 			if(!obj[action] || typeof(obj[action]) != 'function') return false;
 			var args	=	match;
 			args.shift();
-			obj[action].apply(this, args);
+			obj[action].apply(obj, args);
 		},
 
 		setup_routes: function(routes)
