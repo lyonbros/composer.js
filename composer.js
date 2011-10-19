@@ -64,13 +64,11 @@
 		bind: function(name, callback)
 		{
 			// allow adding of multiple events split by space
-			name.trim().split(' ').each(function(ev) {
-				this._events[ev] || (this._events[ev] = []);
-				if(!this._events[ev].contains(callback))
-				{
-					this._events[ev].push(callback);
-				}
-			}, this);
+			this._events[ev] || (this._events[ev] = []);
+			if(!this._events[name].contains(callback))
+			{
+				this._events[name].push(callback);
+			}
 
 			return this;
 		},
