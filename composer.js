@@ -292,7 +292,7 @@
 				this.set(this.parse(res), options);
 				if(success) success(model, res);
 			}.bind(this);
-			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, model, options);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
 		},
 
@@ -308,7 +308,7 @@
 				this.set(this.parse(res), options);
 				if(success) success(model, res);
 			}.bind(this);
-			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, model, options);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
 			return (this.sync || Composer.sync).call(this, (this.is_new() ? 'create' : 'update'), this, options);
 		},
 
@@ -327,7 +327,7 @@
 				this.trigger('destroy', this, this.collection, options);
 				if(success) success(model, res);
 			}.bind(this);
-			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, model, options);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
 			return (this.sync || Composer.sync).call(this, 'delete', this, options);
 		},
 
@@ -358,6 +358,11 @@
 
 		perform_validation: function(data, options)
 		{
+			if(typeof(this.validate) != 'function')
+			{
+				return true;
+			}
+
 			var error	=	this.validate(data);
 			if(error)
 			{
@@ -380,9 +385,9 @@
 
 		model: Model,
 
-		models: [],
+		_models: [],
 
-		sortfn: function(a, b) { return  0; },
+		sortfn: null,
 
 		initialize: function(models, options)
 		{
@@ -397,7 +402,7 @@
 
 		toString: function()
 		{
-			return 'Composer.Model: ' + this.type + ': ' + models.length + ' models';
+			return 'Composer.Model: ' + this.type + ': ' + this._models.length + ' models';
 		},
 
 		toJSON: function()
@@ -407,11 +412,13 @@
 
 		models: function()
 		{
-			return this.models;
+			return this._models;
 		},
 
 		add: function(model, options)
 		{
+			options || (options = {});
+
 			// reference this collection to the model
 			if(!model.collection == this)
 			{
@@ -421,11 +428,11 @@
 			if(this.sortfn)
 			{
 				var index	=	options.at ? parseInt(options.at) : this.sort_index(model);
-				this.models.splice(index, 0, model);
+				this._models.splice(index, 0, model);
 			}
 			else
 			{
-				this.models.push(model);
+				this._models.push(model);
 			}
 
 			// trigger the change event
@@ -436,16 +443,16 @@
 		remove: function(model)
 		{
 			// remove this collection's reference(s) from the model
-			model.collections.erase(this);
+			model.collection	=	null;
 
 			// save to trigger change event if needed
-			var num_rec	=	this.models.length;
+			var num_rec	=	this._models.length;
 
 			// remove hte model
-			this.models.erase(model);
+			this._models.erase(model);
 
 			// if the number actually change, trigger our change event
-			if(this.models.length != num_rec)
+			if(this._models.length != num_rec)
 			{
 				this.trigger('remove');
 			}
@@ -457,15 +464,15 @@
 		clear: function()
 		{
 			// save to trigger change event if needed
-			var num_rec	=	this.models.length;
+			var num_rec	=	this._models.length;
 
-			this.models.each(function(model) {
+			this._models.each(function(model) {
 				this._remove_reference(model);
 			}, this);
-			this.models	=	[];
+			this._models	=	[];
 
 			// if the number actually change, trigger our change event
-			if(this.models.length != num_rec)
+			if(this._models.length != num_rec)
 			{
 				this.trigger('clear');
 			}
@@ -481,7 +488,7 @@
 			}
 
 			values.each(function(data) {
-				this.models.push(new this.model(data));
+				this._models.push(new this.model(data));
 			});
 
 			this.trigger('reset');
@@ -491,7 +498,7 @@
 		{
 			if(!this.sortfn) return false;
 
-			this.models.sort(this.sortfn);
+			this._models.sort(this.sortfn);
 			if(!options.silent)
 			{
 				this.trigger('reset', this, options);
@@ -502,14 +509,14 @@
 		{
 			if(!this.sortfn) return false;
 
-			for(var i = 0; i < this.models.length; i++)
+			for(var i = 0; i < this._models.length; i++)
 			{
-				if(this.sortfn(this.models[i], model) > 0)
+				if(this.sortfn(this._models[i], model) > 0)
 				{
 					return i;
 				}
 			}
-			return this.models.length;
+			return this._models.length;
 		},
 
 		parse: function(data)
@@ -561,7 +568,7 @@
 
 		select: function(callback)
 		{
-			return this.models.filter(callback);
+			return this._models.filter(callback);
 		},
 
 		first: function(n)
@@ -586,7 +593,7 @@
 				this.reset(this.parse(res), options);
 				if(success) success(model, res);
 			}.bind(this);
-			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, model, options);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
 		},
 
