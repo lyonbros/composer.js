@@ -63,8 +63,7 @@
 		 */
 		bind: function(name, callback)
 		{
-			// allow adding of multiple events split by space
-			this._events[ev] || (this._events[ev] = []);
+			this._events[name] || (this._events[name] = []);
 			if(!this._events[name].contains(callback))
 			{
 				this._events[name].push(callback);
