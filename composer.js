@@ -851,11 +851,13 @@
 			this.routes	=	routes;
 		},
 
-		hash_change: function(hash)
+		hash_change: function(hash, force)
 		{
+			var force	=	!!force;
+
 			// remove the motherfucking ! at the beginning
 			hash	=	hash.replace(/^!/, '');
-			if(this.last_hash == hash)
+			if(this.last_hash == hash && !force)
 			{
 				// no need to reload
 				return false;
