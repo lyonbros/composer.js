@@ -559,7 +559,7 @@
 		find_by_id: function(id)
 		{
 			return this.find(function(model) {
-				if(!!model.id())
+				if(model.id() == id)
 				{
 					return true;
 				}
@@ -646,7 +646,7 @@
 			this.init();
 		},
 
-		init: function() {},
+		init: function() {},		// lol
 		render: function() { return this; },
 
 		html: function(str)
