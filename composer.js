@@ -563,9 +563,20 @@
 			});
 		},
 
-		select: function(callback)
+		select: function(selector)
 		{
-			return this._models.filter(callback);
+			if(typeof(selector) == 'object')
+			{
+				var qry	=	[];
+				for(var key in selector)
+				{
+					var val	=	selector[key];
+					qry.push('data.get("'+key+'") == ' + val);
+				}
+				var fnstr	=	'if(' + qry.join('&&') + ') { return true; }';
+				selector	=	new Function('data', fnstr);
+			}
+			return this._models.filter(selector);
 		},
 
 		first: function(n)
