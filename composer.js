@@ -215,24 +215,21 @@
 		{
 			options || (options = {});
 
-			var already_changing	=	this.changing;
-			this.changing			=	true;
-
 			if(!options.silent && !this.perform_validation(data, options)) return false;			
 
-			for(x in data)
-			{
-				var val	=	data[x];
-				if(val != this.data[x])
+			var already_changing	=	this.changing;
+			this.changing			=	true;
+			Object.each(data, function(val, key) {
+				if(val != this.data[key])
 				{
-					this.data[x]	=	val;
+					this.data[key]	=	val;
 					this.changed	=	true;
 					if(!options.silent)
 					{
-						this.trigger('change:'+x, this, val, options);
+						this.trigger('change:'+key, this, val, options);
 					}
 				}
-			}
+			}.bind(this));
 
 			if(!already_changing && !options.silent && this.changed)
 			{
