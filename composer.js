@@ -475,7 +475,7 @@
 			}
 		},
 
-		reset: function(options)
+		reset: function(values, options)
 		{
 			options || (options = {});
 
@@ -485,8 +485,8 @@
 			}
 
 			values.each(function(data) {
-				this._models.push(new this.model(data));
-			});
+				this.add(new this.model(data));
+			}.bind(this));
 
 			this.trigger('reset');
 		},
