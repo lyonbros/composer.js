@@ -637,7 +637,20 @@
 
 		initialize: function(params)
 		{
+			// allow this.el to be a string selector (selecting a single element) instad
+			// of a DOM object. this allows the defining of a controller before the DOM
+			// element the selector refers to exists, but this.el will be updated upon
+			// instantiation of the controller (presumably when the DOM object DOES
+			// exist).
+			if(typeof(this.el) == 'string')
+			{
+				this.el = $E(this.el)
+			}
+
+			// if this.el is null (bad selector or no item given), create a new DOM
+			// object from this.tag
 			this.el || (this.el = new Element(this.tag));
+
 			if(this.className)
 			{
 				this.el.addClass(this.className);
