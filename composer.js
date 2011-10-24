@@ -152,33 +152,57 @@
 
 	/**
 	 * Models are the data class. They deal with loading and manipulating data from
-	 * various sources (ajax, local storage, etc). 
+	 * various sources (ajax, local storage, etc). They make wrapping your actual
+	 * data easy, and tie in well with collections/controllers via events to allow
+	 * for easy updating and rendering.
 	 *
-	 * Models tie in very closely with the Sync construct, which attempts to make
-	 * RESTful communication with a server or other data entity seamless.
+	 * They also tie in with the Composer.sync function to provide a central place
+	 * for saving/updating information with a server.
 	 */
 	var Model	=	new Class({
 		Implements: [Events],
 
 		options: {},
+
+		// default values for the model, merged with the data passed in on CTOR
 		defaults: {},
+
+		// holds the model's data
 		data: {},
+
+		// whether or not the model has changed since the last save/update via sync
 		changed: false,
+
+		// reference to the model's current collection
 		collection: null,
 
 		// what key to look under the data for the primary id for the object
 		id_key: 'id',
 
+		/**
+		 * CTOR, allows passing in of data to set that data into the model.
+		 */
 		initialize: function(data, options)
 		{
+			// merge the defaults into the data
 			data	=	Object.merge(this.defaults, data);
 
+			// set the data into the model (but don't trigger any events)
 			this.set(data, {silent: true});
+
+			// call the init fn
 			this.init(options);
 		},
 
+		/**
+		 * override me, if needed
+		 */
 		init: function() {},
 
+		/**
+		 * wrapper to get data out of the model. it's bad form to access model.data
+		 * directly, you must always go through model.get('mykey')
+		 */
 		get: function(key)
 		{
 			if(typeof(this.data[key]) == 'undefined')
@@ -188,12 +212,15 @@
 			return this.data[key];
 		},
 
+		/**
+		 * like Model.get(), but if the data is a string, escape it for HTML output.
+		 */
 		escape: function(key)
 		{
 			var data	=	this.get(key);
 			if(data == null || typeof(data) != 'string')
 			{
-				return null;
+				return data;
 			}
 
 			// taken directly from backbone.js's escapeHTML() function... thanks!
@@ -206,11 +233,31 @@
 				.replace(/\//g,'&#x2F;');
 		},
 
+		/**
+		 * whether or not a key exists in this.data
+		 */
 		has: function(key)
 		{
 			return this.data[key] != null;
 		},
 
+		/**
+		 * set data into the model. triggers change events for individual attributes
+		 * that change, and also a general change event if the model has changed. it
+		 * only triggers these events if the model has indeed changed, setting an
+		 * attribute to the same value it currently is will not trigger events:
+		 *
+		 *   model.set({name: "fisty", age: 21});
+		 *
+		 * this will trigger the events:
+		 *   "change:name"
+		 *   "change:age"
+		 *   "change"
+		 *
+		 * if the model belongs to a collection, the events will bubble up to that
+		 * collection as well, so as to notify the collection of any display changes
+		 * needed.
+		 */
 		set: function(data, options)
 		{
 			options || (options = {});
@@ -239,6 +286,9 @@
 			this.changing	=	false;
 		},
 
+		/**
+		 * unset a key from the model's data, triggering change events if needed.
+		 */
 		unset: function(key, options)
 		{
 			if(!(key in this.data)) return this;
@@ -257,6 +307,9 @@
 			}
 		},
 
+		/**
+		 * clear all data out of a model, triggering change events if needed.
+		 */
 		clear: function(options)
 		{
 			options || (options = {});
@@ -266,19 +319,27 @@
 			for(key in old) obj[key] = void(0);
 			if(!options.silent && !this.perform_validation(obj, options)) return false;			
 
-			var old			=	this.data;
-			this.data		=	{};
-			this.changed	=	true;
+			this.data	=	{};
+			var changed	=	false;
 			if(!options.silent)
 			{
 				for(key in old)
 				{
+					changed	=	true;
 					this.trigger('change:'+key, this, void 0, options)
 				}
-				this.trigger('change', this, options)
+
+				if(changed)
+				{
+					this.trigger('change', this, options)
+					this.changed	=	true;
+				}
 			}
 		},
 
+		/**
+		 * fetch this model from the server, via its id. 
+		 */
 		fetch: function(options)
 		{
 			options || (options = {});
@@ -293,6 +354,10 @@
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
 		},
 
+		/**
+		 * save this model to the server (update if exists, add if doesn't exist (uses
+		 * id to detemrine if exists or note).
+		 */
 		save: function(data, options)
 		{
 			options || (options = {});
@@ -309,6 +374,9 @@
 			return (this.sync || Composer.sync).call(this, (this.is_new() ? 'create' : 'update'), this, options);
 		},
 
+		/**
+		 * delete this item from the server
+		 */
 		destroy: function(options)
 		{
 			options || (options = {});
@@ -328,31 +396,51 @@
 			return (this.sync || Composer.sync).call(this, 'delete', this, options);
 		},
 
+		/**
+		 * overridable function that gets called when model data comes back from the
+		 * server. use it to perform any needed transformations before setting data
+		 * into the model.
+		 */
 		parse: function(data)
 		{
 			return data;
 		},
 
+		/**
+		 * get this model's id
+		 */
 		id: function()
 		{
 			return this.get(this.id_key);
 		},
 
+		/**
+		 * test whether or not the model is new (checks if it has an id)
+		 */
 		is_new: function()
 		{
-			return !this.get(this.id_key);
+			return !this.id();
 		},
 
+		/**
+		 * create a new model with this models data and return it
+		 */
 		clone: function()
 		{
 			return new this.$constructor(this.toJSON());
 		},
 
+		/**
+		 * return the raw data for this model (cloned, not referenced).
+		 */
 		toJSON: function()
 		{
 			return Object.clone(this.data);
 		},
 
+		/**
+		 * validate the model using its validation function (if it exists)
+		 */
 		perform_validation: function(data, options)
 		{
 			if(typeof(this.validate) != 'function')
@@ -377,15 +465,33 @@
 		}
 	});
 
+	/**
+	 * Collections hold lists of models and contain various helper functions for
+	 * finding and selecting subsets of model data. They are basically a wrapper
+	 * around an array, thats function is dealing with large amounts of model data.
+	 *
+	 * Collections can also sync with the server like models. They tie into model
+	 * events in such a way that if a model's data changes, the collection will be
+	 * notified, and anybody listinging to the collection (ie, a controller) can
+	 * react to that event (re-display the view, for instance).
+	 */
 	var Collection	=	new Class({
 		Implements: [Events],
 
+		// the TYPE of model in this collection
 		model: Model,
 
+		// "private" - array holding all the models in this collection
 		_models: [],
 
+		// function used for sorting. override to sort on a criteria besides order of
+		// addition to collection
 		sortfn: null,
 
+		/**
+		 * allow the passing in of an array of data to instantiate a collection with a
+		 * pre-set number of models. models will be created via this.model.
+		 */
 		initialize: function(models, options)
 		{
 			if(models)
@@ -395,23 +501,33 @@
 			this.init();
 		},
 
+		/**
+		 * override me
+		 */
 		init: function() {},
 
-		toString: function()
-		{
-			return 'Composer.Model: ' + this.type + ': ' + this._models.length + ' models';
-		},
-
+		/**
+		 * for each model in this collection, get its raw data, then return all of the
+		 * raw data in an array
+		 */
 		toJSON: function()
 		{
 			return this.models().map( function(model) { return model.toJSON(); } );
 		},
 
+		/**
+		 * wrapper to get the models under this collection for direct selection (often
+		 * via MooTools' array helper/selection functions)
+		 */
 		models: function()
 		{
 			return this._models;
 		},
 
+		/**
+		 * add a model to this collection, and hook up the correct wire in doing so
+		 * (events and setting the model's collection).
+		 */
 		add: function(model, options)
 		{
 			options || (options = {});
@@ -424,19 +540,25 @@
 
 			if(this.sortfn)
 			{
+				// if we have a sorting function, get the index the model should exist at
+				// and add it to that position
 				var index	=	options.at ? parseInt(options.at) : this.sort_index(model);
 				this._models.splice(index, 0, model);
 			}
 			else
 			{
+				// no sort fn, add model to the end of the list
 				this._models.push(model);
 			}
 
-			// trigger the change event
+			// listen to the model's events so we can propogate them
 			model.bind('all', this._model_event.bind(this));
 			this.trigger('add', model, this, options);
 		},
 
+		/**
+		 * remove a model from the collection, unhooking all necessary wires (events, etc)
+		 */
 		remove: function(model)
 		{
 			// remove this collection's reference(s) from the model
@@ -458,6 +580,9 @@
 			this._remove_reference(model);
 		},
 
+		/**
+		 * remove all the models from the collection
+		 */
 		clear: function()
 		{
 			// save to trigger change event if needed
@@ -475,6 +600,10 @@
 			}
 		},
 
+		/**
+		 * reset the collection with all new data. it can also be appended to the 
+		 * current set of models if specified in the options (via "append").
+		 */
 		reset: function(values, options)
 		{
 			options || (options = {});
@@ -491,6 +620,11 @@
 			this.trigger('reset');
 		},
 
+		/**
+		 * not normally necessary to call this, unless collection.sortfn changes after
+		 * instantiation of the data. sort order is normall maintained upon adding of
+		 * data viw Colleciton.add().
+		 */
 		sort: function(options)
 		{
 			if(!this.sortfn) return false;
@@ -502,6 +636,10 @@
 			}
 		},
 
+		/**
+		 * given the current for function and a model passecd in, determine the index
+		 * the model should exist at in the colleciton's model list.
+		 */
 		sort_index: function(model)
 		{
 			if(!this.sortfn) return false;
@@ -516,6 +654,9 @@
 			return this._models.length;
 		},
 
+		/**
+		 * overridable function called when the collection is synced with the server
+		 */
 		parse: function(data)
 		{
 			return data;
@@ -548,11 +689,18 @@
 			return false;
 		},
 
+		/**
+		 * given a callback, returns whether or not at least one of the models 
+		 * satisfies that callback.
+		 */
 		exists: function(callback)
 		{
 			return this.models().some(callback);
 		},
 
+		/**
+		 * convenience function to find a model by id
+		 */
 		find_by_id: function(id)
 		{
 			return this.find(function(model) {
@@ -563,6 +711,28 @@
 			});
 		},
 
+		/**
+		 * query the models in the collection with a callback and return ALL that
+		 * match. takes either a function OR a key-value object for matching:
+		 *
+		 * mycol.select(function(data) {
+		 *		if(data.get('name') == 'andrew' && data.get('age') == 24)
+		 *		{
+		 *			return true
+		 *		}
+		 * });
+		 *
+		 * is the same as:
+		 *
+		 * mycol.select({
+		 *		name: andrew,
+		 *		age: 24
+		 * });
+		 *
+		 * in other words, it's a very simple version of MongoDB's selection syntax,
+		 * but with a lot less functionality. the only selection is direct value
+		 * matching. still nice, though.
+		 */
 		select: function(selector)
 		{
 			if(typeof(selector) == 'object')
@@ -579,18 +749,29 @@
 			return this._models.filter(selector);
 		},
 
+		/**
+		 * return the first model in the collection. if n is specified, return the
+		 * first n models.
+		 */
 		first: function(n)
 		{
 			var models	=	this.models();
 			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? models.slice(0, n) : models[0];
 		},
 
+		/**
+		 * returns the last model in the collection. if n is specified, returns the
+		 * last n models.
+		 */
 		last: function(n)
 		{
 			var models	=	this.models();
 			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? models.slice(models.length - n) : models[0];
 		},
 
+		/**
+		 * sync the collection with the server.
+		 */
 		fetch: function(options)
 		{
 			options || (options = {});
@@ -605,6 +786,9 @@
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
 		},
 
+		/**
+		 * remove all ties between this colleciton and a model
+		 */
 		_remove_reference: function(model)
 		{
 			if(model.collection == this)
@@ -616,6 +800,9 @@
 			model.unbind('all', this._model_event.bind(this));
 		},
 
+		/**
+		 * bound to every model's "all" event, propagates or reacts to certain events.
+		 */
 		_model_event: function(ev, model, collections, options)
 		{
 			if((ev == 'add' || ev == 'remove') && !collections.contains(this)) return;
@@ -627,14 +814,33 @@
 		}
 	});
 
+	/**
+	 * The controller class sits between views and your models/collections. 
+	 * Controllers bind events to your data objects and update views when the data
+	 * changes. Controllers are also responsible for rendering views.
+	 */
 	var Controller	=	new Class({
 		Implements: [Events],
 
+		// the DOM element to tie this controller to (a container element)
+		el: false,
+
+		// don't worry about it
 		event_splitter:	/^(\w+)\s*(.*)$/,
+
+		// if tihs.el is empty, create a new element of this type as the container
 		tag: 'div',
+
+		// elements to assign to this controller
 		elements: {},
+
+		// events to bind to this controllers sub-items.
 		events: {},
 
+		/**
+		 * CTOR. instantiate main container element (this.el), setup events and
+		 * elements, and call init()
+		 */
 		initialize: function(params)
 		{
 			// allow this.el to be a string selector (selecting a single element) instad
@@ -667,21 +873,40 @@
 			this.init();
 		},
 
+		/**
+		 * override
+		 */
 		init: function() {},		// lol
+
+		/**
+		 * override. not OFFICIALLY used by the framework, but it's good to use it AND
+		 * returh "this" when you're done with it.
+		 */
 		render: function() { return this; },
 
+		/**
+		 * replace this.el's html with the given test, also refresh the controllers
+		 * elements. 
+		 */
 		html: function(str)
 		{
 			this.el.set('html', str);
 			this.refresh_elements();
 		},
 
+		/**
+		 * remove the controller from the DOM and trigger its release event
+		 */
 		release: function()
 		{
 			this.el.dispose();
 			this.trigger('release');
 		},
 
+		/**
+		 * replace this controller's conatiner element (this.el) with another element.
+		 * also refreshes the events/elements associated with the controller
+		 */
 		replace: function(element)
 		{
 			var rep		=	[this.el, element.el || element];
@@ -701,6 +926,10 @@
 		appendTo: function() {},
 		prepend: function() {},
 
+		/**
+		 * set up the events (by delegation) to this controller (events are stored 
+		 * under this.events).
+		 */
 		delegate_events: function()
 		{
 			// setup the events given
@@ -730,6 +959,9 @@
 			}
 		},
 
+		/**
+		 * re-init the elements into the scope of the controller (uses this.elements)
+		 */
 		refresh_elements: function()
 		{
 			// setup given elements as instance variables
@@ -790,6 +1022,11 @@
 			enable_cb: function() { return true; }
 		},
 
+		/**
+		 * initialize the routes your app uses. this is really the only public
+		 * function that exists in the router, since it takes care of everything for
+		 * you after instantiation.
+		 */
 		initialize: function(routes, options)
 		{
 			for(x in options)
@@ -829,11 +1066,18 @@
 			}
 		},
 
+		/**
+		 * run the given callback when a route changes
+		 */
 		register_callback: function(cb)
 		{
 			this.callbacks.push(cb);
 		},
 
+		/**
+		 * given a url, route it within the given routes the router was instantiated
+		 * with. if none fit, do nothing =]
+		 */
 		route: function(url)
 		{
 			if(!this.options.enable_cb())
@@ -867,11 +1111,18 @@
 			obj[action].apply(obj, args);
 		},
 
+		/**
+		 * stupid function, not worth the space it takes up
+		 */
 		setup_routes: function(routes)
 		{
 			this.routes	=	routes;
 		},
 
+		/**
+		 * attached to the hashchange event. runs all the callback assigned with
+		 * register_callback().
+		 */
 		hash_change: function(hash, force)
 		{
 			var force	=	!!force;
