@@ -173,11 +173,21 @@
 		// whether or not the model has changed since the last save/update via sync
 		changed: false,
 
-		// reference to the model's current collection
-		collection: null,
+		// reference to the collections the model is in (yes, multiple). urls are
+		// pulled from the collection via a "priority" parameter. the highest 
+		// priority collection will have its url passed to the model's sync function.
+		collections: [],
 
 		// what key to look under the data for the primary id for the object
 		id_key: 'id',
+
+		// can be used to overwrite all url generation for syncing (if you have a url
+		// that doesn't fit into the "/[collection url]/[model id]" scheme.
+		url: false,
+
+		// can be used to manually set a base url for this model (in the case it
+		// doesn't have a collection or the url needs to change manually).
+		base_url: false,
 
 		/**
 		 * CTOR, allows passing in of data to set that data into the model.
@@ -383,13 +393,13 @@
 
 			if(this.is_new())
 			{
-				return this.trigger('destroy', this, this.collection, options);
+				return this.trigger('destroy', this, this.collections, options);
 			}
 
 			var success	=	options.success;
 			options.success	=	function(res)
 			{
-				this.trigger('destroy', this, this.collection, options);
+				this.trigger('destroy', this, this.collections, options);
 				if(success) success(model, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
@@ -462,6 +472,37 @@
 				return false;
 			}
 			return true;
+		},
+
+		/**
+		 * loops over the collections this model belongs to and gets the highest 
+		 * priority one. makes for easier url extraction during syncing.
+		 */
+		get_highest_priority_collection: function()
+		{
+			var collections	=	shallow_array_clone(this.collections);
+			collections.sort( function(a, b) { return b.priority - a.priority; } );
+			return collections[0];
+		},
+
+		/**
+		 * get the endpoint url for this model.
+		 */
+		get_url: function()
+		{
+			if(this.url)
+			{
+				// we are overriding the url generation.
+				return this.url;
+			}
+
+			// pull from either overridden "base_url" param, or just use the highest 
+			// priority collection's url for the base.
+			var base_url	=	this.base_url ? this.base_url : this.get_highest_priority_collection().get_url();
+
+			// create a /[base url]/[model id] url.
+			var url			=	'/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id();
+			return url;
 		}
 	});
 
@@ -487,6 +528,16 @@
 		// function used for sorting. override to sort on a criteria besides order of
 		// addition to collection
 		sortfn: null,
+
+		// the base url for this collection. if you update a model, the default url 
+		// sent to the sync function would be PUT /[collection url]/[model id].
+		url: '/mycollection',
+
+		// when a model belongs to many collections, it will generate its url from the
+		// collection having the highest priority. if all have the same priority, then
+		// the first collection from the list will have its url used for the model's
+		// sync operation.
+		priority: 1,
 
 		/**
 		 * allow the passing in of an array of data to instantiate a collection with a
@@ -533,9 +584,9 @@
 			options || (options = {});
 
 			// reference this collection to the model
-			if(!model.collection == this)
+			if(!model.collections.contains(this))
 			{
-				model.collection	=	this;
+				model.collections.push(this);
 			}
 
 			if(this.sortfn)
@@ -562,7 +613,7 @@
 		remove: function(model)
 		{
 			// remove this collection's reference(s) from the model
-			model.collection	=	null;
+			model.collections.erase(this);
 
 			// save to trigger change event if needed
 			var num_rec	=	this._models.length;
@@ -787,13 +838,21 @@
 		},
 
 		/**
+		 * simple wrapper to get the collection's url
+		 */
+		get_url: function()
+		{
+			return this.url;
+		}
+
+		/**
 		 * remove all ties between this colleciton and a model
 		 */
 		_remove_reference: function(model)
 		{
-			if(model.collection == this)
+			if(model.collections.contains(this))
 			{
-				delete model.collection;
+				model.collections.erase(this);
 			}
 
 			// don't listen to this model anymore
