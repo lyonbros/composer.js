@@ -522,7 +522,7 @@
 		// the TYPE of model in this collection
 		model: Model,
 
-		// "private" - array holding all the models in this collection
+		// "private" array holding all the models in this collection
 		_models: [],
 
 		// function used for sorting. override to sort on a criteria besides order of
@@ -661,20 +661,24 @@
 
 			if(!options.append)
 			{
-				this.clear();
+				this.clear(options);
 			}
 
 			values.each(function(data) {
-				this.add(new this.model(data));
+				var model	=	data.__is_model ? data : new this.model(data);
+				this.add(model, options);
 			}.bind(this));
 
-			this.trigger('reset');
+			if(!options.silent)
+			{
+				this.trigger('reset');
+			}
 		},
 
 		/**
 		 * not normally necessary to call this, unless collection.sortfn changes after
 		 * instantiation of the data. sort order is normall maintained upon adding of
-		 * data viw Colleciton.add().
+		 * data viw Collection.add().
 		 */
 		sort: function(options)
 		{
@@ -843,7 +847,7 @@
 		get_url: function()
 		{
 			return this.url;
-		}
+		},
 
 		/**
 		 * remove all ties between this colleciton and a model
