@@ -162,6 +162,9 @@
 	var Model	=	new Class({
 		Implements: [Events],
 
+		// for internal object testing
+		__is_model: true,
+
 		options: {},
 
 		// default values for the model, merged with the data passed in on CTOR
@@ -543,11 +546,17 @@
 		 * allow the passing in of an array of data to instantiate a collection with a
 		 * pre-set number of models. models will be created via this.model.
 		 */
-		initialize: function(models, options)
+		initialize: function(models, params)
 		{
+			params || (params = {});
+			for(x in params)
+			{
+				this[x]	=	params[x];
+			}
+
 			if(models)
 			{
-				this.reset(models, options);
+				this.reset(models);
 			}
 			this.init();
 		},
@@ -604,7 +613,11 @@
 
 			// listen to the model's events so we can propogate them
 			model.bind('all', this._model_event.bind(this));
-			this.trigger('add', model, this, options);
+
+			if(!options.silent)
+			{
+				this.trigger('add', model, this, options);
+			}
 		},
 
 		/**
@@ -634,8 +647,10 @@
 		/**
 		 * remove all the models from the collection
 		 */
-		clear: function()
+		clear: function(options)
 		{
+			options || (options = {});
+
 			// save to trigger change event if needed
 			var num_rec	=	this._models.length;
 
@@ -645,7 +660,7 @@
 			this._models	=	[];
 
 			// if the number actually change, trigger our change event
-			if(this._models.length != num_rec)
+			if(this._models.length != num_rec && !options.silent)
 			{
 				this.trigger('clear');
 			}
