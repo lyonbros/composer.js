@@ -788,6 +788,22 @@
 		},
 
 		/**
+		 * get the index of an item in the list of models. useful for sorting items.
+		 */
+		index_of: function(model_or_id)
+		{
+			var id	=	model_or_id.__is_model ? model_or_id.id() : model_or_id;
+			for(var i = 0; i < this._models.length; i++)
+			{
+				if(this._models[i].id() == id)
+				{
+					return i;
+				}
+			}
+			return false;
+		},
+
+		/**
 		 * query the models in the collection with a callback and return ALL that
 		 * match. takes either a function OR a key-value object for matching:
 		 *
