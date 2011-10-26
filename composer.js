@@ -85,30 +85,13 @@
 		 * Note that any trigger event will also trigger the "all" event. the idea
 		 * being that you can subscribe to anything happening on an object.
 		 */
-		trigger: function()
+		trigger: function(ev)
 		{
-			if(arguments.length == 0) return this;
-
-			// pull out our arguments
-			var args		=	arguments == 0 ? [] : $A(arguments);
-			var ev			=	args.shift();
-			var orig_event	=	ev;
-
-			var evs	=	[ev, 'all'];
-
-			// run each callback with the given arguments
-			var log	=	[];
-			evs.each(function(type) {
+			var args	=	shallow_array_clone($A(arguments));
+			[ev, 'all'].each(function(type) {
 				if(!this._events[type]) return;
-
 				this._events[type].each(function(callback) {
-					log.push(type);
-					if(type == 'all')
-					{
-						// if someone bound to the "all" event, pass which event was triggered
-						args.unshift(orig_event);
-					}
-					callback.apply(this, args);
+					callback.apply(this, (type == 'all') ? args : args.slice(1));
 				}, this);
 			}, this);
 
@@ -161,7 +144,7 @@
 		 */
 		fire_event: function()
 		{
-			var args	=	shallow_array_clone(arguments);
+			var args	=	shallow_array_clone($A(arguments));
 			var evname	=	args.shift();
 			var options	=	args.shift();
 
