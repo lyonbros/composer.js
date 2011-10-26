@@ -4,7 +4,7 @@
 	/**
 	 * You must override this function in your app.
 	 */
-	Composer.sync	=	function(method, model, options) {};
+	Composer.sync	=	function(method, model, options) { return options.success(); };
 
 	/**
 	 * The events class provides bindings to objects (Models and Collections,
