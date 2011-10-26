@@ -149,6 +149,42 @@
 		}
 	});
 
+	/**
+	 * The base class is inherited by models, collections, and controllers. It
+	 * provides some nice common functionality.
+	 */
+	var Base	=	new Class({
+		/**
+		 * fire_event dtermines whether or not an event should fire. given an event
+		 * name, the passed-in options, and any arbitrary number of arguments, 
+		 * determine whether or not the given event should be triggered.
+		 */
+		fire_event: function()
+		{
+			var args	=	shallow_array_clone(arguments);
+			var evname	=	args.shift();
+			var options	=	args.shift();
+
+			options || (options = {});
+
+			// add event name back into the beginning of args
+			args.unshift(evname);
+			if(!options.silent)
+			{
+				// not silent, fire the event
+				return this.trigger.apply(this, args);
+			}
+			else if(
+				(typeof(options.not_silent) == 'array' && options.not_silent.contains(evname)) ||
+				(options.not_silent == evname)
+			)
+			{
+				// silent, BUT the given event is allowed. fire it.
+				return this.trigger.apply(this, args);
+			}
+			return this;
+		}
+	});
 
 	/**
 	 * Models are the data class. They deal with loading and manipulating data from
@@ -160,7 +196,7 @@
 	 * for saving/updating information with a server.
 	 */
 	var Model	=	new Class({
-		Implements: [Events],
+		Implements: [Events, Base],
 
 		// for internal object testing
 		__is_model: true,
@@ -284,16 +320,13 @@
 				{
 					this.data[key]	=	val;
 					this.changed	=	true;
-					if(!options.silent)
-					{
-						this.trigger('change:'+key, this, val, options);
-					}
+					this.fire_event('change:'+key, options, this, val, options);
 				}
 			}.bind(this));
 
-			if(!already_changing && !options.silent && this.changed)
+			if(!already_changing && this.changed)
 			{
-				this.trigger('change', options);
+				this.fire_event('change', options, options);
 			}
 
 			this.changing	=	false;
@@ -313,11 +346,8 @@
 
 			delete this.data[key];
 			this.changed	=	true;
-			if(!options.silent)
-			{
-				this.trigger('change:'+key, this, void 0, options);
-				this.trigger('change', this, options);
-			}
+			this.fire_event('change:'+key, options, this, void 0, options);
+			this.fire_event('change', options, this, options);
 		},
 
 		/**
@@ -339,12 +369,12 @@
 				for(key in old)
 				{
 					changed	=	true;
-					this.trigger('change:'+key, this, void 0, options)
+					this.fire_event('change'+key, options, this, void 0, options);
 				}
 
 				if(changed)
 				{
-					this.trigger('change', this, options)
+					this.fire_event('change', options, this, options);
 					this.changed	=	true;
 				}
 			}
@@ -396,13 +426,13 @@
 
 			if(this.is_new())
 			{
-				return this.trigger('destroy', this, this.collections, options);
+				return this.fire_event('destroy', options, this, this.collections, options);
 			}
 
 			var success	=	options.success;
 			options.success	=	function(res)
 			{
-				this.trigger('destroy', this, this.collections, options);
+				this.fire_event('destroy', options, this, this.collections, options);
 				if(success) success(model, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
@@ -470,7 +500,7 @@
 				}
 				else
 				{
-					this.trigger('error', this, error, options);
+					this.fire_event('error', options, this, error, options);
 				}
 				return false;
 			}
@@ -520,7 +550,7 @@
 	 * react to that event (re-display the view, for instance).
 	 */
 	var Collection	=	new Class({
-		Implements: [Events],
+		Implements: [Events, Base],
 
 		// the TYPE of model in this collection
 		model: Model,
@@ -546,7 +576,7 @@
 		 * allow the passing in of an array of data to instantiate a collection with a
 		 * pre-set number of models. models will be created via this.model.
 		 */
-		initialize: function(models, params)
+		initialize: function(models, params, options)
 		{
 			params || (params = {});
 			for(x in params)
@@ -556,7 +586,7 @@
 
 			if(models)
 			{
-				this.reset(models);
+				this.reset(models, options);
 			}
 			this.init();
 		},
@@ -614,17 +644,16 @@
 			// listen to the model's events so we can propogate them
 			model.bind('all', this._model_event.bind(this));
 
-			if(!options.silent)
-			{
-				this.trigger('add', model, this, options);
-			}
+			this.fire_event('add', options, model, this, options);
 		},
 
 		/**
 		 * remove a model from the collection, unhooking all necessary wires (events, etc)
 		 */
-		remove: function(model)
+		remove: function(model, options)
 		{
+			options || (options = {});
+
 			// remove this collection's reference(s) from the model
 			model.collections.erase(this);
 
@@ -637,7 +666,7 @@
 			// if the number actually change, trigger our change event
 			if(this._models.length != num_rec)
 			{
-				this.trigger('remove');
+				this.fire_event('remove', options);
 			}
 
 			// remove the model from the collection
@@ -660,9 +689,9 @@
 			this._models	=	[];
 
 			// if the number actually change, trigger our change event
-			if(this._models.length != num_rec && !options.silent)
+			if(this._models.length != num_rec)
 			{
-				this.trigger('clear');
+				this.fire_event('clear', options);
 			}
 		},
 
@@ -684,10 +713,7 @@
 				this.add(model, options);
 			}.bind(this));
 
-			if(!options.silent)
-			{
-				this.trigger('reset');
-			}
+			this.fire_event('reset', options);
 		},
 
 		/**
@@ -700,10 +726,7 @@
 			if(!this.sortfn) return false;
 
 			this._models.sort(this.sortfn);
-			if(!options.silent)
-			{
-				this.trigger('reset', this, options);
-			}
+			this.fire_event('reset', options, this, options);
 		},
 
 		/**
@@ -898,7 +921,7 @@
 	 * changes. Controllers are also responsible for rendering views.
 	 */
 	var Controller	=	new Class({
-		Implements: [Events],
+		Implements: [Events, Base],
 
 		// the DOM element to tie this controller to (a container element)
 		el: false,
@@ -935,14 +958,14 @@
 			// object from this.tag
 			this.el || (this.el = new Element(this.tag));
 
-			if(this.className)
-			{
-				this.el.addClass(this.className);
-			}
-
 			for(x in params)
 			{
 				this[x]	=	params[x];
+			}
+
+			if(this.className)
+			{
+				this.el.addClass(this.className);
 			}
 
 			this.refresh_elements();
@@ -975,10 +998,11 @@
 		/**
 		 * remove the controller from the DOM and trigger its release event
 		 */
-		release: function()
+		release: function(options)
 		{
+			options || (options = {});
 			this.el.dispose();
-			this.trigger('release');
+			this.fire_event('release', options);
 		},
 
 		/**
@@ -1232,7 +1256,7 @@
 			}
 			else
 			{
-				model.trigger('error', model, resp, options);
+				this.fire_event('error', options, model, resp, options);
 			}
 		};
 	};
