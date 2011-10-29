@@ -1120,7 +1120,8 @@
 		options: {
 			redirect_initial: true,
 			suppress_initial_route: false,
-			enable_cb: function() { return true; }
+			enable_cb: function() { return true; },
+			on_failure: function() {}
 		},
 
 		/**
@@ -1199,14 +1200,14 @@
 					break;
 				}
 			}
-			if(!route) return false;
+			if(!route) return this.options.on_failure({url: url, route: false, handler_exists: false, action_exists: false});
 
 			var handler	=	route[0];
 			var action	=	route[1];
-			if(!window[handler]) return false;
+			if(!window[handler]) return this.options.on_failure({url: url, route: route, handler_exists: false, action_exists: false});
 
 			var obj		=	window[handler];
-			if(!obj[action] || typeof(obj[action]) != 'function') return false;
+			if(!obj[action] || typeof(obj[action]) != 'function') return this.options.on_failure({url: url, route: route, handler_exists: true, action_exists: false});
 			var args	=	match;
 			args.shift();
 			obj[action].apply(obj, args);
