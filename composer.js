@@ -925,6 +925,12 @@
 		// the DOM element to tie this controller to (a container element)
 		el: false,
 
+		// if this is set to a DOM *selector*, then this.el will be ignored and
+		// instantiated as a new Element(this.tag), then injected into the element
+		// referened by the this.inject selector. this allows you to inject
+		// controllers into the DOM 
+		inject: false,
+
 		// don't worry about it
 		event_splitter:	/^(\w+)\s*(.*)$/,
 
@@ -943,23 +949,30 @@
 		 */
 		initialize: function(params)
 		{
-			// allow this.el to be a string selector (selecting a single element) instad
-			// of a DOM object. this allows the defining of a controller before the DOM
-			// element the selector refers to exists, but this.el will be updated upon
-			// instantiation of the controller (presumably when the DOM object DOES
-			// exist).
-			if(typeof(this.el) == 'string')
-			{
-				this.el = $E(this.el)
-			}
-
-			// if this.el is null (bad selector or no item given), create a new DOM
-			// object from this.tag
-			this.el || (this.el = new Element(this.tag));
-
 			for(x in params)
 			{
 				this[x]	=	params[x];
+			}
+
+			if(this.inject)
+			{
+				this.attach();
+			}
+			else
+			{
+				// allow this.el to be a string selector (selecting a single element) instad
+				// of a DOM object. this allows the defining of a controller before the DOM
+				// element the selector refers to exists, but this.el will be updated upon
+				// instantiation of the controller (presumably when the DOM object DOES
+				// exist).
+				if(typeof(this.el) == 'string')
+				{
+					this.el = $E(this.el)
+				}
+
+				// if this.el is null (bad selector or no item given), create a new DOM
+				// object from this.tag
+				this.el || (this.el = new Element(this.tag));
 			}
 
 			if(this.className)
@@ -995,12 +1008,39 @@
 		},
 
 		/**
+		 * injects to controller's element into the DOM.
+		 */
+		attach: function(options)
+		{
+			this.el || (this.el = new Element(this.tag));
+			var container	=	$E(this.inject);
+			if(!container)
+			{
+				return false;
+			}
+
+			container.set('html', '');
+			this.el.inject(container);
+		},
+
+		/**
 		 * remove the controller from the DOM and trigger its release event
 		 */
 		release: function(options)
 		{
 			options || (options = {});
-			this.el.dispose();
+			if(this.el && this.el.destroy)
+			{
+				if(options.dispose())
+				{
+					this.el.dispose();
+				}
+				else
+				{
+					this.el.destroy();
+				}
+			}
+			this.el	=	false;
 			this.fire_event('release', options);
 		},
 
