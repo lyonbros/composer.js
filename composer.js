@@ -313,6 +313,7 @@
 			}
 
 			this.changing	=	false;
+			return this;
 		},
 
 		/**
@@ -388,12 +389,12 @@
 		{
 			options || (options = {});
 
-			this.set(data, options);
+			if(!this.set(data, options)) return false;
 
 			var success	=	options.success;
 			options.success	=	function(res)
 			{
-				this.set(this.parse(res), options);
+				if(!this.set(this.parse(res), options)) return false;
 				if(success) success(model, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
