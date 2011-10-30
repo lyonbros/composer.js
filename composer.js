@@ -1031,7 +1031,7 @@
 			options || (options = {});
 			if(this.el && this.el.destroy)
 			{
-				if(options.dispose())
+				if(options.dispose)
 				{
 					this.el.dispose();
 				}
