@@ -299,7 +299,7 @@
 			var already_changing	=	this.changing;
 			this.changing			=	true;
 			Object.each(data, function(val, key) {
-				if(!Composer.eq(val, this.data[key])
+				if(!Composer.eq(val, this.data[key]))
 				{
 					this.data[key]	=	val;
 					this.changed	=	true;
