@@ -1063,11 +1063,6 @@
 			return this.el;
 		},
 
-		// TODO ...?
-		append: function() {},
-		appendTo: function() {},
-		prepend: function() {},
-
 		/**
 		 * set up the events (by delegation) to this controller (events are stored 
 		 * under this.events).
