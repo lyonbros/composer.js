@@ -193,7 +193,7 @@
 		data: {},
 
 		// whether or not the model has changed since the last save/update via sync
-		changed: false,
+		_changed: false,
 
 		// reference to the collections the model is in (yes, multiple). urls are
 		// pulled from the collection via a "priority" parameter. the highest 
@@ -235,11 +235,12 @@
 		 * wrapper to get data out of the model. it's bad form to access model.data
 		 * directly, you must always go through model.get('mykey')
 		 */
-		get: function(key)
+		get: function(key, def)
 		{
+			if(typeof(def) == 'undefined') def	=	null;
 			if(typeof(this.data[key]) == 'undefined')
 			{
-				return null;
+				return def;
 			}
 			return this.data[key];
 		},
@@ -302,14 +303,15 @@
 				if(!Composer.eq(val, this.data[key]))
 				{
 					this.data[key]	=	val;
-					this.changed	=	true;
+					this._changed	=	true;
 					this.fire_event('change:'+key, options, this, val, options);
 				}
 			}.bind(this));
 
-			if(!already_changing && this.changed)
+			if(!already_changing && this._changed)
 			{
 				this.fire_event('change', options, options);
+				this._changed	=	false;
 			}
 
 			this.changing	=	false;
@@ -329,9 +331,10 @@
 			if(!options.silent && !this.perform_validation(obj, options)) return false;			
 
 			delete this.data[key];
-			this.changed	=	true;
+			this._changed	=	true;
 			this.fire_event('change:'+key, options, this, void 0, options);
 			this.fire_event('change', options, this, options);
+			this._changed	=	false;
 		},
 
 		/**
@@ -347,19 +350,18 @@
 			if(!options.silent && !this.perform_validation(obj, options)) return false;			
 
 			this.data	=	{};
-			var changed	=	false;
 			if(!options.silent)
 			{
 				for(key in old)
 				{
-					changed	=	true;
+					this._changed	=	true;
 					this.fire_event('change'+key, options, this, void 0, options);
 				}
 
-				if(changed)
+				if(this._changed)
 				{
 					this.fire_event('change', options, this, options);
-					this.changed	=	true;
+					this._changed	=	false;
 				}
 			}
 		},
@@ -737,6 +739,21 @@
 		parse: function(data)
 		{
 			return data;
+		},
+
+		/**
+		 * convenience function to loop over collection's models
+		 */
+		each: function(cb, bind)
+		{
+			if(bind)
+			{
+				this.models().each(cb, bind);
+			}
+			else
+			{
+				this.models().each(cb);
+			}
 		},
 
 		/**
