@@ -310,7 +310,7 @@
 
 			if(!already_changing && this._changed)
 			{
-				this.fire_event('change', options, options);
+				this.fire_event('change', options, this, options);
 				this._changed	=	false;
 			}
 
