@@ -909,10 +909,7 @@
 		 */
 		_remove_reference: function(model)
 		{
-			if(model.collections.contains(this))
-			{
-				model.collections.erase(this);
-			}
+			model.collections.erase(this);
 
 			// don't listen to this model anymore
 			model.unbind('all', this._model_event.bind(this));
