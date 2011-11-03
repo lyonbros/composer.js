@@ -195,9 +195,9 @@
 		// whether or not the model has changed since the last save/update via sync
 		_changed: false,
 
-		// reference to the collections the model is in (yes, multiple). urls are
-		// pulled from the collection via a "priority" parameter. the highest 
-		// priority collection will have its url passed to the model's sync function.
+		// Contains references to the collection(s) the model is in. The collection
+		// with the highest priority property value is used when deriving the model's
+		// URL via the Model.get_url method (which delegates to Collection.get_url).
 		collections: [],
 
 		// what key to look under the data for the primary id for the object
@@ -504,7 +504,7 @@
 		{
 			var collections	=	shallow_array_clone(this.collections);
 			collections.sort( function(a, b) { return b.priority - a.priority; } );
-			return collections[0];
+			return collections.count ? collections[0] : false;
 		},
 
 		/**
@@ -513,17 +513,26 @@
 		get_url: function()
 		{
 			if(this.url)
-			{
 				// we are overriding the url generation.
 				return this.url;
-			}
 
 			// pull from either overridden "base_url" param, or just use the highest 
 			// priority collection's url for the base.
-			var base_url	=	this.base_url ? this.base_url : this.highest_priority_collection().get_url();
+			if (this.base_url)
+				var base_url = this.base_url;
+			else
+			{
+				var collection = this.highest_priority_collection();
+				
+				// We need to check that there actually IS a collection...
+				if (collection)
+					var base_url	=	collection.get_url();
+				else
+					var base_url	=	'';
+			}
 
 			// create a /[base url]/[model id] url.
-			var url			=	'/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id();
+			var url	= base_url ? '/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id() : this.id();
 			return url;
 		}
 	});
