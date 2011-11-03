@@ -1419,6 +1419,9 @@
 		return {
 			extend: function(obj)
 			{
+				// If you didn't pass an object, then make an empty one
+				if (typeof(obj) == 'undefined') obj = {};
+				
 				if(obj.initialize)
 				{
 					var str	=	'You are creating a Composer object with an "initialize" method/' +
