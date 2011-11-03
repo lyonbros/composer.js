@@ -497,7 +497,7 @@
 		 * loops over the collections this model belongs to and gets the highest 
 		 * priority one. makes for easier url extraction during syncing.
 		 */
-		get_highest_priority_collection: function()
+		highest_priority_collection: function()
 		{
 			var collections	=	shallow_array_clone(this.collections);
 			collections.sort( function(a, b) { return b.priority - a.priority; } );
@@ -517,7 +517,7 @@
 
 			// pull from either overridden "base_url" param, or just use the highest 
 			// priority collection's url for the base.
-			var base_url	=	this.base_url ? this.base_url : this.get_highest_priority_collection().get_url();
+			var base_url	=	this.base_url ? this.base_url : this.highest_priority_collection().get_url();
 
 			// create a /[base url]/[model id] url.
 			var url			=	'/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id();
