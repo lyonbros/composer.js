@@ -504,7 +504,7 @@
 		{
 			var collections	=	shallow_array_clone(this.collections);
 			collections.sort( function(a, b) { return b.priority - a.priority; } );
-			return collections.count ? collections[0] : false;
+			return collections.length ? collections[0] : false;
 		},
 
 		/**
