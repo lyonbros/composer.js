@@ -6,6 +6,13 @@
 	 */
 	Composer.sync	=	function(method, model, options) { return options.success(); };
 
+	// a closure that returns incrementing integers. these will be unique across 
+	// the entire app since only one counter is instantiated
+	Composer.cid	=	(function() {
+		var counter	=	1;
+		return function(inc) { return counter++; };
+	})();
+
 	/**
 	 * The events class provides bindings to objects (Models and Collections,
 	 * mainly) and allows triggering of those events. For instance, a controller
@@ -184,6 +191,9 @@
 		// for internal object testing
 		__is_model: true,
 
+		// the model's unique app id, assigned by composer on instantiation
+		_cid: false,
+
 		options: {},
 
 		// default values for the model, merged with the data passed in on CTOR
@@ -195,9 +205,9 @@
 		// whether or not the model has changed since the last save/update via sync
 		_changed: false,
 
-		// Contains references to the collection(s) the model is in. The collection
-		// with the highest priority property value is used when deriving the model's
-		// URL via the Model.get_url method (which delegates to Collection.get_url).
+		// reference to the collections the model is in (yes, multiple). urls are
+		// pulled from the collection via a "priority" parameter. the highest 
+		// priority collection will have its url passed to the model's sync function.
 		collections: [],
 
 		// what key to look under the data for the primary id for the object
@@ -216,11 +226,11 @@
 		 */
 		initialize: function(data, options)
 		{
-			data || (data = {});
+			// merge the defaults into the data
+			data	=	Object.merge(this.defaults, data);
 
-			// merge the defaults into the data (note the Object.clone(...) around 
-			// defaults, which fixes a bug that was popping up). 
-			data	=	Object.merge(Object.clone(this.defaults), data);
+			// assign the unique app id
+			this._cid	=	Composer.cid();
 
 			// set the data into the model (but don't trigger any events)
 			this.set(data, {silent: true});
@@ -439,11 +449,24 @@
 		},
 
 		/**
-		 * get this model's id
+		 * get this model's id. if it doesn't exist, return the cid instead.
 		 */
-		id: function()
+		id: function(no_cid)
 		{
-			return this.get(this.id_key);
+			if(typeof(no_cid) != 'boolean') no_cid = false;
+
+			var id	=	this.get(this.id_key);
+			if(id) return id;
+			if(no_cid) return false;
+			return this._cid;
+		},
+
+		/**
+		 * get the model's unique app id (cid)
+		 */
+		cid: function()
+		{
+			return this._cid;
 		},
 
 		/**
@@ -451,7 +474,7 @@
 		 */
 		is_new: function()
 		{
-			return !this.id();
+			return !this.id(true);
 		},
 
 		/**
@@ -500,11 +523,11 @@
 		 * loops over the collections this model belongs to and gets the highest 
 		 * priority one. makes for easier url extraction during syncing.
 		 */
-		highest_priority_collection: function()
+		get_highest_priority_collection: function()
 		{
-			var collections	=	shallow_array_clone(this.collections);			
+			var collections	=	shallow_array_clone(this.collections);
 			collections.sort( function(a, b) { return b.priority - a.priority; } );
-			return collections.length ? collections[0] : false;
+			return collections[0];
 		},
 
 		/**
@@ -513,26 +536,17 @@
 		get_url: function()
 		{
 			if(this.url)
+			{
 				// we are overriding the url generation.
 				return this.url;
+			}
 
 			// pull from either overridden "base_url" param, or just use the highest 
 			// priority collection's url for the base.
-			if (this.base_url)
-				var base_url = this.base_url;
-			else
-			{
-				var collection = this.highest_priority_collection();
-
-				// We need to check that there actually IS a collection...
-				if (collection)
-					var base_url	=	collection.get_url();
-				else
-					var base_url	=	'';
-			}
+			var base_url	=	this.base_url ? this.base_url : this.get_highest_priority_collection().get_url();
 
 			// create a /[base url]/[model id] url.
-			var url	= base_url ? '/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id() : this.id();
+			var url			=	'/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id();
 			return url;
 		}
 	});
@@ -616,10 +630,8 @@
 		 * add a model to this collection, and hook up the correct wire in doing so
 		 * (events and setting the model's collection).
 		 */
-		add: function(data, options)
+		add: function(model, options)
 		{
-			var model	=	data.__is_model ? data : new this.model(data);
-			
 			options || (options = {});
 
 			// reference this collection to the model
@@ -709,7 +721,8 @@
 			}
 
 			values.each(function(data) {
-				this.add(data, options);
+				var model	=	data.__is_model ? data : new this.model(data);
+				this.add(model, options);
 			}.bind(this));
 
 			this.fire_event('reset', options);
@@ -812,6 +825,19 @@
 		{
 			return this.find(function(model) {
 				if(model.id() == id)
+				{
+					return true;
+				}
+			});
+		},
+
+		/**
+		 * convenience function to find a model by cid
+		 */
+		find_by_cid: function(cid)
+		{
+			return this.find(function(model) {
+				if(model.cid() == cid)
 				{
 					return true;
 				}
@@ -1432,8 +1458,6 @@
 		return {
 			extend: function(obj)
 			{
-				obj || (obj = {});
-				
 				if(obj.initialize)
 				{
 					var str	=	'You are creating a Composer object with an "initialize" method/' +
