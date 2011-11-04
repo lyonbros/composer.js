@@ -618,6 +618,11 @@
 		 */
 		add: function(data, options)
 		{
+			if (data instanceof Array)
+			{
+				return Object.each(data, function(model) { this.add(model) }, this);
+			}
+			
 			var model	=	data.__is_model ? data : new this.model(data);
 			
 			options || (options = {});
@@ -708,9 +713,7 @@
 				this.clear(options);
 			}
 
-			values.each(function(data) {
-				this.add(data, options);
-			}.bind(this));
+			this.add(data, options);
 
 			this.fire_event('reset', options);
 		},
