@@ -502,7 +502,7 @@
 		 */
 		highest_priority_collection: function()
 		{
-			var collections	=	shallow_array_clone(this.collections);
+			var collections	=	shallow_array_clone(this.collections);			
 			collections.sort( function(a, b) { return b.priority - a.priority; } );
 			return collections.length ? collections[0] : false;
 		},
@@ -523,7 +523,7 @@
 			else
 			{
 				var collection = this.highest_priority_collection();
-				
+
 				// We need to check that there actually IS a collection...
 				if (collection)
 					var base_url	=	collection.get_url();
@@ -616,8 +616,10 @@
 		 * add a model to this collection, and hook up the correct wire in doing so
 		 * (events and setting the model's collection).
 		 */
-		add: function(model, options)
+		add: function(data, options)
 		{
+			var model	=	data.__is_model ? data : new this.model(data);
+			
 			options || (options = {});
 
 			// reference this collection to the model
@@ -707,8 +709,7 @@
 			}
 
 			values.each(function(data) {
-				var model	=	data.__is_model ? data : new this.model(data);
-				this.add(model, options);
+				this.add(data, options);
 			}.bind(this));
 
 			this.fire_event('reset', options);
