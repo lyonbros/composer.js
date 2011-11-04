@@ -10,7 +10,7 @@
 	// the entire app since only one counter is instantiated
 	Composer.cid	=	(function() {
 		var counter	=	1;
-		return function(inc) { return counter++; };
+		return function(inc) { return 'c'+counter++; };
 	})();
 
 	/**
@@ -1466,6 +1466,8 @@
 		return {
 			extend: function(obj)
 			{
+				obj || (obj = {});
+				
 				if(obj.initialize)
 				{
 					var str	=	'You are creating a Composer object with an "initialize" method/' +
