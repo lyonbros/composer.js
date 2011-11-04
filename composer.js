@@ -667,10 +667,15 @@
 		},
 
 		/**
-		 * remove a model from the collection, unhooking all necessary wires (events, etc)
+		 * remove a model(s) from the collection, unhooking all necessary wires (events, etc)
 		 */
 		remove: function(model, options)
 		{
+			if (model instanceof Array)
+			{
+				return Object.each(model, function(m) { this.remove(m) }, this);
+			}
+			
 			options || (options = {});
 
 			// remove this collection's reference(s) from the model
@@ -685,7 +690,7 @@
 			// if the number actually change, trigger our change event
 			if(this._models.length != num_rec)
 			{
-				this.fire_event('remove', options);
+				this.fire_event('remove', options, model);
 			}
 
 			// remove the model from the collection
