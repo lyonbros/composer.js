@@ -630,7 +630,7 @@
 		 * add a model to this collection, and hook up the correct wire in doing so
 		 * (events and setting the model's collection).
 		 */
-		add: function(model, options)
+		add: function(data, options)
 		{
 			if (data instanceof Array)
 			{
