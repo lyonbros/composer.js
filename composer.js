@@ -723,7 +723,7 @@
 		 * reset the collection with all new data. it can also be appended to the 
 		 * current set of models if specified in the options (via "append").
 		 */
-		reset: function(values, options)
+		reset: function(data, options)
 		{
 			options || (options = {});
 
