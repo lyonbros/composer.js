@@ -227,7 +227,7 @@
 		initialize: function(data, options)
 		{
 			// merge the defaults into the data
-			data	=	Object.merge(this.defaults, data);
+			data	=	Object.merge(Object.clone(this.defaults), data);
 
 			// assign the unique app id
 			this._cid	=	Composer.cid();
