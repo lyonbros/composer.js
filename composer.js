@@ -226,6 +226,8 @@
 		 */
 		initialize: function(data, options)
 		{
+			data || (data = {});
+
 			// merge the defaults into the data
 			data	=	Object.merge(Object.clone(this.defaults), data);
 
@@ -527,7 +529,7 @@
 		{
 			var collections	=	shallow_array_clone(this.collections);
 			collections.sort( function(a, b) { return b.priority - a.priority; } );
-			return collections[0];
+			return collections.count ? collections[0] : false;
 		},
 
 		/**
@@ -536,18 +538,28 @@
 		get_url: function()
 		{
 			if(this.url)
-			{
 				// we are overriding the url generation.
 				return this.url;
-			}
 
 			// pull from either overridden "base_url" param, or just use the highest 
 			// priority collection's url for the base.
-			var base_url	=	this.base_url ? this.base_url : this.get_highest_priority_collection().get_url();
+			if (this.base_url)
+				var base_url = this.base_url;
+			else
+			{
+				var collection = this.highest_priority_collection();
+
+				// We need to check that there actually IS a collection...
+				if (collection)
+					var base_url	=	collection.get_url();
+				else
+					var base_url	=	'';
+			}
 
 			// create a /[base url]/[model id] url.
-			var url			=	'/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id();
+			var url	= base_url ? '/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id() : this.id();
 			return url;
+
 		}
 	});
 
