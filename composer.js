@@ -395,7 +395,7 @@
 				if(success) success(model, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
-			return (this.sync || Composer.sync).call(this, 'read', this, options);
+			return (this.sync || Composer.sync).call('read', this, options);
 		},
 
 		/**
@@ -415,7 +415,7 @@
 				if(success) success(model, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
-			return (this.sync || Composer.sync).call(this, (this.is_new() ? 'create' : 'update'), this, options);
+			return (this.sync || Composer.sync).call((this.is_new() ? 'create' : 'update'), this, options);
 		},
 
 		/**
@@ -437,7 +437,7 @@
 				if(success) success(model, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
-			return (this.sync || Composer.sync).call(this, 'delete', this, options);
+			return (this.sync || Composer.sync).call('delete', this, options);
 		},
 
 		/**
@@ -952,7 +952,7 @@
 				if(success) success(model, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
-			return (this.sync || Composer.sync).call(this, 'read', this, options);
+			return (this.sync || Composer.sync).call('read', this, options);
 		},
 
 		/**
