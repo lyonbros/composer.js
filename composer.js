@@ -226,8 +226,10 @@
 		 */
 		initialize: function(data, options)
 		{
+			data || (data = {});
+
 			// merge the defaults into the data
-			data	=	Object.merge(this.defaults, data);
+			data	=	Object.merge(Object.clone(this.defaults), data);
 
 			// assign the unique app id
 			this._cid	=	Composer.cid();
@@ -523,11 +525,11 @@
 		 * loops over the collections this model belongs to and gets the highest 
 		 * priority one. makes for easier url extraction during syncing.
 		 */
-		get_highest_priority_collection: function()
+		highest_priority_collection: function()
 		{
 			var collections	=	shallow_array_clone(this.collections);
 			collections.sort( function(a, b) { return b.priority - a.priority; } );
-			return collections[0];
+			return collections.length ? collections[0] : false;
 		},
 
 		/**
@@ -536,18 +538,28 @@
 		get_url: function()
 		{
 			if(this.url)
-			{
 				// we are overriding the url generation.
 				return this.url;
-			}
 
 			// pull from either overridden "base_url" param, or just use the highest 
 			// priority collection's url for the base.
-			var base_url	=	this.base_url ? this.base_url : this.get_highest_priority_collection().get_url();
+			if (this.base_url)
+				var base_url = this.base_url;
+			else
+			{
+				var collection = this.highest_priority_collection();
+
+				// We need to check that there actually IS a collection...
+				if (collection)
+					var base_url	=	collection.get_url();
+				else
+					var base_url	=	'';
+			}
 
 			// create a /[base url]/[model id] url.
-			var url			=	'/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id();
+			var url	= base_url ? '/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id() : this.id();
 			return url;
+
 		}
 	});
 
@@ -1015,28 +1027,15 @@
 			{
 				this[x]	=	params[x];
 			}
-
+			
+			// make sure we have an el
+			this._ensure_el();
+			
 			if(this.inject)
 			{
 				this.attach();
 			}
-			else
-			{
-				// allow this.el to be a string selector (selecting a single element) instad
-				// of a DOM object. this allows the defining of a controller before the DOM
-				// element the selector refers to exists, but this.el will be updated upon
-				// instantiation of the controller (presumably when the DOM object DOES
-				// exist).
-				if(typeof(this.el) == 'string')
-				{
-					this.el = $E(this.el)
-				}
-
-				// if this.el is null (bad selector or no item given), create a new DOM
-				// object from this.tag
-				this.el || (this.el = new Element(this.tag));
-			}
-
+			
 			if(this.className)
 			{
 				this.el.addClass(this.className);
@@ -1074,8 +1073,10 @@
 		 */
 		attach: function(options)
 		{
-			this.el || (this.el = new Element(this.tag));
-			var container	=	$E(this.inject);
+			// make sure we have an el
+			this._ensure_el();
+			
+			var container	=	document.getElement(this.inject);
 			if(!container)
 			{
 				return false;
@@ -1083,6 +1084,25 @@
 
 			container.set('html', '');
 			this.el.inject(container);
+		},
+		
+		/**
+		 * make sure el is defined as an HTML element
+		 */
+		_ensure_el: function() {
+			// allow this.el to be a string selector (selecting a single element) instad
+			// of a DOM object. this allows the defining of a controller before the DOM
+			// element the selector refers to exists, but this.el will be updated upon
+			// instantiation of the controller (presumably when the DOM object DOES
+			// exist).
+			if(typeof(this.el) == 'string')
+			{
+				this.el = document.getElement(this.el);
+			}
+
+			// if this.el is null (bad selector or no item given), create a new DOM
+			// object from this.tag
+			this.el || (this.el = new Element(this.tag));
 		},
 
 		/**
