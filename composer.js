@@ -1255,7 +1255,7 @@
 
 			this.routes	=	routes;
 
-			this.register_callback(this.route.bind(this));
+			this.register_callback(this._do_route.bind(this));
 
 			// load the initial hash value
 			var hash	=	self.location.hash;
@@ -1294,10 +1294,39 @@
 		},
 
 		/**
-		 * given a url, route it within the given routes the router was instantiated
-		 * with. if none fit, do nothing =]
+		 * wrapper around the routing functionality. basically, instead of doing a 
+		 *   window.location = '#!/my/route';
+		 * you can do
+		 *   router.route('#!/my/route');
+		 *
+		 * Note that the latter isn't necessary, but it provides a useful abstraction.
 		 */
 		route: function(url)
+		{
+			url || (url = new String(window.location.href));
+
+			var href	=	url.trim();
+			href		=	'/' + href.replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
+			var hash	=	'#!' + href;
+
+			var old		=	new String(self.location.hash).toString();
+			if(old == hash)
+			{
+				window.fireEvent('hashchange', [href, true]);
+			}
+			else
+			{
+				window.location	=	hash;
+			}
+		},
+
+		/**
+		 * given a url, route it within the given routes the router was instantiated
+		 * with. if none fit, do nothing =]
+		 *
+		 * *internal only* =]
+		 */
+		_do_route: function(url)
 		{
 			if(!this.options.enable_cb())
 			{
