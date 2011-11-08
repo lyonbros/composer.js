@@ -3,6 +3,10 @@ good MVC frameworks out there (backbone.js and Spine, which composer.js pulls a
 lot of functionality from), the options for MooTools are lacking. I needed
 something as good as the jQuery MVC frameworks but for MooTools.
 
-The framework is in early alpha, and not yet feature-complete, so I will be
-holding off on documentation until it's a bit more solid and viable.
+The framework is now in beta, and is being used to power two projects we're
+actively working on. The more we use it, the more bugs we fix and the more we 
+find what belongs and what doesn't. In other words, it works great, but it's
+still growing and changing slowly.
+
+Docs available: http://orthecreedence.github.com/composer.js/
 
