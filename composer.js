@@ -1,3 +1,16 @@
+/**
+ * Composer.js is an MVC framework for creating and organizing javascript 
+ * applications. For documentation, please visit:
+ *
+ *     http://orthecreedence.github.com/composer.js/
+ * 
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * 
+ * Licensed under The MIT License. 
+ * Redistributions of files must retain the above copyright notice.
+ */
 (function() {
 	var Composer	=	{};
 
