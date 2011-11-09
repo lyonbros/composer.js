@@ -2,7 +2,7 @@
  * Composer.js is an MVC framework for creating and organizing javascript 
  * applications. For documentation, please visit:
  *
- *     http://orthecreedence.github.com/composer.js/
+ *     http://lyonbros.github.com/composer.js/
  * 
  * -----------------------------------------------------------------------------
  *
