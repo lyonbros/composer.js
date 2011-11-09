@@ -94,7 +94,7 @@
 		 */
 		trigger: function(ev)
 		{
-			var args	=	shallow_array_clone($A(arguments));
+			var args	=	shallow_array_clone(Array.from(arguments));
 			[ev, 'all'].each(function(type) {
 				if(!this._events[type]) return;
 				this._events[type].each(function(callback) {
@@ -151,7 +151,7 @@
 		 */
 		fire_event: function()
 		{
-			var args	=	shallow_array_clone($A(arguments));
+			var args	=	shallow_array_clone(Array.from(arguments));
 			var evname	=	args.shift();
 			var options	=	args.shift();
 
