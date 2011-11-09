@@ -1127,21 +1127,21 @@
 		},
 
 		/**
-		 * replace this controller's conatiner element (this.el) with another element.
+		 * replace this controller's container element (this.el) with another element.
 		 * also refreshes the events/elements associated with the controller
 		 */
 		replace: function(element)
 		{
-			var rep		=	[this.el, element.el || element];
-			var prev	=	rep[0];
-			this.el		=	rep[1];
-
-			this.el.replaces(prev);
+			if(this.el.parentNode)
+			{
+				element.replaces(this.el);
+			}
+			this.el	=	element;
 
 			this.refresh_elements();
 			this.delegate_events();
 
-			return this.el;
+			return element;
 		},
 
 		/**
