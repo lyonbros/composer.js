@@ -1550,6 +1550,9 @@
 						// extend the base object's events and elements
 						obj.events		=	Object.merge(base.events || {}, obj.events);
 						obj.elements	=	Object.merge(base.elements || {}, obj.elements);
+
+						// now extend any other params/functions
+						obj				=	Object.merge(base, obj);
 					}
 				}
 
