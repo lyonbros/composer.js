@@ -1526,9 +1526,10 @@
 	var make_instance	=	function(class_type)
 	{
 		return {
-			extend: function(obj)
+			extend: function(obj, base)
 			{
 				obj || (obj = {});
+				base || (base = null);
 				
 				if(obj.initialize)
 				{
@@ -1541,6 +1542,17 @@
 					console.log(str);
 					console.log('---------------------------');
 				}
+
+				if(base)
+				{
+					if(class_type == Controller)
+					{
+						// extend the base object's events and elements
+						obj.events		=	Object.merge(base.events || {}, obj.events);
+						obj.elements	=	Object.merge(base.elements || {}, obj.elements);
+					}
+				}
+
 				var obj	=	Object.merge({Extends: class_type}, obj);
 				return new Class(obj);
 			}
