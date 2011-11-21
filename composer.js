@@ -25,7 +25,7 @@
 		var counter	=	1;
 		return function(inc) { return 'c'+counter++; };
 	})();
-
+	
 	/**
 	 * The events class provides bindings to objects (Models and Collections,
 	 * mainly) and allows triggering of those events. For instance, a controller
@@ -158,6 +158,48 @@
 	 */
 	var Base	=	new Class({
 		/**
+		 * allows one object to extend another. since controllers, models, and
+		 * collections all do this differently, it is up to each to have their own 
+		 * extend function and call this one for validation.
+		 */
+		extend: function(obj, base)
+		{
+			obj || (obj = {});
+			base || (base = null);
+			if(obj.initialize)
+			{
+				var str	=	'You are creating a Composer object with an "initialize" method/' +
+							'parameter, which is reserved. Unless you know what you\'re doing ' +
+							'(and call this.parent.apply(this, arguments)), please rename ' +
+							'your parameter to something other than "initialize"! Perhaps you' +
+							'were thinking of init()?';
+				console.log('----------WARNING----------');
+				console.log(str);
+				console.log('---------------------------');
+			}
+
+			if(obj.extend)
+			{
+				var str	=	'You are creating a Composer object with an "initialize" method/' +
+							'parameter, which is reserved. Unless you know what you\'re doing ' +
+							'(and call this.parent.apply(this, arguments)), please rename ' +
+							'your parameter to something other than "extend"!';
+				console.log('----------WARNING----------');
+				console.log(str);
+				console.log('---------------------------');
+			}
+
+			return obj;
+		},
+
+		_do_extend: function(obj, base)
+		{
+			var obj	=	Object.merge({Extends: (base || this.$constructor)}, obj);
+			var cls	=	new Class(obj);
+			return cls;
+		},
+
+		/**
 		 * fire_event dtermines whether or not an event should fire. given an event
 		 * name, the passed-in options, and any arbitrary number of arguments, 
 		 * determine whether or not the given event should be triggered.
@@ -199,7 +241,8 @@
 	 * for saving/updating information with a server.
 	 */
 	var Model	=	new Class({
-		Implements: [Events, Base],
+		Extends: Base,
+		Implements: [Events],
 
 		// for internal object testing
 		__is_model: true,
@@ -252,6 +295,14 @@
 
 			// call the init fn
 			this.init(options);
+		},
+
+		extend: function(obj, base)
+		{
+			obj || (obj = {});
+			base || (base = Model);
+			obj	=	this.parent.call(this, obj, base);
+			return this._do_extend(obj, base);
 		},
 
 		/**
@@ -587,7 +638,8 @@
 	 * react to that event (re-display the view, for instance).
 	 */
 	var Collection	=	new Class({
-		Implements: [Events, Base],
+		Extends: Base,
+		Implements: [Events],
 
 		// the TYPE of model in this collection
 		model: Model,
@@ -626,6 +678,14 @@
 				this.reset(models, options);
 			}
 			this.init();
+		},
+
+		extend: function(obj)
+		{
+			obj || (obj = {});
+			base || (base = Collection);
+			obj	=	this.parent.call(this, obj, base);
+			return this._do_extend(obj, base);
 		},
 
 		/**
@@ -1007,7 +1067,8 @@
 	 * changes. Controllers are also responsible for rendering views.
 	 */
 	var Controller	=	new Class({
-		Implements: [Events, Base],
+		Extends: Base,
+		Implements: [Events],
 
 		// the DOM element to tie this controller to (a container element)
 		el: false,
@@ -1060,6 +1121,19 @@
 			this.init();
 		},
 
+		extend: function(obj, base)
+		{
+			obj || (obj = {});
+			base || (base = Controller);
+			obj	=	this.parent.call(this, obj, base);
+
+			// extend the base object's events and elements
+			obj.events		=	Object.merge(this.events || {}, obj.events);
+			obj.elements	=	Object.merge(this.elements || {}, obj.elements);
+
+			return this._do_extend(obj, base);
+		},
+
 		/**
 		 * override
 		 */
@@ -1067,7 +1141,7 @@
 
 		/**
 		 * override. not OFFICIALLY used by the framework, but it's good to use it AND
-		 * returh "this" when you're done with it.
+		 * return "this" when you're done with it.
 		 */
 		render: function() { return this; },
 
@@ -1521,53 +1595,13 @@
 	Composer.eq	=	eq;
 
 
-	// Creates a simple object with an "extends" function which returns a class
-	// extended from class_type out of the given object
-	var make_instance	=	function(class_type)
-	{
-		return {
-			extend: function(obj, base)
-			{
-				obj || (obj = {});
-				base || (base = null);
-				
-				if(obj.initialize)
-				{
-					var str	=	'You are creating a Composer object with an "initialize" method/' +
-								'parameter, which is reserved. Unless you know what you\'re doing ' +
-								'(and call this.parent.apply(this, arguments)), please rename ' +
-								'your parameter to something other than "initialize"! Perhaps you' +
-								'were thinking of init()?';
-					console.log('----------WARNING----------');
-					console.log(str);
-					console.log('---------------------------');
-				}
-
-				if(base)
-				{
-					if(class_type == Controller)
-					{
-						// extend the base object's events and elements
-						obj.events		=	Object.merge(base.events || {}, obj.events);
-						obj.elements	=	Object.merge(base.elements || {}, obj.elements);
-
-						// now extend any other params/functions
-						obj				=	Object.merge(base, obj);
-					}
-				}
-
-				var obj	=	Object.merge({Extends: class_type}, obj);
-				return new Class(obj);
-			}
-		};
-	};
-
 	// list the items we're going to export with "extends" wrappers
 	var exports		=	['Model', 'Collection', 'Controller'];
 
 	// run the exports
-	exports.each(function(ex) {
-		Composer[ex]	=	make_instance(eval(ex));
+	exports.each(function(name) {
+		var obj			=	eval('new '+name+'()');
+		Composer[name]	=	obj;
 	});
 	Composer.Router	=	Router;
 	window.Composer	=	Composer;
