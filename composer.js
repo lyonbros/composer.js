@@ -680,7 +680,7 @@
 			this.init();
 		},
 
-		extend: function(obj)
+		extend: function(obj, base)
 		{
 			obj || (obj = {});
 			base || (base = Collection);
