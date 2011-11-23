@@ -466,11 +466,11 @@
 		 * save this model to the server (update if exists, add if doesn't exist (uses
 		 * id to detemrine if exists or note).
 		 */
-		save: function(data, options)
+		save: function(options)
 		{
 			options || (options = {});
 
-			if(!this.set(data, options)) return false;
+			if(!this.perform_validation(this.data, options)) return false;
 
 			var success	=	options.success;
 			options.success	=	function(res)
@@ -564,12 +564,9 @@
 		 */
 		perform_validation: function(data, options)
 		{
-			if(typeof(this.validate) != 'function')
-			{
-				return true;
-			}
+			if(typeof(this.validate) != 'function') return true;
 
-			var error	=	this.validate(data);
+			var error	=	this.validate(data, options);
 			if(error)
 			{
 				if(options.error)
@@ -621,7 +618,10 @@
 			}
 
 			// create a /[base url]/[model id] url.
-			var url	= base_url ? '/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + '/' + this.id() : this.id();
+			var id	=	this.id(true);
+			if(id) id = '/'+id;
+			else id = '';
+			var url	=	base_url ? '/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + id : id;
 			return url;
 
 		}
