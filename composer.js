@@ -1425,7 +1425,7 @@
 			var match	=	[];
 			for(var re in this.routes)
 			{
-				var regex	=	'/' + re.replace(/\//g, '\\\/') + '$/';
+				var regex	=	'/^' + re.replace(/\//g, '\\\/') + '$/';
 				match		=	eval(regex).exec(url);
 				if(match)
 				{
