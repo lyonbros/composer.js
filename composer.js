@@ -180,7 +180,7 @@
 
 			if(obj.extend)
 			{
-				var str	=	'You are creating a Composer object with an "initialize" method/' +
+				var str	=	'You are creating a Composer object with an "extend" method/' +
 							'parameter, which is reserved. Unless you know what you\'re doing ' +
 							'(and call this.parent.apply(this, arguments)), please rename ' +
 							'your parameter to something other than "extend"!';
@@ -458,7 +458,7 @@
 				this.set(this.parse(res), options);
 				if(success) success(model, res);
 			}.bind(this);
-			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
 		},
 
@@ -476,9 +476,9 @@
 			options.success	=	function(res)
 			{
 				if(!this.set(this.parse(res), options)) return false;
-				if(success) success(model, res);
+				if(success) success(this, res);
 			}.bind(this);
-			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, (this.is_new() ? 'create' : 'update'), this, options);
 		},
 
@@ -500,7 +500,7 @@
 				this.fire_event('destroy', options, this, this.collections, options);
 				if(success) success(model, res);
 			}.bind(this);
-			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'delete', this, options);
 		},
 
@@ -1024,7 +1024,7 @@
 				this.reset(this.parse(res), options);
 				if(success) success(model, res);
 			}.bind(this);
-			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options);
+			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
 		},
 
