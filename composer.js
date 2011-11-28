@@ -677,6 +677,12 @@
 			{
 				this.reset(models, options);
 			}
+
+			// allow Collection.model to be a string so load-order dependencies can be
+			// kept to a minimum. here, we convert the string to an object on collection
+			// instantiation and store it back into Collection.model.
+			this.model	=	typeof(this.model) == 'string' ? eval(this.model) : this.model;
+
 			this.init();
 		},
 
@@ -722,10 +728,8 @@
 				return Object.each(data, function(model) { this.add(model) }, this);
 			}
 			
-			// allow strings so that we can define our relationships before the classes
-			// are instantiated (allowing arbitrary load order).
-			var model_obj	=	typeof(this.model) == 'string' ? eval(this.model) : this.model;
-			var model		=	data.__is_model ? data : new model_obj(data);
+			// if we are passing raw data, create a new model from data
+			var model		=	data.__is_model ? data : new this.model(data);
 			
 			options || (options = {});
 
