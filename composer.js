@@ -722,7 +722,10 @@
 				return Object.each(data, function(model) { this.add(model) }, this);
 			}
 			
-			var model	=	data.__is_model ? data : new this.model(data);
+			// allow strings so that we can define our relationships before the classes
+			// are instantiated (allowing arbitrary load order).
+			var model_obj	=	typeof(this.model) == 'string' ? eval(this.model) : this.model;
+			var model		=	data.__is_model ? data : new model_obj(data);
 			
 			options || (options = {});
 
