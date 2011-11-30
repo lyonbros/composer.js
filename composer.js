@@ -68,7 +68,7 @@
 	 * controller to monitor changes on collections of items instead of each item
 	 * individually.
 	 */
-	Events	=	new Class({
+	var Events	=	new Class({
 		_events: {},
 
 		/**
@@ -673,15 +673,17 @@
 				this[x]	=	params[x];
 			}
 
+			// allow Collection.model to be a string so load-order dependencies can be
+			// kept to a minimum. here, we convert the string to an object on collection
+			// instantiation and store it back into Collection.model.
+			//
+			// NOTE: this happens before the initial reset =]
+			this.model	=	typeof(this.model) == 'string' ? eval(this.model) : this.model;
+
 			if(models)
 			{
 				this.reset(models, options);
 			}
-
-			// allow Collection.model to be a string so load-order dependencies can be
-			// kept to a minimum. here, we convert the string to an object on collection
-			// instantiation and store it back into Collection.model.
-			this.model	=	typeof(this.model) == 'string' ? eval(this.model) : this.model;
 
 			this.init();
 		},
