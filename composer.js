@@ -1219,7 +1219,7 @@
 				}
 			}
 			this.el	=	false;
-			this.fire_event('release', options);
+			this.fire_event('release', options, this);
 		},
 
 		/**
