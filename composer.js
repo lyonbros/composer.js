@@ -1160,6 +1160,7 @@
 		 */
 		html: function(str)
 		{
+			if (!this.el) return false;
 			this.el.set('html', str);
 			this.refresh_elements();
 		},
