@@ -214,14 +214,14 @@
 
 			// add event name back into the beginning of args
 			args.unshift(evname);
-			if(!options.silent)
+			if(!options.silent && !options.not_silent)
 			{
 				// not silent, fire the event
 				return this.trigger.apply(this, args);
 			}
 			else if(
-				(typeof(options.not_silent) == 'array' && options.not_silent.contains(evname)) ||
-				(options.not_silent == evname)
+				options.not_silent == evname ||
+				(options.not_silent && options.not_silent.length && options.not_silent.contains(evname))
 			)
 			{
 				// silent, BUT the given event is allowed. fire it.
@@ -727,14 +727,14 @@
 		{
 			if (data instanceof Array)
 			{
-				return Object.each(data, function(model) { this.add(model) }, this);
+				return Object.each(data, function(model) { this.add(model, options) }, this);
 			}
-			
-			// if we are passing raw data, create a new model from data
-			var model		=	data.__is_model ? data : new this.model(data);
 			
 			options || (options = {});
 
+			// if we are passing raw data, create a new model from data
+			var model		=	data.__is_model ? data : new this.model(data, options);
+			
 			// reference this collection to the model
 			if(!model.collections.contains(this))
 			{
@@ -1160,6 +1160,7 @@
 		 */
 		html: function(str)
 		{
+			if (!this.el) return false;
 			this.el.set('html', str);
 			this.refresh_elements();
 		},
@@ -1219,7 +1220,7 @@
 				}
 			}
 			this.el	=	false;
-			this.fire_event('release', options);
+			this.fire_event('release', options, this);
 		},
 
 		/**
