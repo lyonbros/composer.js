@@ -1385,11 +1385,9 @@
 		/**
 		 * run the given callback when a route changes
 		 */
-		register_callback: function(cb, bind_to)
+		register_callback: function(cb)
 		{
-			bind_to || (bind_to = this);
-			
-			this.callbacks.push(cb.bind(bind_to));
+			this.callbacks.push(cb);
 		},
 
 		/**
