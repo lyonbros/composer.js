@@ -1443,7 +1443,7 @@
 
 					if (param.length != 2) continue;
 
-					this.url_params[param[0]] = param[1];
+					this.url_params[param[0]] = decodeURI(param[1]);
 				}
 			}
 
