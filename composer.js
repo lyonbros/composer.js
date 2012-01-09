@@ -1353,6 +1353,8 @@
 
 			this.routes	=	routes;
 
+			this._init_url_params();
+
 			this.register_callback(this._do_route.bind(this));
 
 			// load the initial hash value
@@ -1431,21 +1433,7 @@
 				return false;
 			}
 
-			this.url_params = {};
-
-			if (window.location.href.indexOf('?') > 0)
-			{
-				var _url_params = window.location.href.substr(window.location.href.indexOf('?')+1);
-				_url_params = _url_params.split("&");
-				for (i=0, c=_url_params.length; i<c; i++)
-				{
-					var param = _url_params[i].split('=');
-
-					if (param.length != 2) continue;
-
-					this.url_params[param[0]] = decodeURI(param[1]);
-				}
-			}
+			this._init_url_params();
 
 			var url		=	'/' + url.replace(/^!?\//g, '');
 			var route	=	false;
@@ -1501,6 +1489,31 @@
 			this.callbacks.each(function(fn) {
 				if(typeof(fn) == 'function') fn.call(this, hash);
 			}, this);
+		},
+
+		_init_url_params: function()
+		{
+			this.url_params = {};
+
+			if (window.location.href.indexOf('?') > 0)
+			{
+				var href = window.location.href;
+
+				if (href.indexOf('#') > - 1)
+					var _url_params = href.substr(href.indexOf('?')+1, href.indexOf('#') - href.indexOf('?') - 1);
+				else
+					var _url_params = href.substr(href.indexOf('?')+1);
+
+				_url_params = _url_params.split("&");
+				for (i=0, c=_url_params.length; i<c; i++)
+				{
+					var param = _url_params[i].split('=');
+
+					if (param.length != 2) continue;
+
+					this.url_params[param[0]] = decodeURI(param[1]);
+				}
+			}
 		},
 
 		/**
