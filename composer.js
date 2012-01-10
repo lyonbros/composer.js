@@ -1328,7 +1328,6 @@
 
 	var Router	=	new Class({
 		last_hash:	false,
-		url_params: {},			// we'll actually read ?querystring=params out of the url
 		routes:		{},
 		callbacks:	[],
 
