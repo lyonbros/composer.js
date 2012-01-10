@@ -1353,8 +1353,6 @@
 
 			this.routes	=	routes;
 
-			this._init_url_params();
-
 			this.register_callback(this._do_route.bind(this));
 
 			// load the initial hash value
@@ -1433,8 +1431,6 @@
 				return false;
 			}
 
-			this._init_url_params();
-
 			var url		=	'/' + url.replace(/^!?\//g, '');
 			var route	=	false;
 			var match	=	[];
@@ -1489,42 +1485,6 @@
 			this.callbacks.each(function(fn) {
 				if(typeof(fn) == 'function') fn.call(this, hash);
 			}, this);
-		},
-
-		_init_url_params: function()
-		{
-			this.url_params = {};
-
-			if (window.location.href.indexOf('?') > 0)
-			{
-				var href = window.location.href;
-
-				if (href.indexOf('#') > - 1)
-					var _url_params = href.substr(href.indexOf('?')+1, href.indexOf('#') - href.indexOf('?') - 1);
-				else
-					var _url_params = href.substr(href.indexOf('?')+1);
-
-				_url_params = _url_params.split("&");
-				for (i=0, c=_url_params.length; i<c; i++)
-				{
-					var param = _url_params[i].split('=');
-
-					if (param.length != 2) continue;
-
-					this.url_params[param[0]] = decodeURI(param[1]);
-				}
-			}
-		},
-
-		/**
-		 * returns a URL parameter in the ?querystring=section of the URL
-		 */
-		get_param: function(param, def_val)
-		{
-			if (this.url_params[param])
-				return this.url_params[param];
-			else
-				return def_val;
 		}
 	});
 
