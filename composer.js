@@ -1043,7 +1043,7 @@
 			options.success	=	function(res)
 			{
 				this.reset(this.parse(res), options);
-				if(success) success(model, res);
+				if(success) success(this.model, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
