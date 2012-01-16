@@ -468,7 +468,7 @@
 			options.success	=	function(res)
 			{
 				this.set(this.parse(res), options);
-				if(success) success(model, res);
+				if(success) success(this, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
@@ -510,7 +510,7 @@
 			options.success	=	function(res)
 			{
 				this.fire_event('destroy', options, this, this.collections, options);
-				if(success) success(model, res);
+				if(success) success(this, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'delete', this, options);
@@ -1043,7 +1043,7 @@
 			options.success	=	function(res)
 			{
 				this.reset(this.parse(res), options);
-				if(success) success(model, res);
+				if(success) success(this, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
