@@ -70,6 +70,7 @@
 	 */
 	var Events	=	new Class({
 		_events: {},
+		_named_events: {},
 
 		/**
 		 * Bind a callback to a specific event for this object. Adds the callback to
@@ -81,8 +82,17 @@
 		 * Whenever mymodel is changed in any way, the "render" function for the 
 		 * current object (probably a controller in this instance) will be called.
 		 */
-		bind: function(name, callback)
+		bind: function(name, callback, callback_name)
 		{
+			callback_name || (callback_name = null);
+
+			if(callback_name && !this._named_events[callback_name])
+			{
+				// assign the callback into the named collection so it can be retrieved
+				// later by name if required.
+				this._named_events[callback_name]	=	callback;
+			}
+
 			this._events[name] || (this._events[name] = []);
 			if(!this._events[name].contains(callback))
 			{
@@ -130,24 +140,26 @@
 				return this;
 			}
 
-			var callback	=	typeof(callback) == 'function' ? callback : null;
-
 			if(typeof(this._events[ev]) == 'undefined' || this._events[ev].length == 0)
 			{
 				// event isn't bound
 				return this;
 			}
 
-			if(!callback)
+			if(typeof(callback) == 'string')
 			{
-				// no callback given, unbind all events of type ev
-				this._events[ev]	=	[];
-				return this;
+				// load the function we assigned the name to and assign it to "callback",
+				// also removing the named reference after we're done.
+				var fn	=	this._named_events[callback];
+				delete this._named_events[callback];
+				var callback	=	fn;
 			}
+
+			if(!callback) return this;
 
 			// remove all callback matches for the event type ev
 			this._events[ev].erase(callback);
-			
+
 			return this;
 		}
 	});
@@ -456,7 +468,7 @@
 			options.success	=	function(res)
 			{
 				this.set(this.parse(res), options);
-				if(success) success(model, res);
+				if(success) success(this, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
@@ -498,7 +510,7 @@
 			options.success	=	function(res)
 			{
 				this.fire_event('destroy', options, this, this.collections, options);
-				if(success) success(model, res);
+				if(success) success(this, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'delete', this, options);
@@ -1033,7 +1045,7 @@
 			options.success	=	function(res)
 			{
 				this.reset(this.parse(res), options);
-				if(success) success(model, res);
+				if(success) success(this, res);
 			}.bind(this);
 			options.error	=	wrap_error(options.error ? options.error.bind(this) : null, this, options).bind(this);
 			return (this.sync || Composer.sync).call(this, 'read', this, options);
@@ -1162,7 +1174,10 @@
 		 */
 		html: function(str)
 		{
-			if (!this.el) return false;
+			if(!this.el)
+			{
+				this._ensure_el();
+			}
 			this.el.set('html', str);
 			this.refresh_elements();
 		},
