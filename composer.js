@@ -750,8 +750,10 @@
 			}
 			else
 			{
-				// no sort fn, add model to the end of the list
-				this._models.push(model);
+				if (typeof(options.at) == 'number')
+					this._models.splice(options.at, 0, model);
+				else
+					this._models.push(model);
 			}
 
 			// listen to the model's events so we can propogate them
