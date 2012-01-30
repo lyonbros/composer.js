@@ -1007,6 +1007,19 @@
 		},
 
 		/**
+		 *	Convenience functon to just select one model from a collection
+		 */
+		select_one: function(selector)
+		{
+			var result = this.select(selector);
+
+			if (result.length)
+				return result[0];
+			
+			return null;
+		},
+
+		/**
 		 * return the first model in the collection. if n is specified, return the
 		 * first n models.
 		 */
