@@ -309,14 +309,6 @@
 			this.init(options);
 		},
 
-		extend: function(obj, base)
-		{
-			obj || (obj = {});
-			base || (base = Model);
-			obj	=	this.parent.call(this, obj, base);
-			return this._do_extend(obj, base);
-		},
-
 		/**
 		 * override me, if needed
 		 */
@@ -638,6 +630,14 @@
 
 		}
 	});
+	Model.extend	=	function(obj, base)
+	{
+		obj || (obj = {});
+		base || (base = Model);
+		obj	=	this.parent.call(this, obj, base);
+		return this._do_extend(obj, base);
+	};
+
 
 	/**
 	 * Collections hold lists of models and contain various helper functions for
@@ -698,14 +698,6 @@
 			}
 
 			this.init();
-		},
-
-		extend: function(obj, base)
-		{
-			obj || (obj = {});
-			base || (base = Collection);
-			obj	=	this.parent.call(this, obj, base);
-			return this._do_extend(obj, base);
 		},
 
 		/**
@@ -1083,6 +1075,14 @@
 			this.trigger.apply(this, arguments);
 		}
 	});
+	Collection.extend	=	function(obj, base)
+	{
+		obj || (obj = {});
+		base || (base = Collection);
+		obj	=	this.parent.call(this, obj, base);
+		return this._do_extend(obj, base);
+	};
+
 
 	/**
 	 * The controller class sits between views and your models/collections. 
@@ -1142,28 +1142,6 @@
 			this.delegate_events();
 
 			this.init();
-		},
-
-		extend: function(obj, base)
-		{
-			obj || (obj = {});
-			base || (base = Controller);
-			obj	=	this.parent.call(this, obj, base);
-
-			// have to do some annoying trickery here to get the actual events/elements
-			var base_events		=	base.events || {};
-			var base_elements	=	base.elements || {};
-
-			// extend the base object's events and elements
-			// NOTE: the first {} in the object is there because the merge is destructive
-			//       to the first argument (we don't want that).
-			obj.events		=	Object.merge({}, base_events, obj.events);
-			obj.elements	=	Object.merge({}, base_elements, obj.elements);
-
-			var cls			=	this._do_extend(obj, base);
-			cls.events		=	obj.events;
-			cls.elements	=	obj.elements;
-			return cls;
 		},
 
 		/**
@@ -1313,6 +1291,28 @@
 			}
 		}
 	});
+	Controller.extend	=	function(obj, base)
+	{
+		obj || (obj = {});
+		base || (base = Controller);
+		obj	=	this.parent.call(this, obj, base);
+
+		// have to do some annoying trickery here to get the actual events/elements
+		var base_events		=	base.events || {};
+		var base_elements	=	base.elements || {};
+
+		// extend the base object's events and elements
+		// NOTE: the first {} in the object is there because the merge is destructive
+		//       to the first argument (we don't want that).
+		obj.events		=	Object.merge({}, base_events, obj.events);
+		obj.elements	=	Object.merge({}, base_elements, obj.elements);
+
+		var cls			=	this._do_extend(obj, base);
+		cls.events		=	obj.events;
+		cls.elements	=	obj.elements;
+		return cls;
+	};
+
 
 	/*
 	---
@@ -1632,11 +1632,10 @@
 
 
 	// list the items we're going to export with "extends" wrappers
-	var exports		=	['Model', 'Collection', 'Controller'];
+	var exports		=	[Model, Collection, Controller];
 
 	// run the exports
-	exports.each(function(name) {
-		var obj			=	eval('new '+name+'()');
+	exports.each(function(obj) {
 		Composer[name]	=	obj;
 	});
 	Composer.Router	=	Router;
