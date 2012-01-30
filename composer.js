@@ -1151,8 +1151,8 @@
 			obj	=	this.parent.call(this, obj, base);
 
 			// have to do some annoying trickery here to get the actual events/elements
-			var base_events		=	Object.merge({}, new base().events || this.events || {});
-			var base_elements	=	Object.merge({}, new base().elements || this.elements || {});
+			var base_events		=	base.events || {};
+			var base_elements	=	base.elements || {};
 
 			// extend the base object's events and elements
 			// NOTE: the first {} in the object is there because the merge is destructive
@@ -1160,7 +1160,10 @@
 			obj.events		=	Object.merge({}, base_events, obj.events);
 			obj.elements	=	Object.merge({}, base_elements, obj.elements);
 
-			return this._do_extend(obj, base);
+			var cls			=	this._do_extend(obj, base);
+			cls.events		=	obj.events;
+			cls.elements	=	obj.elements;
+			return cls;
 		},
 
 		/**
