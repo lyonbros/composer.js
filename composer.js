@@ -170,48 +170,6 @@
 	 */
 	var Base	=	new Class({
 		/**
-		 * allows one object to extend another. since controllers, models, and
-		 * collections all do this differently, it is up to each to have their own 
-		 * extend function and call this one for validation.
-		 */
-		extend: function(obj, base)
-		{
-			obj || (obj = {});
-			base || (base = null);
-			if(obj.initialize)
-			{
-				var str	=	'You are creating a Composer object with an "initialize" method/' +
-							'parameter, which is reserved. Unless you know what you\'re doing ' +
-							'(and call this.parent.apply(this, arguments)), please rename ' +
-							'your parameter to something other than "initialize"! Perhaps you' +
-							'were thinking of init()?';
-				console.log('----------WARNING----------');
-				console.log(str);
-				console.log('---------------------------');
-			}
-
-			if(obj.extend)
-			{
-				var str	=	'You are creating a Composer object with an "extend" method/' +
-							'parameter, which is reserved. Unless you know what you\'re doing ' +
-							'(and call this.parent.apply(this, arguments)), please rename ' +
-							'your parameter to something other than "extend"!';
-				console.log('----------WARNING----------');
-				console.log(str);
-				console.log('---------------------------');
-			}
-
-			return obj;
-		},
-
-		_do_extend: function(obj, base)
-		{
-			var obj	=	Object.merge({Extends: (base || this.$constructor)}, obj);
-			var cls	=	new Class(obj);
-			return cls;
-		},
-
-		/**
 		 * fire_event dtermines whether or not an event should fire. given an event
 		 * name, the passed-in options, and any arbitrary number of arguments, 
 		 * determine whether or not the given event should be triggered.
@@ -242,6 +200,41 @@
 			return this;
 		}
 	});
+	/**
+	 * allows one object to extend another. since controllers, models, and
+	 * collections all do this differently, it is up to each to have their own 
+	 * extend function and call this one for validation.
+	 */
+	Base.extend	=	function(obj, base)
+	{
+		obj || (obj = {});
+		base || (base = null);
+		if(obj.initialize)
+		{
+			var str	=	'You are creating a Composer object with an "initialize" method/' +
+						'parameter, which is reserved. Unless you know what you\'re doing ' +
+						'(and call this.parent.apply(this, arguments)), please rename ' +
+						'your parameter to something other than "initialize"! Perhaps you' +
+						'were thinking of init()?';
+			console.log('----------WARNING----------');
+			console.log(str);
+			console.log('---------------------------');
+		}
+
+		if(obj.extend)
+		{
+			var str	=	'You are creating a Composer object with an "extend" method/' +
+						'parameter, which is reserved. Unless you know what you\'re doing ' +
+						'(and call this.parent.apply(this, arguments)), please rename ' +
+						'your parameter to something other than "extend"!';
+			console.log('----------WARNING----------');
+			console.log(str);
+			console.log('---------------------------');
+		}
+
+		return obj;
+	};
+
 
 	/**
 	 * Models are the data class. They deal with loading and manipulating data from
@@ -634,7 +627,7 @@
 	{
 		obj || (obj = {});
 		base || (base = Model);
-		obj	=	this.parent.call(this, obj, base);
+		obj	=	Base.extend.call(this, obj, base);
 		return this._do_extend(obj, base);
 	};
 
@@ -1092,7 +1085,7 @@
 	{
 		obj || (obj = {});
 		base || (base = Collection);
-		obj	=	this.parent.call(this, obj, base);
+		obj	=	Base.extend.call(this, obj, base);
 		return this._do_extend(obj, base);
 	};
 
@@ -1308,7 +1301,7 @@
 	{
 		obj || (obj = {});
 		base || (base = Controller);
-		obj	=	this.parent.call(this, obj, base);
+		obj	=	Base.extend.call(this, obj, base);
 
 		// have to do some annoying trickery here to get the actual events/elements
 		var base_events		=	base.events || {};
@@ -1644,13 +1637,18 @@
 	Composer.eq	=	eq;
 
 
-	// list the items we're going to export with "extends" wrappers
-	var exports		=	[Model, Collection, Controller];
+	var exports	=	['Model', 'Collection', 'Controller'];
+	exports.each(function(name) {
+		var cls	=	eval(name);
+		cls._do_extend	=	function(obj, base)
+		{
+			var obj	=	Object.merge({Extends: (base || this.$constructor)}, obj);
+			var cls	=	new Class(obj);
+			return cls;
+		};
+		Composer[name]	=	cls;
+	}, this);
 
-	// run the exports
-	exports.each(function(obj) {
-		Composer[name]	=	obj;
-	});
 	Composer.Router	=	Router;
 	window.Composer	=	Composer;
 })();
