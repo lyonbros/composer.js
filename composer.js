@@ -1180,6 +1180,8 @@
 		 */
 		attach: function(options)
 		{
+			options || (options = {});
+
 			// make sure we have an el
 			this._ensure_el();
 			
@@ -1189,7 +1191,7 @@
 				return false;
 			}
 
-			container.set('html', '');
+			if(options.clean_injection) container.set('html', '');
 			this.el.inject(container);
 		},
 		
