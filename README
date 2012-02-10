@@ -10,3 +10,10 @@ actively working on. The more we use it, the more bugs we fix and the more we
 find what belongs and what doesn't. In other words, it works great, but it's
 still growing and changing slowly.
 
+Note: composer.js houses the main/stable framework. There are two other files:
+  
+  composer.relational.js
+  composer.filtercollection.js
+
+which are currently undocumented and considered experimental/alpha. They are
+operational, but subject frequent/substantial changes. *Use at your own risk*!
