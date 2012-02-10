@@ -1,3 +1,23 @@
+/**
+ * NOTE: FilterCollection is considered alpha/experimental and although this
+ * most likely won't happen, it may be subject to substantial API changes. Use/
+ * depend on at your own risk!
+ *
+ * It's also completely undocumented...good luck!
+ * -----------------------------------------------------------------------------
+ *
+ * Composer.js is an MVC framework for creating and organizing javascript 
+ * applications. For documentation, please visit:
+ *
+ *     http://lyonbros.github.com/composer.js/
+ * 
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * 
+ * Licensed under The MIT License. 
+ * Redistributions of files must retain the above copyright notice.
+ */
 (function() {
 	/**
 	 * Collection that exists solely to be a "materialized view" of another
