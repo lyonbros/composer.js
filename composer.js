@@ -758,7 +758,7 @@
 			options || (options = {});
 
 			// if we are passing raw data, create a new model from data
-			var model		=	data.__is_model ? data : new this.model(data, options);
+			var model	=	data.__is_model ? data : new this.model(data, options);
 			
 			// reference this collection to the model
 			if(!model.collections.contains(this))
@@ -819,6 +819,37 @@
 		},
 
 		/**
+		 * given a model, check if its ID is already in this collection. if so,
+		 * replace is with the given model, otherwise add the model to the collection.
+		 */
+		upsert: function(model, options)
+		{
+			options || (options = {});
+
+			var existing	=	this.find_by_id(model.id());
+			if(existing)
+			{
+				// reposition the model if necessary
+				var existing_idx	=	this.index_of(existing);
+				if(typeof(options.at) == 'number' && existing_idx != options.at)
+				{
+					this._models.splice(existing_idx, 1);
+					this._models.splice(options.at, 0, existing);
+					this.fire_event('sort', options);
+				}
+
+				// replace the data in the existing model with the new model's
+				existing.set(model.toJSON(), {silent: true});
+
+				return existing;
+			}
+
+			// model is not in this collection, add it
+			this.add(model, options);
+			return model;
+		},
+
+		/**
 		 * remove all the models from the collection
 		 */
 		clear: function(options)
@@ -854,13 +885,19 @@
 			}
 			this.add(data, options);
 
-			this.fire_event('reset', options);
+			this.fire_event('reset', options, options);
 		},
 
 		/**
 		 * not normally necessary to call this, unless collection.sortfn changes after
 		 * instantiation of the data. sort order is normall maintained upon adding of
 		 * data viw Collection.add().
+		 *
+		 * However, since the sorting criteria for the models can be modified manually
+		 * and it's not always desired to sort automatically, you can call this method
+		 * to re-sort the data in the collection via the bubble-up eventing:
+		 *
+		 * mycollection.bind('change:sort_order', mycollection.sort.bind(mycollection))
 		 */
 		sort: function(options)
 		{
