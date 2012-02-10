@@ -82,9 +82,17 @@
 		 * Whenever mymodel is changed in any way, the "render" function for the 
 		 * current object (probably a controller in this instance) will be called.
 		 */
-		bind: function(name, callback, callback_name)
+		bind: function(ev, callback, callback_name)
 		{
+			if(typeof(ev) == 'object' && ev.length)
+			{
+				// it's an array, process each binding separately
+				return ev.each(function(evname) {
+					this.bind(evname, callback, callback_name);
+				}, this);
+			}
 			callback_name || (callback_name = null);
+			callback_name	=	ev+':'+callback_name;
 
 			if(callback_name && !this._named_events[callback_name])
 			{
@@ -93,10 +101,10 @@
 				this._named_events[callback_name]	=	callback;
 			}
 
-			this._events[name] || (this._events[name] = []);
-			if(!this._events[name].contains(callback))
+			this._events[ev] || (this._events[ev] = []);
+			if(!this._events[ev].contains(callback))
 			{
-				this._events[name].push(callback);
+				this._events[ev].push(callback);
 			}
 
 			return this;
@@ -133,6 +141,14 @@
 		 */
 		unbind: function(ev, callback)
 		{
+			if(typeof(ev) == 'object' && ev.length)
+			{
+				// it's an array, process each item individually
+				return ev.each(function(evname) {
+					this.unbind(evname, callback);
+				}, this);
+			}
+
 			if(typeof(ev) == 'undefined')
 			{
 				// no event passed, unbind everything
@@ -150,7 +166,8 @@
 			{
 				// load the function we assigned the name to and assign it to "callback",
 				// also removing the named reference after we're done.
-				var fn	=	this._named_events[callback];
+				callback	=	ev+':'+callback;
+				var fn		=	this._named_events[callback];
 				delete this._named_events[callback];
 				var callback	=	fn;
 			}
@@ -190,11 +207,21 @@
 				return this.trigger.apply(this, args);
 			}
 			else if(
-				options.not_silent == evname ||
-				(options.not_silent && options.not_silent.length && options.not_silent.contains(evname))
+				options.not_silent &&
+				(options.not_silent == evname ||
+				 (options.not_silent.contains && options.not_silent.contains(evname)))
 			)
 			{
 				// silent, BUT the given event is allowed. fire it.
+				return this.trigger.apply(this, args);
+			}
+			else if(
+				options.silent && 
+				((typeof(options.silent) == 'string' && options.silent != evname) ||
+				 (options.silent.contains && !options.silent.contains(evname)))
+			)
+			{
+				// the current event is not marked to be silent, fire it
 				return this.trigger.apply(this, args);
 			}
 			return this;
@@ -411,6 +438,7 @@
 			this.fire_event('change:'+key, options, this, void 0, options);
 			this.fire_event('change', options, this, options);
 			this._changed	=	false;
+			return this;
 		},
 
 		/**
