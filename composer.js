@@ -1056,6 +1056,7 @@
 				for(var key in selector)
 				{
 					var val	=	selector[key];
+					if(typeof(val) == 'string') val = '"'+val+'"';
 					qry.push('data.get("'+key+'") == ' + val);
 				}
 				var fnstr	=	'if(' + qry.join('&&') + ') { return true; }';
@@ -1095,6 +1096,16 @@
 		{
 			var models	=	this.models();
 			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? models.slice(models.length - n) : models[0];
+		},
+
+		/**
+		 * returns the model at the specified index. if there is no model there,
+		 * return false
+		 */
+		at: function(n)
+		{
+			var model	=	this._models[n];
+			return (model || false);
 		},
 
 		/**
