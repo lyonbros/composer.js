@@ -1717,18 +1717,27 @@
 	Composer.eq	=	eq;
 
 
-	var exports	=	['Model', 'Collection', 'Controller'];
-	exports.each(function(name) {
-		var cls	=	eval(name);
-		cls._do_extend	=	function(obj, base)
-		{
-			var obj	=	Object.merge({Extends: (base || this.$constructor)}, obj);
-			var cls	=	new Class(obj);
-			return cls;
-		};
-		Composer[name]	=	cls;
-	}, this);
+	Composer._export	=	function(exports)
+	{
+		exports.each(function(name) {
+			var _do_try	=	function(classname) { return 'try{'+classname+'}catch(e){false}'; }
+			var cls	=	eval(_do_try(name)) || eval(_do_try('Composer.'+name));
+			if(!cls) return false;
 
+			cls._do_extend	=	function(obj, base)
+			{
+				var obj	=	Object.merge({Extends: (base || this.$constructor)}, obj);
+				var cls	=	new Class(obj);
+				return cls;
+			};
+			Composer[name]	=	cls;
+		}, this);
+	}.bind(this);
+
+	Composer._export(['Model', 'Collection', 'Controller']);
+
+	Composer.Base	=	Base;
 	Composer.Router	=	Router;
+
 	window.Composer	=	Composer;
 })();
