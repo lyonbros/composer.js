@@ -987,10 +987,11 @@
 		/**
 		 * convenience function to find a model by id
 		 */
-		find_by_id: function(id)
+		find_by_id: function(id, strict)
 		{
+			strict	=	!!strict;
 			return this.find(function(model) {
-				if(model.id() == id)
+				if(model.id(strict) == id)
 				{
 					return true;
 				}
