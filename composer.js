@@ -1200,8 +1200,10 @@
 		 * CTOR. instantiate main container element (this.el), setup events and
 		 * elements, and call init()
 		 */
-		initialize: function(params)
+		initialize: function(params, options)
 		{
+			options || (options = {});
+
 			for(x in params)
 			{
 				this[x]	=	params[x];
@@ -1212,7 +1214,7 @@
 			
 			if(this.inject)
 			{
-				this.attach();
+				this.attach(options);
 			}
 			
 			if(this.className)
