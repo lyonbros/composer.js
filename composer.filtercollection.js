@@ -161,7 +161,7 @@
 			}
 			
 			// add this model into the master (if it's not already in it)
-			this.master.upsert(model, options);
+			return this.master.upsert(model, options);
 		},
 
 		remove: function(model, options)

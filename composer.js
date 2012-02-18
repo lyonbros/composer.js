@@ -787,6 +787,8 @@
 			model.bind('all', this._model_event.bind(this));
 
 			this.fire_event('add', options, model, this, options);
+
+			return model;
 		},
 
 		/**
