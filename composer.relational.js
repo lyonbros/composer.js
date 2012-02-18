@@ -102,9 +102,8 @@
 		set: function(data, options)
 		{
 			options || (options = {});
-			if(typeof(options.setup_relations) == 'undefined') options.setup_relations = true;
 
-			if(this.relations && options.setup_relations)
+			if(this.relations && !options.skip_relational)
 			{
 				Object.each(this.relations, function(relation, k) {
 					var d	=	this._get_key(data, k);

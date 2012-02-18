@@ -841,7 +841,7 @@
 				}
 
 				// replace the data in the existing model with the new model's
-				existing.set(model.toJSON(), {silent: true});
+				existing.set(model.toJSON(), Object.merge({}, options, {silent: true, upsert: true}));
 
 				return existing;
 			}
