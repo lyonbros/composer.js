@@ -1671,7 +1671,12 @@
 			// override this action, it can just call event.stop().
 			document.body.addEvent('click:relay('+selector+')', function(e) {
 				var a	=	next_tag_up('a', e.target);
-				if(typeof(options.do_state_change) == 'function' && !options.do_state_change(a))
+				var curhost		=	new String(window.location).replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1');
+				var linkhost	=	a.href.match(/^[a-z]+:\/\//) ? a.href.replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1') : curhost;
+				if(
+					curhost != linkhost ||
+					(typeof(options.do_state_change) == 'function' && !options.do_state_change(a))
+				)
 				{
 					return;
 				}
