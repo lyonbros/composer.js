@@ -1405,46 +1405,21 @@
 	};
 
 
-	/*
-	---
-	description: Added the onhashchange event
-
-	license: MIT-style
-
-	authors: 
-	- sdf1981cgn
-	- Greggory Hernandez
-
-	requires: 
-	- core/1.2.4: '*'
-
-	provides: [Element.Events.hashchange]
-
-	...
-	*/
-	Element.Events.hashchange = {
-		onAdd: function() {
-			var hash = self.location.hash;
-
-			var hashchange = function(){
-				if (hash == self.location.hash) return;
-				else hash = self.location.hash;
-
-				var value = (hash.indexOf('#') == 0 ? hash.substr(1) : hash);
-				window.fireEvent('hashchange', value);
-				document.fireEvent('hashchange', value);
-			};
-
-			if ("onhashchange" in window){
-				window.onhashchange = hashchange;
-			} else {
-				hashchange.periodical(50);
-			}
-		}
-	};
-
+	/**
+	 * The Router class is a utility that helps in the routing of requests to
+	 * certain parts of your application. It works either by history.pushState
+	 * (which is highly recommended) or by falling back onto hashbang url 
+	 * support (not recommended).
+	 *
+	 * Note that if you do want to use pushState, you have to include History.js
+	 * before instantiating the Router class:
+	 *
+	 *   https://github.com/balupton/History.js/
+	 */
 	var Router	=	new Class({
-		last_hash:	false,
+		Implements: [Options],
+
+		last_path:	false,
 		routes:		{},
 		callbacks:	[],
 
@@ -1452,7 +1427,8 @@
 			redirect_initial: true,
 			suppress_initial_route: false,
 			enable_cb: function() { return true; },
-			on_failure: function() {}
+			on_failure: function() {},
+			hash_fallback: true
 		},
 
 		/**
@@ -1462,40 +1438,56 @@
 		 */
 		initialize: function(routes, options)
 		{
-			for(x in options)
-			{
-				this.options[x]	=	options[x];
-			}
+			this.setOptions(options);
 
 			this.routes	=	routes;
-
 			this.register_callback(this._do_route.bind(this));
 
-			// load the initial hash value
-			var hash	=	self.location.hash;
-			var value	=	(hash.indexOf('#') == 0 ? hash.substr(1) : hash);
-			
-			// if redirect_initial is true, then whatever page a user lands on, redirect
-			// them to the hash version, ie
-			//
-			// gonorrhea.com/users/display/42
-			// becomes:
-			// gonorrhea.com/#!/users/display/42
-			//
-			// the routing system will pick this new hash up after the redirect and route
-			// it normally
-			if(this.options.redirect_initial && hash.trim() == '')
+			// in case History.js isn't loaded
+			if(!window.History) window.History = {enabled: false};
+
+			if(History.enabled)
 			{
-				window.location	=	'/#!' + self.location.pathname;
+				// bind our pushstate event
+				History.Adapter.bind(window, 'statechange', this.state_change.bind(this));
+
+				if(!this.options.suppress_initial_route)
+				{
+					// run the initial route
+					History.Adapter.trigger(window, 'statechange', [window.location.pathname])
+				}
 			}
-
-			// set up the hashchange event
-			window.addEvent('hashchange', this.hash_change.bind(this));
-
-			if(!this.options.suppress_initial_route)
+			else if(this.options.hash_fallback)
 			{
-				// run the initial route
-				window.fireEvent('hashchange', [value]);
+				// load the initial hash value
+				var hash	=	this.cur_path();
+				
+				// if redirect_initial is true, then whatever page a user lands on, redirect
+				// them to the hash version, ie
+				//
+				// gonorrhea.com/users/display/42
+				// becomes:
+				// gonorrhea.com/#!/users/display/42
+				//
+				// the routing system will pick this new hash up after the redirect and route
+				// it normally
+				if(this.options.redirect_initial && !(hash == '/' || hash == ''))
+				{
+					window.location	=	'/#!' + hash;
+				}
+
+				// set up the hashchange event
+				window.addEvent('hashchange', this.state_change.bind(this));
+
+				if(!this.options.suppress_initial_route)
+				{
+					// run the initial route
+					window.fireEvent('hashchange', [hash]);
+				}
+			}
+			else if(!this.options.suppress_initial_route)
+			{
+				this._do_route(new String(window.location.pathname).toString());
 			}
 		},
 
@@ -1508,29 +1500,61 @@
 		},
 
 		/**
-		 * wrapper around the routing functionality. basically, instead of doing a 
-		 *   window.location = '#!/my/route';
-		 * you can do
-		 *   router.route('#!/my/route');
-		 *
-		 * Note that the latter isn't necessary, but it provides a useful abstraction.
+		 * get the current url path
 		 */
-		route: function(url)
+		cur_path: function()
 		{
-			url || (url = new String(window.location.href));
-
-			var href	=	url.trim();
-			href		=	'/' + href.replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
-			var hash	=	'#!' + href;
-
-			var old		=	new String(self.location.hash).toString();
-			if(old == hash)
+			if(!History.enabled)
 			{
-				window.fireEvent('hashchange', [href, true]);
+				return '/' + new String(window.location.hash).toString().replace(/^[#!\/]+/, '');
 			}
 			else
 			{
-				window.location	=	hash;
+				return new String(window.location.pathname).toString();
+			}
+		},
+
+		/**
+		 * wrapper around the routing functionality. basically, instead of doing a 
+		 *   window.location = '/my/route';
+		 * you can do
+		 *   router.route('/my/route');
+		 *
+		 * Note that the latter isn't necessary, but it provides a useful abstraction.
+		 */
+		route: function(url, options)
+		{
+			url || (url = this.cur_path());
+			options || (options = {});
+			options.state || (options.state = {});
+
+			var href	=	'/' + url.trim().replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
+			var old		=	this.cur_path();
+			if(old == href)
+			{
+				if(History.enabled)
+				{
+					History.Adapter.trigger(window, 'statechange', [href, true]);
+				}
+				else if(this.options.hash_fallback)
+				{
+					window.fireEvent('hashchange', [href, true]);
+				}
+			}
+			else
+			{
+				if(History.enabled)
+				{
+					History.pushState(options.state, '', href);
+				}
+				else if(this.options.hash_fallback)
+				{
+					window.location	=	'/#!'+href;
+				}
+				else
+				{
+					window.location	=	href;
+				}
 			}
 		},
 
@@ -1574,7 +1598,7 @@
 		},
 
 		/**
-		 * stupid function, not worth the space it takes up
+		 * stupid function, not worth the space it takes up. oh well.
 		 */
 		setup_routes: function(routes)
 		{
@@ -1582,28 +1606,129 @@
 		},
 
 		/**
-		 * attached to the hashchange event. runs all the callback assigned with
+		 * attached to the pushState event. runs all the callback assigned with
 		 * register_callback().
 		 */
-		hash_change: function(hash, force)
+		state_change: function(path, force)
 		{
-			var force	=	!!force;
+			if(path && path.stop != undefined) path = false;
+			path || (path = this.cur_path());
+			force	=	!!force;
 
 			// remove the motherfucking ! at the beginning
-			hash	=	hash.replace(/^!/, '');
-			if(this.last_hash == hash && !force)
+			if(this.last_path == path && !force)
 			{
 				// no need to reload
 				return false;
 			}
 			
-			this.last_hash	=	hash;
+			this.last_path	=	path;
 			this.callbacks.each(function(fn) {
-				if(typeof(fn) == 'function') fn.call(this, hash);
+				if(typeof(fn) == 'function') fn.call(this, path);
 			}, this);
+		},
+
+		/**
+		 * Bind the pushState to any links that don't have the options.exclude_class
+		 * className in them.
+		 */
+		bind_links: function(options)
+		{
+			options || (options = {});
+
+			// build a selector that work for YOU.
+			if(options.selector)
+			{
+				// specific selector......specified. use it.
+				var selector	=	options.selector;
+			}
+			else
+			{
+				// create a CUSTOM selector tailored to your INDIVIDUAL needs.
+				if(options.exclude_class)
+				{
+					// exclusion classname exists, make sure to not listen to <a>
+					// tags with that class
+					var selector	=	'a:not([class~="'+options.exclude_class+'"])';
+				}
+				else
+				{
+					// bind all <a>'s
+					var selector	=	'a';
+				}
+			}
+
+			// convenience function, recursively searches up the DOM tree until
+			// it finds an element with tagname ==  tag.
+			var next_tag_up = function(tag, element)
+			{
+				return element.get('tag') == tag ? element : next_tag_up(tag, element.getParent());
+			}
+
+			// bind our heroic pushState to the <a> tags we specified. this
+			// hopefully be that LAST event called for any <a> tag because it's
+			// so high up the DOM chain. this means if a composer event wants to
+			// override this action, it can just call event.stop().
+			document.body.addEvent('click:relay('+selector+')', function(e) {
+				var a	=	next_tag_up('a', e.target);
+				if(typeof(options.do_state_change) == 'function' && !options.do_state_change(a))
+				{
+					return;
+				}
+
+				if(e) e.stop();
+
+				if(History.enabled)
+				{
+					var href	=	'/' + a.href.replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
+					History.pushState(options.global_state, '', href);
+					return false;
+				}
+				else
+				{
+					window.location	=	'/#!/'+a.href.replace(/^[a-z]+:\/\/.*?\//, '');
+				}
+			});
 		}
 	});
 
+	/*
+	---
+	description: Added the onhashchange event
+
+	license: MIT-style
+
+	authors: 
+	- sdf1981cgn
+	- Greggory Hernandez
+
+	requires: 
+	- core/1.2.4: '*'
+
+	provides: [Element.Events.hashchange]
+
+	...
+	*/
+	Element.Events.hashchange = {
+		onAdd: function() {
+			var hash = self.location.hash;
+
+			var hashchange = function(){
+				if (hash == self.location.hash) return;
+				else hash = self.location.hash;
+
+				var value = (hash.indexOf('#') == 0 ? hash.substr(1) : hash);
+				window.fireEvent('hashchange', value);
+				document.fireEvent('hashchange', value);
+			};
+
+			if ("onhashchange" in window){
+				window.onhashchange = hashchange;
+			} else {
+				hashchange.periodical(50);
+			}
+		}
+	};
 
 	// wraps error callbacks for syncing functions
 	var wrap_error	=	function(callback, model, options)
