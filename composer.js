@@ -1669,7 +1669,7 @@
 			// hopefully be that LAST event called for any <a> tag because it's
 			// so high up the DOM chain. this means if a composer event wants to
 			// override this action, it can just call event.stop().
-			document.body.addEvent('click:relay('+selector+')', function(e) {
+			$(document.body).addEvent('click:relay('+selector+')', function(e) {
 				var a	=	next_tag_up('a', e.target);
 				var curhost		=	new String(window.location).replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1');
 				var linkhost	=	a.href.match(/^[a-z]+:\/\//) ? a.href.replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1') : curhost;
