@@ -1476,6 +1476,12 @@
 					window.location	=	'/#!' + hash;
 				}
 
+				// SUCK ON THAT, HISTORY.JS!!!!
+				// NOTE: this fixes a hashchange double-firing in IE, which 
+				// causes some terrible, horrible, no-good, very bad issues in
+				// more complex controllers.
+				delete Element.NativeEvents.hashchange;
+
 				// set up the hashchange event
 				window.addEvent('hashchange', this.state_change.bind(this));
 
