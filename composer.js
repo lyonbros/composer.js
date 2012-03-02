@@ -1592,11 +1592,12 @@
 			}
 			if(!route) return this.options.on_failure({url: url, route: false, handler_exists: false, action_exists: false});
 
-			var handler	=	route[0];
+			var obj	=	route[0];
 			var action	=	route[1];
-			if(!window[handler]) return this.options.on_failure({url: url, route: route, handler_exists: false, action_exists: false});
-
-			var obj		=	window[handler];
+			if (typeof(obj) != 'object') {
+			  if(!window[obj]) return this.options.on_failure({url: url, route: route, handler_exists: false, action_exists: false}); 
+			  var obj		=	window[obj];
+			}
 			if(!obj[action] || typeof(obj[action]) != 'function') return this.options.on_failure({url: url, route: route, handler_exists: true, action_exists: false});
 			var args	=	match;
 			args.shift();
