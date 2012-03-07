@@ -991,11 +991,15 @@
 		/**
 		 * convenience function to find a model by id
 		 */
-		find_by_id: function(id, strict)
+		find_by_id: function(id, options)
 		{
-			strict	=	!!strict;
+			options || (options = {});
 			return this.find(function(model) {
-				if(model.id(strict) == id)
+				if(model.id(options.strict) == id)
+				{
+					return true;
+				}
+				if(options.allow_cid && model.cid() == id)
 				{
 					return true;
 				}
