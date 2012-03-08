@@ -1100,7 +1100,7 @@
 		last: function(n)
 		{
 			var models	=	this.models();
-			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? models.slice(models.length - n) : models[0];
+			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? models.slice(models.length - n) : models[models.length - 1];
 		},
 
 		/**
