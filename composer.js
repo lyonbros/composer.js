@@ -953,6 +953,21 @@
 		},
 
 		/**
+		 * convenience function to execute a function on a collection's models
+		 */
+		map: function(cb, bind)
+		{
+			if(bind)
+			{
+				return this.models().map(cb, bind);
+			}
+			else
+			{
+				return this.models().map(cb);
+			}
+		},
+
+		/**
 		 * Find the first model that satisfies the callback. An optional sort function
 		 * can be passed in to order the results of the find, which uses the usual 
 		 * fn(a,b){return (-1|0|1);} syntax.
