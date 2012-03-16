@@ -93,14 +93,21 @@
 			}
 			callback_name || (callback_name = null);
 
-			if(callback_name && !this._named_events[callback_name])
+			if(callback_name)
 			{
 				// prepend event type to callback name
 				callback_name	=	ev+':'+callback_name;
 
-				// assign the callback into the named collection so it can be retrieved
-				// later by name if required.
-				this._named_events[callback_name]	=	callback;
+				if(!this._named_events[callback_name])
+				{
+					// assign the callback into the named collection so it can be retrieved
+					// later by name if required.
+					this._named_events[callback_name]	=	callback;
+				}
+				else
+				{
+					throw 'CallbackNameExists';
+				}
 			}
 
 			this._events[ev] || (this._events[ev] = []);
