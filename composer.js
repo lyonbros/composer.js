@@ -106,7 +106,8 @@
 				}
 				else
 				{
-					throw 'CallbackNameExists';
+					// don't bother with duplicate event names
+					return false;
 				}
 			}
 
