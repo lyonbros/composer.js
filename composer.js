@@ -162,7 +162,8 @@
 			if(typeof(ev) == 'undefined')
 			{
 				// no event passed, unbind everything
-				this._events	=	{};
+				this._events		=	{};
+				this._named_events	=	{};
 				return this;
 			}
 
@@ -1341,6 +1342,10 @@
 					this.el.destroy();
 				}
 			}
+
+			// remove all events from controller
+			if(!options.keep_events) this.unbind();
+
 			this.el	=	false;
 			this.fire_event('release', options, this);
 		},
