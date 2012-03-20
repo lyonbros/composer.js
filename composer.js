@@ -1704,7 +1704,13 @@
 			// so high up the DOM chain. this means if a composer event wants to
 			// override this action, it can just call event.stop().
 			$(document.body).addEvent('click:relay('+selector+')', function(e) {
-				var a	=	next_tag_up('a', e.target);
+				var a		=	next_tag_up('a', e.target);
+				var button	=	typeof(e.button) != 'undefined' ? e.button : e.event.button;
+
+				// don't trap links that are meant to open new windows, and don't
+				// trap middle mouse clicks (or anything more than left click)
+				if(a.target == '_blank' || button > 0) return;
+
 				var curhost		=	new String(window.location).replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1');
 				var linkhost	=	a.href.match(/^[a-z]+:\/\//) ? a.href.replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1') : curhost;
 				if(
@@ -1906,6 +1912,7 @@
 	Composer._export(['Model', 'Collection', 'Controller']);
 
 	Composer.Base	=	Base;
+	Composer.Events	=	Events;
 	Composer.Router	=	Router;
 
 	window.Composer	=	Composer;
