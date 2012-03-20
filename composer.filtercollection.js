@@ -28,7 +28,6 @@
 	 */
 	var FilterCollection	=	new Class({
 		Extends: Composer.Collection,
-		Implements: [Events],
 
 		master: null,
 		filter: null,
