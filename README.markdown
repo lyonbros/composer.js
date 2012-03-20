@@ -2,7 +2,8 @@
 Check out [Composer's documentation](http://lyonbros.github.com/composer.js/).
 
 Composer.js is an MVC framework for MooTools >= 1.3. While there are some very
-good MVC frameworks out there (backbone.js and Spine, which composer.js pulls a
+good MVC frameworks out there ([backbone.js](http://documentcloud.github.com/backbone/) and
+[Spine](http://spinejs.com/), which composer.js pulls a
 lot of functionality from), the options for MooTools are lacking. We needed
 something as good as the jQuery MVC frameworks but for MooTools.
 
@@ -40,7 +41,8 @@ an example of what happens when you try to nest data structures in your model:
 		]
 	});
 
-	zep.get('members');		// this is a javascript array containing simple objects
+	// this will pull out the 'members' object, which is just an array of simple objects:
+	zep.get('members');  // [{name: 'Jimmy Page'}, {name: 'John Paul Jones'}, ...]
 
 This is fine and well, but what if you want "members" to be a collection? This
 is where RelationalModel comes into play:
@@ -70,15 +72,18 @@ is where RelationalModel comes into play:
 		]
 	});
 
-	zep.get('members');		// this is a Composer Collection, each member being a model of type 'Member'
+	// 'members' is now a Composer Collection, each item of the collection being a Composer model:
+	zep.get('members').select_one({name: 'Jimmy Page'}).bind('gig', function() {
+		console.log('Jimmy Page is playing a gig!');
+	});
 
 We've been using RelationalModel for quite a few months now without problems, so
-I think it's safe to say it's usable. Once again though, it's officially beta
+it's safe to say it's usable. Once again though, it's officially beta
 and subject to changes (although not likely because that would be a lot of work
 on our part).
 
 ### Composer.Keyboard.js ###
-This is a _simple_ modules that lets you do global key bindings:
+This is a _simple_ module that lets you do global key bindings:
 
     var kbd = new Composer.Keyboard();
 	kbd.bind('esc', function(e) {
