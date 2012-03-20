@@ -146,7 +146,7 @@
 			// grab the object and unbind the event
 			var obj	=	this._get_key(this.relation_data, key);
 			if(!obj) return false;
-			var args	=	shallow_array_clone(Array.from(arguments));
+			var args	=	Array.from(arguments);
 			obj.unbind.apply(obj, args.slice(1));
 		},
 
