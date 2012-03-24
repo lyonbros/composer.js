@@ -45,6 +45,9 @@
 				this[k]	=	v;
 			}, this);
 
+			// assign the unique app id
+			this._cid	=	Composer.cid();
+
 			this.master	=	master;
 
 			if(!this.master) return false;

@@ -717,6 +717,9 @@
 				this[x]	=	params[x];
 			}
 
+			// assign the unique app id
+			this._cid	=	Composer.cid();
+
 			// allow Collection.model to be a string so load-order dependencies can be
 			// kept to a minimum. here, we convert the string to an object on collection
 			// instantiation and store it back into Collection.model.
