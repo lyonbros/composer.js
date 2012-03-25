@@ -424,7 +424,7 @@
 
 			if(!already_changing && this._changed)
 			{
-				this.fire_event('change', options, this, options);
+				this.fire_event('change', options, this, options, data);
 				this._changed	=	false;
 			}
 
@@ -1810,93 +1810,51 @@
 		return to;
 	};
 
-	// taken and modified from underscore.js. added in some function helpers for
-	// the value comparisons.
+	// Composer equality function. It replaces _.eq, which wasn't able to tell
+	// non-equality between {key1: 3} and {key1: 3, key2: 5} (said they were 
+	// equal). This was causing some events to not fire in Composer, prompting
+	// me to write our own equality function. It might have just been the release
+	// we were using, but I'm too lazy to go in and re-update _.eq to not have
+	// other _ dependencies. Writing our own is a bit easier.
 	//
-	//     Underscore.js 1.2.0
-	//     (c) 2011 Jeremy Ashkenas, DocumentCloud Inc.
-	//     Underscore is freely distributable under the MIT license.
-	//     Portions of Underscore are inspired or borrowed from Prototype,
-	//     Oliver Steele's Functional, and John Resig's Micro-Templating.
-	//     For all details and documentation:
-	//     http://documentcloud.github.com/underscore
-	var eq	=	function(a, b, stack)
+	// This is a work in progress.
+	var eq	=	function(a, b)
 	{
-		stack || (stack = []);
-		// Identical objects are equal. `0 === -0`, but they aren't identical.
-		// See the Harmony `egal` proposal: http://wiki.ecmascript.org/doku.php?id=harmony:egal.
-		if (a === b) return a !== 0 || 1 / a == 1 / b;
-		// A strict comparison is necessary because `null == undefined`.
-		if (a == null) return a === b;
-		// Compare object types.
-		var typeA = typeof a;
-		if (typeA != typeof b) return false;
-		// Optimization; ensure that both values are truthy or falsy.
-		if (!a != !b) return false;
-		// `NaN` values are equal.
-		if (a != a) return b != b;
-		// Compare string objects by value.
-		var is_string	=	function(obj) {return !!(obj === '' || (obj && obj.charCodeAt && obj.substr));};
-		var isStringA = is_string(a), isStringB = is_string(b);
-		if (isStringA || isStringB) return isStringA && isStringB && String(a) == String(b);
-		// Compare number objects by value.
-		var is_number	=	function(obj) {return !!(obj === 0 || (obj && obj.toExponential && obj.toFixed));};
-		var isNumberA = is_number(a), isNumberB = is_number(b);
-		if (isNumberA || isNumberB) return isNumberA && isNumberB && +a == +b;
-		// Compare boolean objects by value. The value of `true` is 1; the value of `false` is 0.
-		var is_boolean	=	function(b) {return b === true || b === false;};
-		var isBooleanA = is_boolean(a), isBooleanB = is_boolean(b);
-		if (isBooleanA || isBooleanB) return isBooleanA && isBooleanB && +a == +b;
-		// Ensure that both values are objects.
-		if (typeA != 'object') return false;
-		// Unwrap any wrapped objects.
-		if (a._chain) a = a._wrapped;
-		if (b._chain) b = b._wrapped;
-		// Assume equality for cyclic structures. The algorithm for detecting cyclic structures is
-		// adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
-		var length = stack.length;
-		while (length--) {
-			// Linear search. Performance is inversely proportional to the number of unique nested
-			// structures.
-			if (stack[length] == a) return true;
-		}
-		// Add the first object to the stack of traversed objects.
-		var hasOwnProperty	=	Object.prototype.hasOwnProperty;
-		stack.push(a);
-		var size = 0, result = true;
-		if (a.length === +a.length || b.length === +b.length) {
-			// Compare object lengths to determine if a deep comparison is necessary.
-			size = a.length;
-			result = size == b.length;
-			if (result) {
-				// Deep compare array-like object contents, ignoring non-numeric properties.
-				while (size--) {
-					// Ensure commutative equality for sparse arrays.
-					if (!(result = size in a == size in b && eq(a[size], b[size], stack))) break;
-				}
-			}
-		} else {
-			// Deep compare objects.
-			for (var key in a) {
-				if (hasOwnProperty.call(a, key)) {
-					// Count the expected number of properties.
-					size++;
-					// Deep compare each member.
-					if (!(result = hasOwnProperty.call(b, key) && eq(a[key], b[key], stack))) break;
-				}
-			}
-			// Ensure that both objects contain the same number of properties.
-			if (result) {
-				for (key in b) {
-					if (hasOwnProperty.call(b, key) && !size--) break;
-				}
-				result = !size;
+		if ( a === b ) return true;
+		if(a instanceof Function) return false;
+		if(typeOf(a) != typeOf(b)) return false;
+		if(a instanceof Array)
+		{
+			if(a.length != b.length) return false;
+			// TODO: check if array indexes are always sequential
+			for(var i = 0, n = a.length; i < n; i++)
+			{
+				if(!b.hasOwnProperty(i)) return false;
+				if(!eq(a[i], b[i])) return false;
 			}
 		}
-		// Remove the first object from the stack of traversed objects.
-		stack.pop();
-		return result;
-	}
+		else if(a instanceof Object)
+		{
+			if ( a.constructor !== b.constructor ) return false;
+			for( var p in b )
+			{
+				if( b.hasOwnProperty(p) && ! a.hasOwnProperty(p) ) return false;
+			}
+			for( var p in a )
+			{
+				if ( ! a.hasOwnProperty( p ) ) continue;
+				if ( ! b.hasOwnProperty( p ) ) return false;
+				if ( a[ p ] === b[ p ] ) continue;
+				if ( typeof( a[ p ] ) !== "object" ) return false;
+				if ( ! eq( a[ p ],  b[ p ] ) ) return false;
+			}
+		}
+		else if(a != b)
+		{
+			return false;
+		}
+		return true;
+	};
 	Composer.eq	=	eq;
 
 
