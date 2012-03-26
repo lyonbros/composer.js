@@ -424,7 +424,7 @@
 
 			if(!already_changing && this._changed)
 			{
-				this.fire_event('change', options, this, options);
+				this.fire_event('change', options, this, options, data);
 				this._changed	=	false;
 			}
 
