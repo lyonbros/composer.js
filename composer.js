@@ -13,6 +13,9 @@
  */
 (function() {
 	var Composer	=	{};
+	var global	=	typeof(global) != 'undefined' ? global : 
+						typeof(window) != 'undefined' ? window :
+							this;
 
 	/**
 	 * You must override this function in your app.
@@ -1479,17 +1482,17 @@
 			this.register_callback(this._do_route.bind(this));
 
 			// in case History.js isn't loaded
-			if(!window.History) window.History = {enabled: false};
+			if(!global.History) global.History = {enabled: false};
 
 			if(History.enabled)
 			{
 				// bind our pushstate event
-				History.Adapter.bind(window, 'statechange', this.state_change.bind(this));
+				History.Adapter.bind(global, 'statechange', this.state_change.bind(this));
 
 				if(!this.options.suppress_initial_route)
 				{
 					// run the initial route
-					History.Adapter.trigger(window, 'statechange', [window.location.pathname])
+					History.Adapter.trigger(global, 'statechange', [global.location.pathname])
 				}
 			}
 			else if(this.options.hash_fallback)
@@ -1508,7 +1511,7 @@
 				// it normally
 				if(this.options.redirect_initial && !(hash == '/' || hash == ''))
 				{
-					window.location	=	'/#!' + hash;
+					global.location	=	'/#!' + hash;
 				}
 
 				// SUCK ON THAT, HISTORY.JS!!!!
@@ -1518,17 +1521,17 @@
 				delete Element.NativeEvents.hashchange;
 
 				// set up the hashchange event
-				window.addEvent('hashchange', this.state_change.bind(this));
+				global.addEvent('hashchange', this.state_change.bind(this));
 
 				if(!this.options.suppress_initial_route)
 				{
 					// run the initial route
-					window.fireEvent('hashchange', [hash]);
+					global.fireEvent('hashchange', [hash]);
 				}
 			}
 			else if(!this.options.suppress_initial_route)
 			{
-				this._do_route(new String(window.location.pathname).toString());
+				this._do_route(new String(global.location.pathname).toString());
 			}
 		},
 
@@ -1547,11 +1550,11 @@
 		{
 			if(!History.enabled)
 			{
-				return '/' + new String(window.location.hash).toString().replace(/^[#!\/]+/, '');
+				return '/' + new String(global.location.hash).toString().replace(/^[#!\/]+/, '');
 			}
 			else
 			{
-				return new String(window.location.pathname).toString();
+				return new String(global.location.pathname).toString();
 			}
 		},
 
@@ -1575,11 +1578,11 @@
 			{
 				if(History.enabled)
 				{
-					History.Adapter.trigger(window, 'statechange', [href, true]);
+					History.Adapter.trigger(global, 'statechange', [href, true]);
 				}
 				else if(this.options.hash_fallback)
 				{
-					window.fireEvent('hashchange', [href, true]);
+					global.fireEvent('hashchange', [href, true]);
 				}
 			}
 			else
@@ -1590,11 +1593,11 @@
 				}
 				else if(this.options.hash_fallback)
 				{
-					window.location	=	'/#!'+href;
+					global.location	=	'/#!'+href;
 				}
 				else
 				{
-					window.location	=	href;
+					global.location	=	href;
 				}
 			}
 		},
@@ -1630,8 +1633,8 @@
 			var obj	=	route[0];
 			var action	=	route[1];
 			if (typeof(obj) != 'object') {
-				if(!window[obj]) return this.options.on_failure({url: url, route: route, handler_exists: false, action_exists: false}); 
-				var obj		=	window[obj];
+				if(!global[obj]) return this.options.on_failure({url: url, route: route, handler_exists: false, action_exists: false}); 
+				var obj		=	global[obj];
 			}
 			if(!obj[action] || typeof(obj[action]) != 'function') return this.options.on_failure({url: url, route: route, handler_exists: true, action_exists: false});
 			var args	=	match;
@@ -1719,7 +1722,7 @@
 				// trap middle mouse clicks (or anything more than left click)
 				if(a.target == '_blank' || button > 0) return;
 
-				var curhost		=	new String(window.location).replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1');
+				var curhost		=	new String(global.location).replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1');
 				var linkhost	=	a.href.match(/^[a-z]+:\/\//) ? a.href.replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1') : curhost;
 				if(
 					curhost != linkhost ||
@@ -1739,7 +1742,7 @@
 				}
 				else
 				{
-					window.location	=	'/#!/'+a.href.replace(/^[a-z]+:\/\/.*?\//, '');
+					global.location	=	'/#!/'+a.href.replace(/^[a-z]+:\/\/.*?\//, '');
 				}
 			});
 		}
@@ -1771,12 +1774,12 @@
 				else hash = self.location.hash;
 
 				var value = (hash.indexOf('#') == 0 ? hash.substr(1) : hash);
-				window.fireEvent('hashchange', value);
+				global.fireEvent('hashchange', value);
 				document.fireEvent('hashchange', value);
 			};
 
-			if ("onhashchange" in window){
-				window.onhashchange = hashchange;
+			if ("onhashchange" in global){
+				global.onhashchange = hashchange;
 			} else {
 				hashchange.periodical(50);
 			}
@@ -1881,5 +1884,5 @@
 	Composer.Events	=	Events;
 	Composer.Router	=	Router;
 
-	window.Composer	=	Composer;
+	global.Composer	=	Composer;
 })();
