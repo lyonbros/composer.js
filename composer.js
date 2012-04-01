@@ -1282,14 +1282,23 @@
 		 * replace this.el's html with the given test, also refresh the controllers
 		 * elements. 
 		 */
-		html: function(str)
+		html: function(obj)
 		{
 			if(!this.el)
 			{
 				this._ensure_el();
 			}
-			this.el.set('html', str);
-			this.refresh_elements();
+
+			if(typeOf(obj) == 'element')
+			{
+				this.el.set('html', '');
+				obj.inject(this.el);
+			}
+			else
+			{
+				this.el.set('html', obj);
+				this.refresh_elements();
+			}
 		},
 
 		/**
