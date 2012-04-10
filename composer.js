@@ -1297,8 +1297,8 @@
 			else
 			{
 				this.el.set('html', obj);
-				this.refresh_elements();
 			}
+			this.refresh_elements();
 		},
 
 		/**
