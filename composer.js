@@ -880,6 +880,7 @@
 
 			this._models.each(function(model) {
 				this._remove_reference(model);
+				if(options.fire_remove_events) model.trigger('remove');
 			}, this);
 			this._models	=	[];
 
