@@ -1788,7 +1788,7 @@
 				document.fireEvent('hashchange', value);
 			};
 
-			if ("onhashchange" in global){
+			if ("onhashchange" in global && !(Browser.ie && Browser.version < 8)){
 				global.onhashchange = hashchange;
 			} else {
 				hashchange.periodical(50);
