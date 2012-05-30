@@ -1618,27 +1618,21 @@
 		 *
 		 * *internal only* =]
 		 */
-		_do_route: function(url)
+		_do_route: function(url, routes)
 		{
-			if(!this.options.enable_cb())
+			if(!this.options.enable_cb(url))
 			{
 				return false;
 			}
 
-			var url		=	'/' + url.replace(/^!?\//g, '');
-			var route	=	false;
-			var match	=	[];
-			for(var re in this.routes)
-			{
-				var regex	=	'/^' + re.replace(/\//g, '\\\/') + '$/';
-				match		=	eval(regex).exec(url);
-				if(match)
-				{
-					route	=	this.routes[re];
-					break;
-				}
-			}
-			if(!route) return this.options.on_failure({url: url, route: false, handler_exists: false, action_exists: false});
+			// allow passing in of routes manually, otherwise default to internal route table
+			routes || (routes = this.routes);
+
+			var routematch	=	this.find_matching_route(url, routes);
+			if(!routematch) return this.options.on_failure({url: url, route: false, handler_exists: false, action_exists: false});
+
+			var route	=	routematch.route;
+			var match	=	routematch.args;
 
 			var obj	=	route[0];
 			var action	=	route[1];
@@ -1650,6 +1644,30 @@
 			var args	=	match;
 			args.shift();
 			obj[action].apply(obj, args);
+		},
+
+		/**
+		 * Stateless function for finding the best matching route for a URL and given
+		 * set of routes.
+		 */
+		find_matching_route: function(url, routes)
+		{
+			var url		=	'/' + url.replace(/^!?\//g, '');
+			var route	=	false;
+			var match	=	[];
+			for(var re in routes)
+			{
+				var regex	=	'/^' + re.replace(/\//g, '\\\/') + '$/';
+				match		=	eval(regex).exec(url);
+				if(match)
+				{
+					route	=	routes[re];
+					break;
+				}
+			}
+			if(!route) return false;
+
+			return {route: route, args: match};
 		},
 
 		/**
