@@ -1465,11 +1465,10 @@
 	 *   https://github.com/balupton/History.js/
 	 */
 	var Router	=	new Class({
-		Implements: [Options],
+		Implements: [Options, Events],
 
 		last_path:	false,
 		routes:		{},
-		callbacks:	[],
 
 		options: {
 			redirect_initial: true,
@@ -1546,11 +1545,20 @@
 		},
 
 		/**
-		 * run the given callback when a route changes
+		 * add a callback that runs whenever the router "routes"
 		 */
-		register_callback: function(cb)
+		register_callback: function(cb, name)
 		{
-			this.callbacks.push(cb);
+			name || (name = null);
+			return this.bind('route', cb, name);
+		},
+
+		/**
+		 * remove a router callback
+		 */
+		unregister_callback: function(cb)
+		{
+			return this.unbind('route', cb);
 		},
 
 		/**
@@ -1696,9 +1704,7 @@
 			}
 			
 			this.last_path	=	path;
-			this.callbacks.each(function(fn) {
-				if(typeof(fn) == 'function') fn.call(this, path);
-			}, this);
+			this.trigger('route', path);
 		},
 
 		/**
