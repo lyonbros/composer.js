@@ -1572,7 +1572,7 @@
 			}
 			else
 			{
-				return new String(global.location.pathname).toString();
+				return new String(global.location.pathname+global.location.search).toString();
 			}
 		},
 
