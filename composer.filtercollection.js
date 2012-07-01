@@ -87,7 +87,7 @@
 			case 'remove':
 				this.remove_event(model, {from_event: true}); break;
 			case 'change':
-				this.change_event(); break;
+				this.change_event(model); break;
 			case 'sort':
 				this.refresh(); break;
 			}
@@ -97,15 +97,32 @@
 		{
 			options || (options = {});
 
+			if(options.diff_events)
+			{
+				var old_models	=	this._models;
+			}
 			this._models	=	this.master._models.filter(this.filter);
 			this.sort({silent: true});
 			if(this.limit) this._models.splice(this.limit);
+			if(options.diff_events)
+			{
+				old_models.diff(this._models).each(function(model) {
+					this.fire_event('remove', options, model);
+				}, this);
+
+				this._models.diff(old_models).each(function(model) {
+					this.fire_event('add', options, model);
+				}, this);
+			}
 			this.fire_event('reset', options, {has_reload: true});
 		},
 
-		change_event: function(options)
+		change_event: function(model, options)
 		{
 			options || (options = {});
+
+			// see if this model even belongs to this collection
+			if(model && !this.filter(model)) return false;
 
 			// track the current number of items and reloda the data
 			var num_items	=	this._models.length;
@@ -134,7 +151,7 @@
 		{
 			if (data instanceof Array)
 			{
-				return Object.each(data, function(model) { this.add(model, options) }, this);
+				return Object.each(data, function(model) { this.add(model, options); }, this);
 			}
 			
 			options || (options = {});
@@ -170,7 +187,7 @@
 		{
 			if (model instanceof Array)
 			{
-				return Object.each(model, function(m) { this.remove(m) }, this);
+				return Object.each(model, function(m) { this.remove(m); }, this);
 			}
 			
 			options || (options = {});
