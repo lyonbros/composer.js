@@ -22,8 +22,8 @@
 	 */
 	Composer.sync	=	function(method, model, options) { return options.success(); };
 
-    // an option to supress those annoying warnings when overriding initialize and extend methods
-    Composer.supress_warnings = false;
+    // an option to suppress those annoying warnings when overriding initialize and extend methods
+    Composer.suppress_warnings = false;
 
 	// a closure that returns incrementing integers. these will be unique across
 	// the entire app since only one counter is instantiated
@@ -253,7 +253,7 @@
 	{
 		obj || (obj = {});
 		base || (base = null);
-		if(obj.initialize && !Composer.supress_warnings)
+		if(obj.initialize && !Composer.suppress_warnings)
 		{
 			var str	=	'You are creating a Composer object with an "initialize" method/' +
 						'parameter, which is reserved. Unless you know what you\'re doing ' +
@@ -265,7 +265,7 @@
 			console.log('---------------------------');
 		}
 
-		if(obj.extend && !Composer.supress_warnings)
+		if(obj.extend && !Composer.suppress_warnings)
 		{
 			var str	=	'You are creating a Composer object with an "extend" method/' +
 						'parameter, which is reserved. Unless you know what you\'re doing ' +
