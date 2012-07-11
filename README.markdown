@@ -10,7 +10,21 @@ something as good as the jQuery MVC frameworks but for MooTools.
 The framework is now in beta, and is being used to power two projects we're
 actively working on. The more we use it, the more bugs we fix and the more we 
 find what belongs and what doesn't. In other words, it works great, but it's
-still growing and changing slowly.
+still growing and changing slowly. 
+
+Also, a special thanks to our early users who are submitting changes and pull
+requests. You guys are helping a lot to make Composer more stable and usable.
+
+## See it in action ##
+[Musio.com](http://musio.com) is still in invite-only beta, you can see a lot of
+the functionality of Composer in action by looking through the band pages. This
+site is all HTML5/Mootools/Composer driven, and runs completely in the browser
+using pushState (via Composer's built-in Router module).
+
+Composer and its modules were built off of the need to run Musio.com, which is
+fairly complicated under the hood and requires a wide range of functionality.
+While Composer leaves a lot of decisions up to the developer, it has been 
+instrumental in the organization, optimization, and maintainability of our code.
 
 ## Composer modules ##
 Composer.js houses the main/stable framework, but we're also building modules
@@ -57,7 +71,7 @@ is where RelationalModel comes into play:
 		relations: {
 			members: {
 				type: Composer.HasMany,
-				collection: Users
+				collection: Members
 			}
 		}
 	});
