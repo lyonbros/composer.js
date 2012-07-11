@@ -1774,12 +1774,17 @@
 				if(History.enabled)
 				{
 					var href	=	'/' + a.href.replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
+					if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
+
 					History.pushState(options.global_state, '', href);
 					return false;
 				}
 				else
 				{
-					global.location	=	'/#!/'+a.href.replace(/^[a-z]+:\/\/.*?\//, '');
+					var href		=	'/#!/'+a.href.replace(/^[a-z]+:\/\/.*?\//, '');
+					if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
+
+					global.location	=	href;
 				}
 			});
 		}
