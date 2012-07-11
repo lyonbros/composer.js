@@ -1,19 +1,19 @@
 /**
- * Composer.js is an MVC framework for creating and organizing javascript 
+ * Composer.js is an MVC framework for creating and organizing javascript
  * applications. For documentation, please visit:
  *
  *     http://lyonbros.github.com/composer.js/
- * 
+ *
  * -----------------------------------------------------------------------------
  *
  * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
- * 
- * Licensed under The MIT License. 
+ *
+ * Licensed under The MIT License.
  * Redistributions of files must retain the above copyright notice.
  */
 (function() {
 	var Composer	=	{};
-	var global	=	typeof(global) != 'undefined' ? global : 
+	var global	=	typeof(global) != 'undefined' ? global :
 						typeof(window) != 'undefined' ? window :
 							this;
 
@@ -22,19 +22,22 @@
 	 */
 	Composer.sync	=	function(method, model, options) { return options.success(); };
 
-	// a closure that returns incrementing integers. these will be unique across 
+    // an option to supress those annoying warnings when overriding initialize and extend methods
+    Composer.supress_warnings = false;
+
+	// a closure that returns incrementing integers. these will be unique across
 	// the entire app since only one counter is instantiated
 	Composer.cid	=	(function() {
 		var counter	=	1;
 		return function(inc) { return 'c'+counter++; };
 	})();
-	
+
 	/**
 	 * The events class provides bindings to objects (Models and Collections,
 	 * mainly) and allows triggering of those events. For instance, a controller
 	 * can bind its "removeItemFromView" function to its model's "destroy" event.
 	 * Now when that model is destroyed, the destroyer doesn't have to remember to
-	 * also trigger the "removeItemFromView" function, but it will happen 
+	 * also trigger the "removeItemFromView" function, but it will happen
 	 * automatically as a result of the binding.
 	 *
 	 * Note that this class is meant to be extended and doesn't provide much use on
@@ -43,7 +46,7 @@
 	 * Certain events are used by the framework itself:
 	 *   Models:
 	 *     "change" - called when a model's values are changed vie its set()
-	 *       function. 
+	 *       function.
 	 *     "change:[key]" - called when [key] is changed under model's data. For
 	 *       instance, if you did :
 	 *         model.bind("change:name", myfn);
@@ -54,20 +57,20 @@
 	 *   Collections:
 	 *     "add" - Called when a model is added to a collection via
 	 *       collection.add()
-	 *     "clear" - Called when all models are cleared out of a via 
+	 *     "clear" - Called when all models are cleared out of a via
 	 *       collection.clear()
 	 *     "reset" - Called when collection is reset with new model data via
 	 *       collection.reset()
 	 *     "remove" - Called when collection.remove() is used to remove a model
 	 *       from the collection
 	 *   Controllers:
-	 *     "release" - Called when controller.release() is called to remove the 
+	 *     "release" - Called when controller.release() is called to remove the
 	 *       controller from the view.
 	 *
 	 * Note that the "all" event will bubble up from model to collection...when a
 	 * model is added to a collection via collection.add(), the collection binds
 	 * an 'all' event to that model so that any events that happen on that model
-	 * will be triggered in the collection as well. This makes it easy for a 
+	 * will be triggered in the collection as well. This makes it easy for a
 	 * controller to monitor changes on collections of items instead of each item
 	 * individually.
 	 */
@@ -82,7 +85,7 @@
 		 *
 		 * Example: mymodel.bind("change", this.render.bind(this));
 		 *
-		 * Whenever mymodel is changed in any way, the "render" function for the 
+		 * Whenever mymodel is changed in any way, the "render" function for the
 		 * current object (probably a controller in this instance) will be called.
 		 */
 		bind: function(ev, callback, callback_name)
@@ -202,7 +205,7 @@
 	var Base	=	new Class({
 		/**
 		 * fire_event dtermines whether or not an event should fire. given an event
-		 * name, the passed-in options, and any arbitrary number of arguments, 
+		 * name, the passed-in options, and any arbitrary number of arguments,
 		 * determine whether or not the given event should be triggered.
 		 */
 		fire_event: function()
@@ -230,7 +233,7 @@
 				return this.trigger.apply(this, args);
 			}
 			else if(
-				options.silent && 
+				options.silent &&
 				((typeof(options.silent) == 'string' && options.silent != evname) ||
 				 (options.silent.contains && !options.silent.contains(evname)))
 			)
@@ -243,14 +246,14 @@
 	});
 	/**
 	 * allows one object to extend another. since controllers, models, and
-	 * collections all do this differently, it is up to each to have their own 
+	 * collections all do this differently, it is up to each to have their own
 	 * extend function and call this one for validation.
 	 */
 	Base.extend	=	function(obj, base)
 	{
 		obj || (obj = {});
 		base || (base = null);
-		if(obj.initialize)
+		if(obj.initialize && !Composer.supress_warnings)
 		{
 			var str	=	'You are creating a Composer object with an "initialize" method/' +
 						'parameter, which is reserved. Unless you know what you\'re doing ' +
@@ -262,7 +265,7 @@
 			console.log('---------------------------');
 		}
 
-		if(obj.extend)
+		if(obj.extend && !Composer.supress_warnings)
 		{
 			var str	=	'You are creating a Composer object with an "extend" method/' +
 						'parameter, which is reserved. Unless you know what you\'re doing ' +
@@ -308,7 +311,7 @@
 		_changed: false,
 
 		// reference to the collections the model is in (yes, multiple). urls are
-		// pulled from the collection via a "priority" parameter. the highest 
+		// pulled from the collection via a "priority" parameter. the highest
 		// priority collection will have its url passed to the model's sync function.
 		collections: [],
 
@@ -412,7 +415,7 @@
 		{
 			options || (options = {});
 
-			if(!options.silent && !this.perform_validation(data, options)) return false;			
+			if(!options.silent && !this.perform_validation(data, options)) return false;
 
 			var already_changing	=	this.changing;
 			this.changing			=	true;
@@ -445,7 +448,7 @@
 
 			var obj		=	{};
 			obj[key]	=	void(0);
-			if(!options.silent && !this.perform_validation(obj, options)) return false;			
+			if(!options.silent && !this.perform_validation(obj, options)) return false;
 
 			delete this.data[key];
 			this._changed	=	true;
@@ -465,7 +468,7 @@
 			var old		=	this.data;
 			var obj		=	{};
 			for(key in old) obj[key] = void(0);
-			if(!options.silent && !this.perform_validation(obj, options)) return false;			
+			if(!options.silent && !this.perform_validation(obj, options)) return false;
 
 			this.data	=	{};
 			if(!options.silent)
@@ -485,7 +488,7 @@
 		},
 
 		/**
-		 * fetch this model from the server, via its id. 
+		 * fetch this model from the server, via its id.
 		 */
 		fetch: function(options)
 		{
@@ -622,7 +625,7 @@
 		},
 
 		/**
-		 * loops over the collections this model belongs to and gets the highest 
+		 * loops over the collections this model belongs to and gets the highest
 		 * priority one. makes for easier url extraction during syncing.
 		 */
 		highest_priority_collection: function()
@@ -641,7 +644,7 @@
 				// we are overriding the url generation.
 				return this.url;
 
-			// pull from either overridden "base_url" param, or just use the highest 
+			// pull from either overridden "base_url" param, or just use the highest
 			// priority collection's url for the base.
 			if (this.base_url)
 				var base_url = this.base_url;
@@ -698,7 +701,7 @@
 		// addition to collection
 		sortfn: null,
 
-		// the base url for this collection. if you update a model, the default url 
+		// the base url for this collection. if you update a model, the default url
 		// sent to the sync function would be PUT /[collection url]/[model id].
 		url: '/mycollection',
 
@@ -771,12 +774,12 @@
 			{
 				return Object.each(data, function(model) { this.add(model, options); }, this);
 			}
-			
+
 			options || (options = {});
 
 			// if we are passing raw data, create a new model from data
 			var model	=	data.__is_model ? data : new this.model(data, options);
-			
+
 			// reference this collection to the model
 			if(!model.collections.contains(this))
 			{
@@ -815,7 +818,7 @@
 			{
 				return Object.each(model, function(m) { this.remove(m); }, this);
 			}
-			
+
 			options || (options = {});
 
 			// remove this collection's reference(s) from the model
@@ -892,7 +895,7 @@
 		},
 
 		/**
-		 * reset the collection with all new data. it can also be appended to the 
+		 * reset the collection with all new data. it can also be appended to the
 		 * current set of models if specified in the options (via "append").
 		 */
 		reset: function(data, options)
@@ -985,7 +988,7 @@
 
 		/**
 		 * Find the first model that satisfies the callback. An optional sort function
-		 * can be passed in to order the results of the find, which uses the usual 
+		 * can be passed in to order the results of the find, which uses the usual
 		 * fn(a,b){return (-1|0|1);} syntax.
 		 */
 		find: function(callback, sortfn)
@@ -1011,7 +1014,7 @@
 		},
 
 		/**
-		 * given a callback, returns whether or not at least one of the models 
+		 * given a callback, returns whether or not at least one of the models
 		 * satisfies that callback.
 		 */
 		exists: function(callback)
@@ -1114,7 +1117,7 @@
 
 			if (result.length)
 				return result[0];
-			
+
 			return null;
 		},
 
@@ -1207,7 +1210,7 @@
 
 
 	/**
-	 * The controller class sits between views and your models/collections. 
+	 * The controller class sits between views and your models/collections.
 	 * Controllers bind events to your data objects and update views when the data
 	 * changes. Controllers are also responsible for rendering views.
 	 */
@@ -1221,7 +1224,7 @@
 		// if this is set to a DOM *selector*, then this.el will be ignored and
 		// instantiated as a new Element(this.tag), then injected into the element
 		// referened by the this.inject selector. this allows you to inject
-		// controllers into the DOM 
+		// controllers into the DOM
 		inject: false,
 
 		// don't worry about it
@@ -1248,15 +1251,15 @@
 			{
 				this[x]	=	params[x];
 			}
-			
+
 			// make sure we have an el
 			this._ensure_el();
-			
+
 			if(this.inject)
 			{
 				this.attach(options);
 			}
-			
+
 			if(this.className)
 			{
 				this.el.addClass(this.className);
@@ -1281,7 +1284,7 @@
 
 		/**
 		 * replace this.el's html with the given test, also refresh the controllers
-		 * elements. 
+		 * elements.
 		 */
 		html: function(obj)
 		{
@@ -1311,7 +1314,7 @@
 
 			// make sure we have an el
 			this._ensure_el();
-			
+
 			var container	=	document.getElement(this.inject);
 			if(!container)
 			{
@@ -1321,7 +1324,7 @@
 			if(options.clean_injection) container.set('html', '');
 			this.el.inject(container);
 		},
-		
+
 		/**
 		 * make sure el is defined as an HTML element
 		 */
@@ -1385,7 +1388,7 @@
 		},
 
 		/**
-		 * set up the events (by delegation) to this controller (events are stored 
+		 * set up the events (by delegation) to this controller (events are stored
 		 * under this.events).
 		 */
 		delegate_events: function()
@@ -1456,7 +1459,7 @@
 	/**
 	 * The Router class is a utility that helps in the routing of requests to
 	 * certain parts of your application. It works either by history.pushState
-	 * (which is highly recommended) or by falling back onto hashbang url 
+	 * (which is highly recommended) or by falling back onto hashbang url
 	 * support (not recommended).
 	 *
 	 * Note that if you do want to use pushState, you have to include History.js
@@ -1508,7 +1511,7 @@
 			{
 				// load the initial hash value
 				var hash	=	this.cur_path();
-				
+
 				// if redirect_initial is true, then whatever page a user lands on, redirect
 				// them to the hash version, ie
 				//
@@ -1524,7 +1527,7 @@
 				}
 
 				// SUCK ON THAT, HISTORY.JS!!!!
-				// NOTE: this fixes a hashchange double-firing in IE, which 
+				// NOTE: this fixes a hashchange double-firing in IE, which
 				// causes some terrible, horrible, no-good, very bad issues in
 				// more complex controllers.
 				delete Element.NativeEvents.hashchange;
@@ -1577,7 +1580,7 @@
 		},
 
 		/**
-		 * wrapper around the routing functionality. basically, instead of doing a 
+		 * wrapper around the routing functionality. basically, instead of doing a
 		 *   window.location = '/my/route';
 		 * you can do
 		 *   router.route('/my/route');
@@ -1645,7 +1648,7 @@
 			var obj	=	route[0];
 			var action	=	route[1];
 			if (typeof(obj) != 'object') {
-				if(!global[obj]) return this.options.on_failure({url: url, route: route, handler_exists: false, action_exists: false}); 
+				if(!global[obj]) return this.options.on_failure({url: url, route: route, handler_exists: false, action_exists: false});
 				var obj		=	global[obj];
 			}
 			if(!obj[action] || typeof(obj[action]) != 'function') return this.options.on_failure({url: url, route: route, handler_exists: true, action_exists: false});
@@ -1702,7 +1705,7 @@
 				// no need to reload
 				return false;
 			}
-			
+
 			this.last_path	=	path;
 			this.trigger('route', path);
 		},
@@ -1788,11 +1791,11 @@
 
 	license: MIT-style
 
-	authors: 
+	authors:
 	- sdf1981cgn
 	- Greggory Hernandez
 
-	requires: 
+	requires:
 	- core/1.2.4: '*'
 
 	provides: [Element.Events.hashchange]
@@ -1848,7 +1851,7 @@
 	};
 
 	// Composer equality function. It replaces _.eq, which wasn't able to tell
-	// non-equality between {key1: 3} and {key1: 3, key2: 5} (said they were 
+	// non-equality between {key1: 3} and {key1: 3, key2: 5} (said they were
 	// equal). This was causing some events to not fire in Composer, prompting
 	// me to write our own equality function. It might have just been the release
 	// we were using, but I'm too lazy to go in and re-update _.eq to not have
