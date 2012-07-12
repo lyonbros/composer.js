@@ -1707,6 +1707,7 @@
 			}
 
 			this.last_path	=	path;
+			this.trigger('preroute', path);
 			this.trigger('route', path);
 		},
 
