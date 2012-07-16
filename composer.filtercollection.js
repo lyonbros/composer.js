@@ -106,11 +106,13 @@
 			if(this.limit) this._models.splice(this.limit);
 			if(options.diff_events)
 			{
-				old_models.diff(this._models).each(function(model) {
+				var arrdiff	=	function(arr1, arr2) { return arr1.filter(function(el) { return !arr2.contains(el); }); };
+
+				arrdiff(old_models, this._models).each(function(model) {
 					this.fire_event('remove', options, model);
 				}, this);
 
-				this._models.diff(old_models).each(function(model) {
+				arrdiff(this._models, old_models).each(function(model) {
 					this.fire_event('add', options, model);
 				}, this);
 			}
