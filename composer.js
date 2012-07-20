@@ -1479,7 +1479,7 @@
 			enable_cb: function() { return true; },
 			on_failure: function() {},
 			hash_fallback: true,
-			process_querystring: true
+			process_querystring: false
 		},
 
 		/**
