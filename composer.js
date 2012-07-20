@@ -1478,7 +1478,8 @@
 			suppress_initial_route: false,
 			enable_cb: function() { return true; },
 			on_failure: function() {},
-			hash_fallback: true
+			hash_fallback: true,
+			process_querystring: true
 		},
 
 		/**
@@ -1697,6 +1698,11 @@
 		{
 			if(path && path.stop != undefined) path = false;
 			path || (path = this.cur_path());
+
+			// remove querystring from the url if we have set the Router to
+			// ignore it
+			if(!this.options.process_querystring) path = path.replace(/\?.*/, '');
+
 			force	=	!!force;
 
 			// remove the motherfucking ! at the beginning
