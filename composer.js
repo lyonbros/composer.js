@@ -1611,7 +1611,14 @@
 			{
 				if(History.enabled)
 				{
-					History.pushState(options.state, '', href);
+					if(options.replace_state)
+					{
+						History.replaceState(options.state, '', href);
+					}
+					else
+					{
+						History.pushState(options.state, '', href);
+					}
 				}
 				else if(this.options.hash_fallback)
 				{
