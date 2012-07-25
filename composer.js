@@ -1768,6 +1768,8 @@
 			// so high up the DOM chain. this means if a composer event wants to
 			// override this action, it can just call event.stop().
 			$(document.body).addEvent('click:relay('+selector+')', function(e) {
+				if(e.control || e.shift || e.alt) return;
+
 				var a		=	next_tag_up('a', e.target);
 				var button	=	typeof(e.button) != 'undefined' ? e.button : e.event.button;
 
