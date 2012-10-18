@@ -784,6 +784,7 @@
 			if(!model.collections.contains(this))
 			{
 				model.collections.push(this);
+				options.is_new	=	true;
 			}
 
 			if(this.sortfn)
