@@ -1723,8 +1723,21 @@
 			// we still want to take QS into account when comparing URLs.
 			if(!this.options.process_querystring) path = path.replace(/\?.*/, '');
 
+			// allow URL to be modifyable within the "preroute" callback, ie
+			// mimick mutable strings, kind of. this affords an opportunity for
+			// a preroute callback to "rewrite" the URL such that the address
+			// bar stays the same, but the actual route loaded is for the
+			// new, rewritten URL.
+			path			=	new String(path);
+			path.rewrite	=	function(str) {
+				this._string_value	=	str;
+			}.bind(path);
+			path.rewrite(null);
 			this.trigger('preroute', path);
-			this.trigger('route', path);
+			// grab rewritten url, if any
+			if(path._string_value) path = path._string_value;
+
+			this.trigger('route', path.toString());
 		},
 
 		/**
