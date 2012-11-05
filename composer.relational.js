@@ -109,7 +109,7 @@
 					var d	=	this._get_key(data, k);
 					if(typeof(d) == 'undefined') return;
 
-					var obj	=	this._create_obj(relation, k, {data: d});
+					var obj	=	this._create_obj(relation, k, Object.merge({}, options, {data: d}));
 				}, this);
 			}
 
@@ -163,6 +163,8 @@
 		_create_obj: function(relation, obj_key, options)
 		{
 			options || (options = {});
+			var _data	=	options.data;
+			delete options.data;
 
 			var obj	=	this._get_key(this.relation_data, obj_key);
 			switch(relation.type)
@@ -170,7 +172,7 @@
 			case Composer.HasOne:
 				obj || (obj = new relation.model());
 				if(options.set_parent) this.set_parent(this, obj);	// NOTE: happens BEFORE setting data
-				if(options.data) obj.set(options.data);
+				if(_data) obj.set(_data);
 				break;
 			case Composer.HasMany:
 				if(!obj)
@@ -185,7 +187,7 @@
 					}
 				}
 				if(options.set_parent) this.set_parent(this, obj);	// NOTE: happens BEFORE setting data
-				if(options.data) obj.reset(options.data);
+				if(_data) obj.reset(_data, options);
 				break;
 			}
 
