@@ -1472,6 +1472,7 @@
 		Implements: [Options, Events],
 
 		last_path:	false,
+		_last_url:	null,
 		routes:		{},
 
 		options: {
@@ -1663,6 +1664,7 @@
 			if(!obj[action] || typeof(obj[action]) != 'function') return this.options.on_failure({url: url, route: route, handler_exists: true, action_exists: false});
 			var args	=	match;
 			args.shift();
+			this._last_url	=	url;	// save the last successfully routed url
 			obj[action].apply(obj, args);
 		},
 
@@ -1675,10 +1677,11 @@
 			var url		=	'/' + url.replace(/^!?\//g, '');
 			var route	=	false;
 			var match	=	[];
+			var regex	=	null;
 			for(var re in routes)
 			{
-				var regex	=	'/^' + re.replace(/\//g, '\\\/') + '$/';
-				match		=	eval(regex).exec(url);
+				regex	=	'/^' + re.replace(/\//g, '\\\/') + '$/';
+				match	=	eval(regex).exec(url);
 				if(match)
 				{
 					route	=	routes[re];
@@ -1687,7 +1690,7 @@
 			}
 			if(!route) return false;
 
-			return {route: route, args: match};
+			return {route: route, args: match, regex: regex};
 		},
 
 		/**
@@ -1738,6 +1741,15 @@
 			if(path._string_value) path = path._string_value;
 
 			this.trigger('route', path.toString());
+		},
+
+		/**
+		 * Returns the full, last successfully routed URL that the Router found
+		 * a match for.
+		 */
+		last_url: function()
+		{
+			return this._last_url;
 		},
 
 		/**
