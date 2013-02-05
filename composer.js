@@ -863,6 +863,7 @@
 
 				// replace the data in the existing model with the new model's
 				existing.set(model.toJSON(), Object.merge({}, options, {silent: true, upsert: true}));
+				this.fire_event('upsert', options, existing, options);
 
 				return existing;
 			}
