@@ -332,15 +332,18 @@
 		initialize: function(data, options)
 		{
 			data || (data = {});
+			var _data	=	{};
 
-			// merge the defaults into the data
-			data	=	Object.merge({}, Object.clone(this.defaults), data);
+			// merge in the defaults/data
+			var merge_fn = function(v, k) { _data[k] = v; };
+			Object.each(Object.clone(this.defaults), merge_fn);
+			Object.each(data, merge_fn);
 
 			// assign the unique app id
 			this._cid	=	Composer.cid();
 
 			// set the data into the model (but don't trigger any events)
-			this.set(data, {silent: true});
+			this.set(_data, options);
 
 			// call the init fn
 			this.init(options);
