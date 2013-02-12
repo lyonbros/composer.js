@@ -109,7 +109,9 @@
 					var d	=	this._get_key(data, k);
 					if(typeof(d) == 'undefined') return;
 
-					var obj	=	this._create_obj(relation, k, Object.merge({}, options, {data: d}));
+					var options_copy	=	Object.clone(options);
+					options_copy.data	=	d;
+					var obj	=	this._create_obj(relation, k, options_copy);
 				}, this);
 			}
 
