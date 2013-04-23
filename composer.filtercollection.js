@@ -29,6 +29,11 @@
 	var FilterCollection	=	new Class({
 		Extends: Composer.Collection,
 
+		/**
+		 * Track this object's type. Useful for debugging, mainly
+		 */
+		__composer_type: 'filtercollection',
+
 		master: null,
 		filter: null,
 		transform: null,
