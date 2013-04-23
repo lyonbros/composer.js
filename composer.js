@@ -966,6 +966,8 @@
 					return i - 1;
 				}
 			}
+			var index = this._models.indexOf(model);
+			if(index == this._models.length - 1) return index;
 			return this._models.length;
 		},
 
