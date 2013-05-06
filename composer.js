@@ -951,6 +951,8 @@
 			if(data == undefined) return;
 			if(typeOf(data) != 'array') data = [data];
 
+			data = Array.clone(data);
+
 			if(!options.append) this.clear();
 			if(data.length > 0)
 			{
