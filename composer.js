@@ -824,7 +824,7 @@
 			}
 
 			// listen to the model's events so we can propogate them
-			model.bind('all', this._model_event.bind(this));
+			model.bind('all', this._model_event.bind(this), 'collection:'+this._cid+':listen:model:all');
 
 			this.fire_event('add', options, model, this, options);
 
@@ -1245,7 +1245,7 @@
 			model.collections.erase(this);
 
 			// don't listen to this model anymore
-			model.unbind('all', this._model_event.bind(this));
+			model.unbind('all', 'collection:'+this._cid+':listen:model:all');
 		},
 
 		/**
