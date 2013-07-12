@@ -1149,9 +1149,16 @@
 		 * Filter this collection's models by the given callback. Works just
 		 * like Array.filter in JS.
 		 */
-		filter: function(callback)
+		filter: function(callback, bind)
 		{
-			return this._models.filter(callback);
+			if(bind)
+			{
+				return this._models.filter(callback, bind);
+			}
+			else
+			{
+				return this._models.filter(callback);
+			}
 		},
 
 		/**
