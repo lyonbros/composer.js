@@ -174,7 +174,8 @@
 				else if(cur_index != new_index)
 				{
 					// sort order changed
-					this.sort(options);
+					this.sort(Object.merge({}, options, {silent: true}));
+					this.fire_event('sort', options);
 				}
 			}
 
