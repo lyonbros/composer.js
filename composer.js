@@ -1689,6 +1689,17 @@
 		},
 
 		/**
+		 * Get a value (by key) out of the current query string
+		 */
+		get_param: function(key)
+		{
+			key			=	key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			var regex	=	new RegExp("[\\?&]" + key + "=([^&#]*)");
+			var results	=	regex.exec(location.search);
+			return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		},
+
+		/**
 		 * wrapper around the routing functionality. basically, instead of doing a
 		 *   window.location = '/my/route';
 		 * you can do
