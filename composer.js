@@ -179,20 +179,33 @@
 				return this;
 			}
 
-			if(typeof(callback) == 'string')
+			if(typeof(callback) == 'undefined')
 			{
-				// load the function we assigned the name to and assign it to "callback",
-				// also removing the named reference after we're done.
-				callback	=	ev+':'+callback;
-				var fn		=	this._named_events[callback];
-				delete this._named_events[callback];
-				var callback	=	fn;
+				// no callback specified, remove all events of the given type
+				Object.each(this._named_events, function(cb, ev_key) {
+					// clear out all named events for this event type
+					var match	=	ev_key.substr(0, ev.length + 1);
+					if(ev+':' != match) return;
+					delete this._named_events[ev_key];
+				}, this);
+				// empty out the event type
+				this._events[ev].empty();
 			}
+			else
+			{
+				if(typeof(callback) == 'string')
+				{
+					// load the function we assigned the name to and assign it to "callback",
+					// also removing the named reference after we're done.
+					callback	=	ev+':'+callback;
+					var fn		=	this._named_events[callback];
+					delete this._named_events[callback];
+					var callback	=	fn;
+				}
 
-			if(!callback) return this;
-
-			// remove all callback matches for the event type ev
-			this._events[ev].erase(callback);
+				// remove all callback matches for the event type ev
+				this._events[ev].erase(callback);
+			}
 
 			return this;
 		}
