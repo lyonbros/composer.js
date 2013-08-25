@@ -2023,12 +2023,7 @@
 	// do a shallow clone of an array
 	var shallow_array_clone	=	function(from)
 	{
-		var to	=	new Array();
-		for(i in from)
-		{
-			to[i]	=	from[i];
-		}
-		return to;
+		return from.slice(0);
 	};
 
 	// Composer equality function. It replaces _.eq, which wasn't able to tell
