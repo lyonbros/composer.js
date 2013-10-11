@@ -196,7 +196,6 @@
 			{
 				forward_args.shift();
 				var args	=	['change', options].append(forward_args);
-				console.log('FC: change: args', args);
 				this.fire_event.apply(this, args);
 			}
 			else
