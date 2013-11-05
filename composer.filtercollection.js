@@ -139,7 +139,7 @@
 			options || (options = {});
 
 			// see if this model even belongs to this collection
-			if(model && !this.filter(model, this)) return false;
+			if(model && !this.models().contains(model) && !this.filter(model, this)) return false;
 
 			// track the current number of items and reloda the data
 			var num_items	=	this._models.length;
