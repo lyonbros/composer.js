@@ -1796,7 +1796,7 @@
 				}
 				else if(this.options.hash_fallback)
 				{
-					global.location	=	'/#!'+href;
+					global.location	=	global.location.pathname+'#!'+href;
 				}
 				else
 				{
