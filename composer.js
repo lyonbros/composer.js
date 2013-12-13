@@ -1674,7 +1674,8 @@
 			else if(this.options.hash_fallback)
 			{
 				// load the initial hash value
-				var hash	=	this.cur_path();
+				var path	=	window.location.pathname;
+				var hash	=	path == '' || path == '/' ? this.cur_path() : path;
 
 				// if redirect_initial is true, then whatever page a user lands on, redirect
 				// them to the hash version, ie
