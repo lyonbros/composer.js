@@ -926,7 +926,7 @@
 		{
 			options || (options = {});
 
-			var existing	=	this.find_by_id(model.id());
+			var existing	=	this.find_by_id(model.id(), options);
 			if(existing)
 			{
 				// reposition the model if necessary
