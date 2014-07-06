@@ -98,9 +98,15 @@
 	var remove_event = (function() {
 		if(has_jquery)
 		{
+			return function(el, ev, fn) {
+				jQuery(el).off(ev, fn);
+			};
 		}
 		else if(document.body && document.body.removeEvent)
 		{
+			return function(el, ev, fn) {
+				el.removeEvent(ev, fn);
+			};
 		}
 		else
 		{
