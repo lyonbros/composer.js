@@ -1,9 +1,8 @@
 /**
- * NOTE: FilterCollection is considered alpha/experimental and although this
- * most likely won't happen, it may be subject to substantial API changes. Use/
- * depend on at your own risk!
+ * filtercollection.js
  *
- * It's also completely undocumented...good luck!
+ * Provides a collection type that utilizes automatic filtering to create what
+ * are essentially materialized views.
  * -----------------------------------------------------------------------------
  *
  * Composer.js is an MVC framework for creating and organizing javascript 
@@ -20,6 +19,7 @@
  */
 (function() {
 	"use strict";
+
 	/**
 	 * Collection that exists solely to be a "materialized view" of another
 	 * "master" collection. Whenever items are added/removed from the master
@@ -27,9 +27,7 @@
 	 * This is useful for keeping many collections in sync with one master list
 	 * without having to manually update them all.
 	 */
-	var FilterCollection	=	new Class({
-		Extends: Composer.Collection,
-
+	var FilterCollection	=	Composer.Collection.extend({
 		/**
 		 * Track this object's type. Useful for debugging, mainly
 		 */
@@ -350,14 +348,6 @@
 			this.trigger.apply(this, args);
 		}
 	});
-	FilterCollection.extend	=	function(obj, base)
-	{
-		obj || (obj = {});
-		base || (base = this);
-		obj	=	Composer.Base.extend.call(this, obj, base);
-		return this._do_extend(obj, base);
-	};
 
-	Composer.FilterCollection	=	FilterCollection;
-	Composer._export(['FilterCollection']);
+	Composer.export({ FilterCollection: FilterCollection });
 })();

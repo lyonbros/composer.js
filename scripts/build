@@ -1,0 +1,23 @@
+#!/bin/bash
+
+BUILDLIST=(
+	util.js
+	class.js
+	event.js
+	base.js
+	model.js
+	collection.js
+	adapter.js
+	controller.js
+	router.js
+);
+
+echo -n '' > composer.js
+for file in "${BUILDLIST[@]}"; do
+	cat src/$file >> composer.js
+done
+
+cp src/relational.js composer.relational.js
+cp src/filtercollection.js composer.filtercollection.js
+cp src/keyboard.js composer.keyboard.js
+

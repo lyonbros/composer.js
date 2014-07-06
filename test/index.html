@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Composer.js tests</title>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta http-equiv="Content-language" content="en">
+		<link rel="stylesheet" href="jasmine-2.0.0/jasmine.css">
+		<script src="slick.js"></script>
+		<script>
+			function fire_click(node)
+			{
+				if(document.createEvent)
+				{
+					var evt = document.createEvent('MouseEvents');
+					evt.initEvent('click', true, false);
+					node.dispatchEvent(evt);	
+				}
+				else if(document.createEventObject)
+				{
+					node.fireEvent('onclick');	
+				}
+				else if(typeof node.onclick == 'function')
+				{
+					node.onclick();	
+				}
+			}
+		</script>
+		<script src="../src/util.js"></script>
+		<script src="../src/class.js"></script>
+		<script src="../src/event.js"></script>
+		<script src="../src/base.js"></script>
+		<script src="../src/model.js"></script>
+		<script src="../src/collection.js"></script>
+		<script src="../src/adapter.js"></script>
+		<script src="../src/controller.js"></script>
+		<script src="../src/router.js"></script>
+		<script src="../src/relational.js"></script>
+		<script src="../src/filtercollection.js"></script>
+		<script src="../src/keyboard.js"></script>
+		<script src="jasmine-2.0.0/jasmine.js"></script>
+		<script src="jasmine-2.0.0/jasmine-html.js"></script>
+		<script src="jasmine-2.0.0/boot.js"></script>
+		<script src="spec.util.js"></script>
+		<script src="spec.class.js"></script>
+		<script src="spec.event.js"></script>
+		<script src="spec.model.js"></script>
+		<script src="spec.collection.js"></script>
+		<script src="spec.controller.js"></script>
+		<script src="spec.router.js"></script>
+		<script src="spec.relational.js"></script>
+		<script src="spec.filtercollection.js"></script>
+		<script src="spec.keyboard.js"></script>
+	</head>
+	<body>
+		<div id="test"></div>
+	</body>
+</html>

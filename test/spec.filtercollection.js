@@ -1,0 +1,3 @@
+describe('Composer FilterCollection', function() {
+});
+

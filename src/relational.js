@@ -1,9 +1,7 @@
 /**
- * NOTE: RelationalModel is considered alpha/experimental and although this most
- * likely won't happen, it may be subject to substantial API changes. Use/depend
- * on at your own risk!
+ * relational.js
  *
- * It's also completely undocumented...good luck!
+ * An extension of the Model to allow hierarchical data structures.
  * -----------------------------------------------------------------------------
  *
  * Composer.js is an MVC framework for creating and organizing javascript 
@@ -20,20 +18,8 @@
  */
 (function() {
 	"use strict";
-	var global	=	typeof(global) != 'undefined' ? global :
-						typeof(window) != 'undefined' ? window : this;
-	var Composer	=	global.Composer;
 
-	// set up relationship types
-	// TODO: deprecate these...
-	Composer.HasOne		=	1;
-	Composer.HasMany	=	2;
-
-	// very simple wrapper around Model to support relationships between data.
-	// TODO: support reverse relationships
-	var RelationalModel	=	new Class({
-		Extends: Composer.Model,
-
+	var RelationalModel	=	Composer.Model.extend({
 		relations: false,
 		relation_data: {},
 
@@ -48,7 +34,7 @@
 			if(this.relations)
 			{
 				// cache the model/collection strings to real objects
-				Object.each(this.relations, function(relation, k) {
+				Composer.object.each(this.relations, function(relation, k) {
 					// for each relation, make sure strings are referenced back to the catual
 					// objects they refer to.
 					if(relation.model && typeof(relation.model) == 'string')
@@ -100,7 +86,7 @@
 			// modify the underlying data to match the data of the relational models
 			if(!this.skip_relational_serialize)
 			{
-				Object.each(this.relations, function(relation, k) {
+				Composer.object.each(this.relations, function(relation, k) {
 					var obj	=	this._get_key(this.relation_data, k);
 					if(obj) this._set_key(this.data, k, obj.toJSON());
 				}, this);
@@ -110,53 +96,17 @@
 			return this.parent();
 		},
 
-		toJSONAsync: function(finish_cb)
-		{
-			var result			=	{};
-			var num_relations	=	0;
-			var num_results		=	0;
-			Object.each(this.relations, function(relation, k) {
-				num_relations++;
-				var obj	=	this._get_key(this.relation_data, k);
-				if(obj)
-				{
-					obj.toJSONAsync(function(data) {
-						// like RelationalModel.toJSON, works by populating this.data
-						// then calling toJSON
-						this._set_key(this.data, k, data);
-						num_results++;
-						if(num_results >= num_relations)
-						{
-							(function() {
-								// disable relational serializing (otherwise
-								// we'll just end up doing a sync serialization)
-								this.skip_relational_serialize	=	true;
-								var data	=	this.toJSON();
-								this.skip_relational_serialize	=	false;
-								finish_cb(data);
-							}).delay(0, this);
-						}
-					}.bind(this));
-				}
-				else
-				{
-					// didn't get a real object, so don't count it
-					num_relations--;
-				}
-			}, this);
-		},
-
 		set: function(data, options)
 		{
 			options || (options = {});
 
 			if(this.relations && !options.skip_relational)
 			{
-				Object.each(this.relations, function(relation, k) {
+				Composer.object.each(this.relations, function(relation, k) {
 					var d	=	this._get_key(data, k);
 					if(typeof(d) == 'undefined') return;
 
-					var options_copy	=	Object.clone(options);
+					var options_copy	=	Composer.object.clone(options);
 					options_copy.data	=	d;
 					var obj	=	this._create_obj(relation, k, options_copy);
 				}, this);
@@ -228,14 +178,16 @@
 				// data passed is just a plain old object (or, at least, not a
 				// Composer object). set the data into the relation object.
 				var obj	=	this._get_key(this.relation_data, obj_key);
-				switch(relation.type)
+				var collection_or_model = (relation.collection || relation.filter_collection) ?
+											'collection' : 'model';
+				switch(collection_or_model)
 				{
-				case Composer.HasOne:
+				case 'model':
 					obj || (obj = new relation.model());
 					if(options.set_parent) this.set_parent(this, obj);	// NOTE: happens BEFORE setting data
 					if(_data) obj.set(_data);
 					break;
-				case Composer.HasMany:
+				case 'collection':
 					if(!obj)
 					{
 						if(relation.collection)
@@ -244,7 +196,7 @@
 						}
 						else if(relation.filter_collection)
 						{
-							obj	=	new relation.filter_collection(relation.master(), Object.merge({skip_initial_sync: true}, relation.options));
+							obj	=	new relation.filter_collection(relation.master(), Composer.object.merge({skip_initial_sync: true}, relation.options));
 						}
 					}
 					if(options.set_parent) this.set_parent(this, obj);	// NOTE: happens BEFORE setting data
@@ -314,27 +266,28 @@
 			return obj;
 		}
 	});
-	RelationalModel.extend	=	function(obj, base)
+
+	var _extend = RelationalModel.extend;
+	RelationalModel.extend = function(def, base)
 	{
-		obj || (obj = {});
 		base || (base = this);
+		var attr = base.prototype;
+		var relations = attr.relations;
 
-		// hijack _do_extend to not wrap our object in a class since we need to do
-		// more mods before this happens
-		var do_extend	=	this._do_extend;
-		this._do_extend	=	function(obj, base) { return obj; };
+		def.relations = Composer.object.merge({}, relations, def.relations);
 
-		// call Model.extend (which would normally call Base._do_extend)
-		obj	=	Composer.Base.extend.call(this, obj, base);
-
-		// extend the base object's relations
-		obj.relations	=	Object.merge(this.relations || {}, obj.relations);
-
-		// restore Base._do_extend and call it, finalizing our class
-		this._do_extend	=	do_extend;
-		return this._do_extend(obj, base);
+		var cls = _extend.call(base, def);
+		cls.extend = function(def)
+		{
+			return base.extend(def, cls);
+		};
+		return cls;
 	};
 
-	Composer.RelationalModel	=	RelationalModel;
-	Composer._export(['RelationalModel']);
+	Composer.export({
+		HasOne: -1,		// no longer used but needed for backwards compat
+		HasMany: -1,	// " "
+		RelationalModel: RelationalModel
+	});
 })();
+

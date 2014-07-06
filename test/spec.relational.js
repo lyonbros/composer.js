@@ -1,0 +1,76 @@
+describe('Composer RelationalModel', function() {
+	var BandMember = Composer.RelationalModel.extend({
+		relations: {
+			pet: {
+				model: Composer.Model
+			}
+		}
+	});
+	var BandMembers = Composer.Collection.extend({
+		model: BandMember,
+
+		play: function()
+		{
+			return 'music';
+		}
+	});
+	var Band = Composer.RelationalModel.extend({
+		relations: {
+			members: {
+				collection: BandMembers
+			}
+		}
+	});
+
+	var banddata = {
+		name: 'the way',
+		members: [
+			{name: 'barney', pet: {name: 'giraffee', type: 'giraffe'}},
+			{name: 'pervy stu', pet: {name: 'lucy', type: 'dog'}},
+			{name: 'judd', pet: {name: 'marty malt', type: 'cat'}}
+		]
+	};
+
+	it('is instantiated properly', function() {
+		var col = new Band(banddata);
+		expect(col.get('members') instanceof BandMembers).toBe(true);
+		expect(col.get('members').first() instanceof BandMember).toBe(true);
+		expect(col.get('members').first().get('pet') instanceof Composer.Model).toBe(true);
+		expect(col.get('members').first().get('name')).toBe('barney');
+		expect(col.get('members').first().get('pet').get('name')).toBe('giraffee');
+
+		var mapped = col.get('members').map(function(m) { return m.get('pet').get('type'); });
+		expect(mapped[0]).toBe('giraffe');
+		expect(mapped[1]).toBe('dog');
+		expect(mapped[2]).toBe('cat');
+	});
+
+	it('will serialize properly', function() {
+		var col = new Band(banddata);
+		var obj = col.toJSON();
+		expect(obj.name).toBe('the way');
+		expect(obj.members instanceof Array).toBe(true);
+		expect(obj.members[1].pet.name).toBe('lucy');
+	});
+
+	it('can bind/unbind relations', function() {
+		var col = new Band(banddata);
+		var add = 0;
+		var addfn = function() { add++; };
+		col.bind_relational('members', 'add', function() { add++; }, 'band:add:named');
+		col.bind_relational('members', 'add', addfn);
+
+		col.get('members').add({name: 'larry', pet: {name: 'racooney', type: 'dead raccoon'}});
+		col.get('members').add({name: 'jeffrey', pet: {name: 'kofi', type: 'shiba'}});
+
+		expect(add).toBe(4);
+
+		col.unbind_relational('members', 'add', 'band:add:named');
+		col.get('members').add({name: 'oh noo'});
+		expect(add).toBe(5);
+		col.unbind_relational('members', 'add', addfn);
+		col.get('members').add({name: 'and yet his son is a dunce'});
+		expect(add).toBe(5);
+	});
+});
+
