@@ -211,17 +211,12 @@
 
 				if(selector == '')
 				{
-					this.el.removeEventListener(evname, fn, false);
-					this.el.addEventListener(evname, fn, false);
+					Composer.remove_event(this.el, evname, fn);
+					Composer.add_event(this.el, evname, fn);
 				}
 				else
 				{
-					this.el.addEventListener(evname, function(ev) {
-						var target = ev.target || ev.srcElement;
-						if(ev.__composer_handled || !Composer.match(target, selector)) return false;
-						ev.__composer_handled = true;
-						fn(ev);
-					});
+					Composer.add_event(this.el, evname, fn, selector);
 				}
 			}
 		},
