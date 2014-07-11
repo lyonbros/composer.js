@@ -1,5 +1,7 @@
 describe('Composer Controller', function() {
 	var MyController = Composer.Controller.extend({
+		inject: '#test',
+
 		elements: {
 			'h1': 'title'
 		},
@@ -41,7 +43,7 @@ describe('Composer Controller', function() {
 		var con = new MyController();
 		var title = con.title;
 		expect(con.clicked).toBe(false);
-		fire_click(title);
+		Composer.fire_event(title, 'click');
 		expect(con.clicked).toBe(true);
 	});
 
@@ -72,8 +74,8 @@ describe('Composer Controller', function() {
 		expect(ext.events['click p']).toBeDefined();
 		expect(ext.events['click p.test']).toBeUndefined();
 
-		fire_click(ext.my_p);
-		fire_click(ext.my_p);
+		Composer.fire_event(ext.my_p, 'click');
+		Composer.fire_event(ext.my_p, 'click');
 		expect(ext.clicked_p).toBe(2);
 	});
 

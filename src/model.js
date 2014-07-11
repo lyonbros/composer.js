@@ -38,8 +38,6 @@
 		// NOTE: deprecated in favor of __composer_type
 		__is_model: true,
 
-		options: {},
-
 		// default values for the model, merged with the data passed in on CTOR
 		defaults: {},
 

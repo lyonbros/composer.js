@@ -30,6 +30,11 @@
 		__composer_type: 'base',
 
 		/**
+		 * Holds generic options for objects.
+		 * */
+		options: {},
+
+		/**
 		 * Every Composer object has an assigned unique id (regardless of the
 		 * object's actual app ID). It is stored here.
 		 */
@@ -41,6 +46,18 @@
 		cid: function()
 		{
 			return this._cid;
+		},
+
+		/**
+		 * Convenience function to set options easily
+		 */
+		set_options: function(options)
+		{
+			options || (options = {});
+
+			Object.keys(options).forEach(function(key) {
+				this.options[key] = options[key];
+			}.bind(this));
 		},
 
 		/**

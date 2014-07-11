@@ -20,7 +20,7 @@
 (function() {
 	"use strict";
 
-	var Keyboard	=	Composer.Base.extend({
+	var Keyboard = Composer.Base.extend({
 		// set to true to allow bindings based on meta keys
 		// (ie "?" would be 'S-/' (shift + /)
 		options: {
@@ -31,13 +31,11 @@
 
 		initialize: function(options)
 		{
-			Object.keys(options).forEach(function(key) {
-				this.optons[key] = options[key];
-			}.bind(this));
+			this.set_options(options);
 
 			// create a function bound to "this" and store it later so we can
 			// unbind it when we detach
-			this._dispatch	=	this.dispatch.bind(this);
+			this._dispatch = this.dispatch.bind(this);
 
 			// start listening for keyboard events
 			return this.attach();

@@ -16,8 +16,10 @@
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
  */
-(function() {
+(function(global, undefined) {
 	"use strict";
+
+	var global = this;
 
 	/**
 	 * The Router class is a utility that helps in the routing of requests to
@@ -44,8 +46,6 @@
 			redirect_initial: true,
 			suppress_initial_route: false,
 			enable_cb: function() { return true; },
-			on_failure: function() {},
-			hash_fallback: true,
 			process_querystring: false
 		},
 
@@ -56,81 +56,44 @@
 		 */
 		initialize: function(routes, options)
 		{
-			this.setOptions(options);
+			this.set_options(options);
 
 			this.routes = routes;
-			this.register_callback(this._do_route.bind(this));
+			this.bind('route', this._do_route.bind(this));
 
 			// in case History.js isn't loaded
 			if(!global.History) global.History = {enabled: false};
+			if(!History.enabled) throw 'History.js is *required* for proper router operation: https://github.com/browserstate/history.js';
 
-			if(History.enabled)
+			// set up our bindings
+			this.bind('statechange', this.state_change.bind(this));
+			this.bind_once('destroy', function() {
+				Object.keys(History.Adapter.handlers).forEach(function(key) {
+					delete History.Adapter.handlers[key];
+				});
+				delete global['onstatechange'];
+			});
+
+			History.Adapter.bind(global, 'statechange', function() {
+				this.trigger('statechange', this.cur_path());
+			}.bind(this));
+
+			if(!this.options.suppress_initial_route)
 			{
-				// bind our pushstate event
-				History.Adapter.bind(global, 'statechange', this.state_change.bind(this));
-
-				if(!this.options.suppress_initial_route)
-				{
-					// run the initial route
-					History.Adapter.trigger(global, 'statechange', [global.location.pathname]);
-				}
-			}
-			else if(this.options.hash_fallback)
-			{
-				// load the initial hash value
-				var path = window.location.pathname;
-				var hash = path == '' || path == '/' ? this.cur_path() : path;
-
-				// if redirect_initial is true, then whatever page a user lands on, redirect
-				// them to the hash version, ie
-				//
-				// gonorrhea.com/users/display/42
-				// becomes:
-				// gonorrhea.com/#!/users/display/42
-				//
-				// the routing system will pick this new hash up after the redirect and route
-				// it normally
-				if(this.options.redirect_initial && !(hash == '/' || hash == ''))
-				{
-					global.location = '/#!' + hash;
-				}
-
-				// SUCK ON THAT, HISTORY.JS!!!!
-				// NOTE: this fixes a hashchange double-firing in IE, which
-				// causes some terrible, horrible, no-good, very bad issues in
-				// more complex controllers.
-				delete Element.NativeEvents.hashchange;
-
-				// set up the hashchange event
-				global.addEvent('hashchange', this.state_change.bind(this));
-
-				if(!this.options.suppress_initial_route)
-				{
-					// run the initial route
-					global.fireEvent('hashchange', [hash]);
-				}
-			}
-			else if(!this.options.suppress_initial_route)
-			{
-				this._do_route(new String(global.location.pathname).toString());
+				// run the initial route
+				History.Adapter.trigger(global, 'statechange', [global.location.pathname]);
 			}
 		},
 
 		/**
-		 * add a callback that runs whenever the router "routes"
+		 * remove all router bindings and perform any cleanup. note that once
+		 * this is called, the router can no longer be used and a new one must
+		 * be created.
 		 */
-		register_callback: function(cb, name)
+		destroy: function()
 		{
-			name || (name = null);
-			return this.bind('route', cb, name);
-		},
-
-		/**
-		 * remove a router callback
-		 */
-		unregister_callback: function(cb)
-		{
-			return this.unbind('route', cb);
+			this.trigger('destroy');
+			this.unbind();
 		},
 
 		/**
@@ -138,14 +101,7 @@
 		 */
 		cur_path: function()
 		{
-			if(!History.enabled)
-			{
-				return '/' + new String(global.location.hash).toString().replace(/^[#!\/]+/, '');
-			}
-			else
-			{
-				return new String(global.location.pathname+global.location.search).toString();
-			}
+			return new String(global.location.pathname+global.location.search).toString();
 		},
 
 		/**
@@ -177,35 +133,17 @@
 			var old = this.cur_path();
 			if(old == href)
 			{
-				if(History.enabled)
-				{
-					History.Adapter.trigger(global, 'statechange', [href, true]);
-				}
-				else if(this.options.hash_fallback)
-				{
-					global.fireEvent('hashchange', [href, true]);
-				}
+				History.Adapter.trigger(global, 'statechange', [href, true]);
 			}
 			else
 			{
-				if(History.enabled)
+				if(options.replace_state)
 				{
-					if(options.replace_state)
-					{
-						History.replaceState(options.state, '', href);
-					}
-					else
-					{
-						History.pushState(options.state, '', href);
-					}
-				}
-				else if(this.options.hash_fallback)
-				{
-					global.location = '/#!'+href;
+					History.replaceState(options.state, '', href);
 				}
 				else
 				{
-					global.location = href;
+					History.pushState(options.state, '', href);
 				}
 			}
 		},
@@ -227,7 +165,10 @@
 			routes || (routes = this.routes);
 
 			var routematch = this.find_matching_route(url, routes);
-			if(!routematch) return this.options.on_failure({url: url, route: false, handler_exists: false, action_exists: false});
+			if(!routematch)
+			{
+				return this.trigger('fail', {url: url, route: false, handler_exists: false, action_exists: false});
+			}
 
 			var route = routematch.route;
 			var match = routematch.args;
@@ -235,10 +176,16 @@
 			var obj = route[0];
 			var action = route[1];
 			if (typeof(obj) != 'object') {
-				if(!global[obj]) return this.options.on_failure({url: url, route: route, handler_exists: false, action_exists: false});
+				if(!global[obj])
+				{
+					return this.trigger('fail', {url: url, route: route, handler_exists: false, action_exists: false});
+				}
 				var obj = global[obj];
 			}
-			if(!obj[action] || typeof(obj[action]) != 'function') return this.options.on_failure({url: url, route: route, handler_exists: true, action_exists: false});
+			if(!obj[action] || typeof(obj[action]) != 'function')
+			{
+				return this.trigger('fail', {url: url, route: route, handler_exists: true, action_exists: false});
+			}
 			var args = match;
 			args.shift();
 			this._last_url = url;	// save the last successfully routed url
@@ -271,16 +218,8 @@
 		},
 
 		/**
-		 * stupid function, not worth the space it takes up. oh well.
-		 */
-		setup_routes: function(routes)
-		{
-			this.routes = routes;
-		},
-
-		/**
-		 * attached to the pushState event. runs all the callback assigned with
-		 * register_callback().
+		 * attached to the pushState event. fires the `route` event on success
+		 * which in turns runs any attached handlers.
 		 */
 		state_change: function(path, force)
 		{
@@ -337,7 +276,42 @@
 		{
 			options || (options = {});
 
-			// build a selector that work for YOU.
+			// bind our heroic pushState to the <a> tags we specified. this
+			// hopefully be that LAST event called for any <a> tag because it's
+			// so high up the DOM chain. this means if a composer event wants to
+			// override this action, it can just call event.stop().
+			var route_link = function(e)
+			{
+				if(e.control || e.shift || e.alt) return;
+
+				var a = find_parent('a', e.target);
+				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
+
+				// don't trap links that are meant to open new windows, and don't
+				// trap middle mouse clicks (or anything more than left click)
+				if(a.target == '_blank' || button > 0) return;
+
+				var curhost = new String(global.location).replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1');
+				var linkhost = a.href.match(/^[a-z]+:\/\//) ? a.href.replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1') : curhost;
+				if(
+					curhost != linkhost ||
+					(typeof(options.do_state_change) == 'function' && !options.do_state_change(a))
+				)
+				{
+					return;
+				}
+
+				if(e) e.stop();
+
+				var href = a.href.replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
+				if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
+				href = '/'+href;
+
+				History.pushState(options.global_state, '', href);
+				return false;
+			};
+
+			// build a selector that works for YOU.
 			if(options.selector)
 			{
 				// specific selector......specified. use it.
@@ -358,61 +332,10 @@
 					var selector = 'a';
 				}
 			}
-
-			// convenience function, recursively searches up the DOM tree until
-			// it finds an element with tagname ==  tag.
-			var next_tag_up = function(tag, element)
-			{
-				return element.get('tag') == tag ? element : next_tag_up(tag, element.getParent());
-			};
-
-			// bind our heroic pushState to the <a> tags we specified. this
-			// hopefully be that LAST event called for any <a> tag because it's
-			// so high up the DOM chain. this means if a composer event wants to
-			// override this action, it can just call event.stop().
-			$(document.body).addEvent('click:relay('+selector+')', function(e) {
-				if(e.control || e.shift || e.alt) return;
-
-				var a = next_tag_up('a', e.target);
-				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
-
-				// don't trap links that are meant to open new windows, and don't
-				// trap middle mouse clicks (or anything more than left click)
-				if(a.target == '_blank' || button > 0) return;
-
-				var curhost = new String(global.location).replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1');
-				var linkhost = a.href.match(/^[a-z]+:\/\//) ? a.href.replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1') : curhost;
-				if(
-					curhost != linkhost ||
-					(typeof(options.do_state_change) == 'function' && !options.do_state_change(a))
-				)
-				{
-					return;
-				}
-
-				if(e) e.stop();
-
-				if(History.enabled)
-				{
-					var href = a.href.replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
-					if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
-					href = '/'+href;
-
-					History.pushState(options.global_state, '', href);
-					return false;
-				}
-				else
-				{
-					var href = a.href.replace(/^[a-z]+:\/\/.*?\//, '');
-					if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
-					href = '/#!/'+href;
-
-					global.location = href;
-				}
-			});
+			Composer.add_event(document.body, 'click', route_link, selector);
 		}
 	});
 
 	Composer.export({ Router: Router });
-})();
+}).apply((typeof exports != 'undefined') ? exports : this);
 
