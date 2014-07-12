@@ -19,6 +19,8 @@
 (function() {
 	"use strict";
 
+	var global = this;
+
 	/**
 	 * Collections hold lists of models and contain various helper functions for
 	 * finding and selecting subsets of model data. They are basically a wrapper
@@ -591,5 +593,5 @@
 		}
 	});
 	Composer.export({ Collection: Collection });
-})();
+}).apply((typeof exports != 'undefined') ? exports : this);
 

@@ -19,6 +19,8 @@
 (function() {
 	"use strict";
 
+	var global = this;
+
 	var RelationalModel = Composer.Model.extend({
 		relations: false,
 		relation_data: {},
@@ -319,5 +321,5 @@
 		HasMany: -1,	// " "
 		RelationalModel: RelationalModel
 	});
-})();
+}).apply((typeof exports != 'undefined') ? exports : this);
 
