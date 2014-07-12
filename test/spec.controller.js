@@ -1,4 +1,4 @@
-describe('Composer Controller', function() {
+describe('Composer.Controller', function() {
 	var MyController = Composer.Controller.extend({
 		inject: '#test',
 

@@ -1,4 +1,4 @@
-describe('Composer class system', function() {
+describe('Composer.Class', function() {
 	it('will properly define and instantiate classes', function() {
 		var c = 0;
 		var Animal = Composer.Class({

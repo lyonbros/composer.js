@@ -1,4 +1,4 @@
-describe('Composer FilterCollection', function() {
+describe('Composer.FilterCollection', function() {
 	var master = new Composer.Collection();
 
 	var Filter = Composer.FilterCollection.extend({

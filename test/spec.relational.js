@@ -1,4 +1,4 @@
-describe('Composer RelationalModel', function() {
+describe('Composer.RelationalModel', function() {
 	var BandMember = Composer.RelationalModel.extend({
 		relations: {
 			pet: {

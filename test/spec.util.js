@@ -2,14 +2,15 @@ describe('Composer', function() {
 	it('has known exported objects', function() {
 		// Composer.*
 		var main_exports	=	[
+			'sync',
+			'cid',
+			'eq',
 			'Base',
 			'Event',
 			'Model',
 			'Collection',
 			'Controller',
-			'Router',
-			'eq',
-			'cid'
+			'Router'
 		];
 		// Composer.array.*
 		var array_exports = [

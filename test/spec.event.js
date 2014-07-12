@@ -1,4 +1,4 @@
-describe('Composer eventing fabric', function() {
+describe('Composer.Event', function() {
 	var Animal = Composer.Event.extend({});
 
 	it('extends the correct event class', function() {

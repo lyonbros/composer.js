@@ -1,6 +1,6 @@
 var handlers = {};
 
-describe('Composer Router', function() {
+describe('Composer.Router', function() {
 	var routes = {
 		'/': ['handlers', 'home'],
 		'/users': ['handlers', 'users'],

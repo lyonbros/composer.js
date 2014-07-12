@@ -1,4 +1,4 @@
-describe('Composer Collection', function() {
+describe('Composer.Collection', function() {
 	it('can be instantiated properly', function() {
 		var col = new Composer.Collection();
 		expect(col.models().length).toBe(0);

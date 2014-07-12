@@ -1,4 +1,4 @@
-describe('Composer Model', function() {
+describe('Composer.Model', function() {
 	it('can be instantiated properly', function() {
 		var model = new Composer.Model({name: 'andrew'});
 		expect(model.get('name')).toBe('andrew');
