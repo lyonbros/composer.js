@@ -67,6 +67,13 @@
 		 */
 		bind: function(event_name, fn, bind_name)
 		{
+			if(event_name instanceof Array)
+			{
+				event_name.forEach(function(ev) {
+					this.bind(ev, fn, bind_name);
+				}.bind(this));
+				return this;
+			}
 			if(bind_name) this.unbind(event_name, bind_name);
 
 			if(!this._handlers[event_name]) this._handlers[event_name] = [];
@@ -106,6 +113,13 @@
 		unbind: function(event_name, function_or_name)
 		{
 			if(!event_name) return this.wipe();
+			if(event_name instanceof Array)
+			{
+				event_name.forEach(function(ev) {
+					this.unbind(ev, function_or_name);
+				}.bind(this));
+				return this;
+			}
 			if(!function_or_name) return this.unbind_all(event_name);
 
 			var is_fn = function_or_name instanceof Function;

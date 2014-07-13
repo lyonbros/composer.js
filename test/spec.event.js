@@ -170,5 +170,21 @@ describe('Composer.Event', function() {
 		cat.trigger('click');
 		expect(clicks).toBe(1);
 	});
+
+	it('will bind to an array of events', function() {
+		var dog = new Animal();
+		var actions = 0;
+		dog.bind(['bark', 'bite'], function() {
+			actions++;
+		});
+		dog.trigger('bark');
+		dog.trigger('bite');
+		dog.trigger('omg');
+		expect(actions).toBe(2);
+		dog.unbind(['bark', 'bite']);
+		dog.trigger('bark');
+		dog.trigger('bite');
+		expect(actions).toBe(2);
+	});
 });
 
