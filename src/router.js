@@ -75,6 +75,7 @@
 			});
 
 			History.Adapter.bind(global, 'statechange', function(data) {
+				data || (data = [this.cur_path()]);
 				var url = data[0];
 				var force = data[1];
 				this.trigger('statechange', url, force);
@@ -135,7 +136,7 @@
 			var old = this.cur_path();
 			if(old == href)
 			{
-				History.Adapter.trigger(global, 'statechange', [href, true]);
+				this.trigger('statechange', href, true);
 			}
 			else
 			{
