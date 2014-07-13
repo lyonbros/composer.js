@@ -74,7 +74,9 @@
 				delete global['onstatechange'];
 			});
 
-			History.Adapter.bind(global, 'statechange', function(url, force) {
+			History.Adapter.bind(global, 'statechange', function(data) {
+				var url = data[0];
+				var force = data[1];
 				this.trigger('statechange', url, force);
 			}.bind(this));
 
