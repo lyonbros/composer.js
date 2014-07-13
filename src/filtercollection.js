@@ -82,7 +82,7 @@
 			if(!this.filter) return false;
 
 			this.attach(options);
-			if(!options.skip_initial_sync) this.trigger('reset');
+			if(!options.skip_initial_sync) this.refresh();
 		},
 
 		/**
@@ -179,7 +179,7 @@
 			options || (options = {});
 
 			// see if this model even belongs to this collection
-			if(model && this.models().indexOf(model) < 0 && !this.filter(model, this)) return false;
+			if(!model || this.models().indexOf(model) < 0 || !this.filter(model, this)) return false;
 
 			// track the current number of items and reloda the data
 			var num_items = this._models.length;
