@@ -16,8 +16,8 @@ This is the main export of the class system:
 {% highlight js %}
 var Dog = Composer.Class({
     options: {
-        loud: true,
-        bites: true
+        loud: false,
+        bites: false
     },
 
     // CTOR
@@ -27,6 +27,7 @@ var Dog = Composer.Class({
     }
 });
 var larry = new Dog(true);
+alert(larry.options.bites);  // true
 {% endhighlight %}
 
 ## Extending
