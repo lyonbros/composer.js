@@ -27,11 +27,22 @@ var app = {
 				fn();
 			}).set('value', 'Try it').inject(hl, 'bottom');
 		});
+	},
+
+	init_highlight: function()
+	{
+		var doc = document.getElement('.documentation');
+		if(!doc) return false;
+
+		doc.getElements('.highlight pre code').each(function(el) {
+			hljs.highlightBlock(el);
+		});
 	}
 };
 
 window.addEvent('domready', function() {
 	app.init_toc();
 	app.init_eval();
+	app.init_highlight();
 });
 
