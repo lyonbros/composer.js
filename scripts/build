@@ -19,5 +19,4 @@ done
 
 cp src/relational.js composer.relational.js
 cp src/filtercollection.js composer.filtercollection.js
-cp src/keyboard.js composer.keyboard.js
 
