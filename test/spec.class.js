@@ -78,10 +78,12 @@ describe('Composer.Class', function() {
 		expect(cat.noise()).toBe('not so funny meow is it');
 	});
 
-	it('will extend other classes properly', function() {
+	it('will merge_extend other classes properly', function() {
 		var Band = Composer.Class({
 			play: function() { return 'la la la'; }
 		});
+		Composer.merge_extend(Band, ['members']);
+
 		var GoodBand = Band.extend({
 			play: function() { return '...'; }
 		});
@@ -93,6 +95,40 @@ describe('Composer.Class', function() {
 		var cover = new Cover();
 		expect(good.play()).toBe('...');
 		expect(cover.play()).toBe('let the music be your master');
+	});
+
+	it('will handle merge_extend/parent methods properly', function() {
+		var Animal = Composer.Class({
+			eats: {stuff: true},
+			sound: function() { return []; }
+		});
+		Composer.merge_extend(Animal, ['eats']);
+		var Dog = Animal.extend({
+			eats: {poop: true},
+			sound: function()
+			{
+				var sounds = this.parent();
+				sounds.push('woof');
+				return sounds;
+			}
+		});
+		var Breed = Dog.extend({ });
+		var Shiba = Breed.extend({
+			eats: {dead_rats: true},
+			sound: function()
+			{
+				var sounds = this.parent();
+				sounds.push('harrrr');
+				return sounds;
+			}
+		});
+
+		var shiba = new Shiba();
+		expect(shiba.eats.stuff).toBe(true);
+		expect(shiba.eats.poop).toBe(true);
+		expect(shiba.eats.dead_rats).toBe(true);
+		expect(shiba.sound()[0]).toBe('woof');
+		expect(shiba.sound()[1]).toBe('harrrr');
 	});
 });
 
