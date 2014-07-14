@@ -1,4 +1,5 @@
 ---
+title: Try Composer
 layout: default
 ---
 
