@@ -10,13 +10,12 @@ BUILDLIST=(
 	adapter.js
 	controller.js
 	router.js
+	relational.js
+	filtercollection.js
 );
 
 echo -n '' > composer.js
 for file in "${BUILDLIST[@]}"; do
 	cat src/$file >> composer.js
 done
-
-cp src/relational.js composer.relational.js
-cp src/filtercollection.js composer.filtercollection.js
 
