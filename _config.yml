@@ -1,1 +1,4 @@
+markdown: kramdown
+kramdown:
+  input: GFM
 version: 1.0.0
