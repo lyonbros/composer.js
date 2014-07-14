@@ -171,7 +171,7 @@
 		release: function(options)
 		{
 			options || (options = {});
-			if(this.el.parentNode) this.el.parentNode.removeChild(this.el);
+			if(this.el && this.el.parentNode) this.el.parentNode.removeChild(this.el);
 			this.el = false;
 
 			// auto-remove bound events
