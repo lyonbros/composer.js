@@ -25,7 +25,7 @@ var app = {
 			var btn = new Element('input[type=button]').addEvent('click', function() {
 				var fn = new Function(code);
 				fn();
-			}).inject(h1, 'bottom');
+			}).inject(hl, 'bottom');
 		});
 	}
 };
