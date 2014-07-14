@@ -39,6 +39,15 @@ describe('Composer.Controller', function() {
 		expect(con.title.tagName.toLowerCase()).toBe('h1');
 	});
 
+	it('will release properly (delete the el)', function() {
+		var con = new MyController();
+		var test = document.getElementById('test');
+		var el = con.el;
+		expect(el.parentNode).toBe(test);
+		con.release();
+		expect(el.parentNode).toBe(null);
+	});
+
 	it('can delegate events properly', function() {
 		var con = new MyController();
 		var title = con.title;
