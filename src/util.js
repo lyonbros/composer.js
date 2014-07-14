@@ -103,6 +103,26 @@
 		return true;
 	};
 
+	// create an extension function that merges specific properties from
+	// inherited objects
+	var merge_extend = function(cls, properties)
+	{
+		var _extend = cls.extend;
+		cls.extend = function(def, base)
+		{
+			base || (base = this);
+			var attr = base.prototype;
+
+			properties.forEach(function(prop) {
+				def[prop] = Composer.object.merge({}, attr[prop], def[prop]);
+			});
+
+			var cls = _extend.call(base, def);
+			Composer.merge_extend(cls, properties);
+			return cls;
+		}
+	};
+
 	// some Mootools-reminiscent object utilities Composer uses
 	var array = {
 		erase: function(arr, item)
@@ -148,6 +168,7 @@
 		cid: cid,
 		wrap_error: wrap_error,
 		eq: eq,
+		merge_extend: merge_extend,
 		array: array,
 		object: object
 	});

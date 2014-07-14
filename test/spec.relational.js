@@ -19,6 +19,11 @@ describe('Composer.RelationalModel', function() {
 			members: {
 				collection: BandMembers
 			}
+		},
+
+		play: function()
+		{
+			return 'la la la';
 		}
 	});
 
@@ -71,6 +76,20 @@ describe('Composer.RelationalModel', function() {
 		col.unbind_relational('members', 'add', addfn);
 		col.get('members').add({name: 'and yet his son is a dunce'});
 		expect(add).toBe(5);
+	});
+
+	it('will merge_extend other classes properly', function() {
+		var GoodBand = Band.extend({
+			play: function() { return '...'; }
+		});
+		var Zep = GoodBand.extend({
+			play: function() { return 'let the music be your master'; }
+		});
+		var Cover = Zep.extend({ });
+		var good = new GoodBand();
+		var cover = new Cover();
+		expect(good.play()).toBe('...');
+		expect(cover.play()).toBe('let the music be your master');
 	});
 });
 

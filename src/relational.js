@@ -298,23 +298,7 @@
 		}
 	});
 
-	// create an extension function that merges relations from inherited objects
-	var _extend = RelationalModel.extend;
-	RelationalModel.extend = function(def, base)
-	{
-		base || (base = this);
-		var attr = base.prototype;
-		var relations = attr.relations;
-
-		def.relations = Composer.object.merge({}, relations, def.relations);
-
-		var cls = _extend.call(base, def);
-		cls.extend = function(def)
-		{
-			return base.extend(def, cls);
-		};
-		return cls;
-	};
+	Composer.merge_extend(RelationalModel, ['relations']);
 
 	Composer.export({
 		HasOne: -1,		// no longer used but needed for backwards compat

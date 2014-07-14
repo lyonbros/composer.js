@@ -120,5 +120,22 @@ describe('Composer.Controller', function() {
 		expect(rendered).toBe(2);
 		expect(clicked).toBe(1);
 	});
+
+	it('will merge_extend other classes properly', function() {
+		var Band = Composer.Controller.extend({
+			play: function() { return 'la la la'; }
+		});
+		var GoodBand = Band.extend({
+			play: function() { return '...'; }
+		});
+		var Zep = GoodBand.extend({
+			play: function() { return 'let the music be your master'; }
+		});
+		var Cover = Zep.extend({ });
+		var good = new GoodBand();
+		var cover = new Cover();
+		expect(good.play()).toBe('...');
+		expect(cover.play()).toBe('let the music be your master');
+	});
 });
 

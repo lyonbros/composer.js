@@ -77,5 +77,22 @@ describe('Composer.Class', function() {
 		expect(dog.noise()).toBe('bark');
 		expect(cat.noise()).toBe('not so funny meow is it');
 	});
+
+	it('will extend other classes properly', function() {
+		var Band = Composer.Class({
+			play: function() { return 'la la la'; }
+		});
+		var GoodBand = Band.extend({
+			play: function() { return '...'; }
+		});
+		var Zep = GoodBand.extend({
+			play: function() { return 'let the music be your master'; }
+		});
+		var Cover = Zep.extend({ });
+		var good = new GoodBand();
+		var cover = new Cover();
+		expect(good.play()).toBe('...');
+		expect(cover.play()).toBe('let the music be your master');
+	});
 });
 

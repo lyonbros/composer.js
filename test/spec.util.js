@@ -5,6 +5,7 @@ describe('Composer', function() {
 			'sync',
 			'cid',
 			'eq',
+			'merge_extend',
 			'Base',
 			'Event',
 			'Model',

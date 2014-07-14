@@ -235,24 +235,7 @@
 		}
 	});
 
-	var _extend = Controller.extend;
-	Controller.extend = function(def, base)
-	{
-		base || (base = this);
-		var attr = base.prototype;
-		var base_events = attr.events;
-		var base_elements = attr.elements;
-
-		def.events = Composer.object.merge({}, base_events, def.events);
-		def.elements = Composer.object.merge({}, base_elements, def.elements);
-
-		var cls = _extend.call(base, def);
-		cls.extend = function(def)
-		{
-			return base.extend(def, cls);
-		};
-		return cls;
-	};
+	Composer.merge_extend(Controller, ['events', 'elements']);
 
 	Composer.export({ Controller: Controller });
 })();
