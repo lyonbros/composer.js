@@ -21,6 +21,7 @@ var app = {
 			var a = '<a href="#'+id+'">'+h.get('html')+'</a>';
 			var newlevel = parseInt(h.tagName.replace(/^h/i));
 			var li = new Element('li').set('html', a).inject(ul);
+			console.log('lev: ', level, newlevel);
 			if(newlevel > level)
 			{
 				last.push(ul);
