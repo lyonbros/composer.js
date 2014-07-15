@@ -82,3 +82,15 @@ var MyModel = Composer.Model.extend({
 new MyModel({name: 'larry'}, {is_cool: true});
 {% endhighlight %}
 
+### get (key, default)
+
+Gets data out of the model by its key. If the value is not present, `default` is
+used instead.
+
+{% highlight js %}
+var model = new Composer.Model({name: 'larry'});
+alert('Data: '+ model.get('name') + ' / ' + model.get('test', 'nope'));
+{% endhighlight %}
+
+
+
