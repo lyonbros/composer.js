@@ -36,6 +36,8 @@ var band = new Band({
     owner: {name: 'harry'},
     members: [{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]
 });
+
+// note we access the items inside the nested model data as we passed it
 var owner_name = band.get('owner').name;
 var first_member = band.get('members')[0].name;
 alert('Owner: '+ owner_name +' / first member: '+ first_member);
@@ -66,9 +68,12 @@ var band = new Band({
     members: [{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]
 });
 
+// note we have converted our nested data into a tree of collections/models
 var owner_name = band.get('owner').get('name');
 var first_member = band.get('members').first().get('name');
 alert('Owner: '+ owner_name +' / first member: '+ first_member);
 {% endhighlight %}
 
+The obvious benefit to using the relational model is that your nested data now
+has the same capabilities your top-level items do (including eventing).
 
