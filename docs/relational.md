@@ -8,7 +8,7 @@ layout: documentation
 The relational model extends the [model](/composer.js/docs/model). The idea is
 that while a model is great for a single record, sometimes you need hierarchies
 in your data, and you need each part of the hierarchy to be a model/collection.
-The relational model let's you specify a structure and will automatically
+The relational model lets you specify a structure and will automatically
 convert data passed in into that structure.
 
 This can be very useful if your backing store is a document store, or if your
@@ -133,7 +133,7 @@ var MyModel = Composer.RelationalModel.extend({
 
 ### toJSON
 
-Like [Model.toJSON](/composer.js/docs/model/#tojson), this function serializes
+Like [Model.toJSON](/composer.js/docs/model#tojson), this function serializes
 the data contained in the model into objects/arrays. However, this function also
 aggregates the serialized results from all its sub-objects:
 
@@ -148,6 +148,6 @@ var model = new MyModel({
 });
 
 var serialized = model.toJSON();
-alert('Second friend: '+ serialized[1].name);
+alert('Second friend: '+ serialized.friends[1].name);
 {% endhighlight %}
 
