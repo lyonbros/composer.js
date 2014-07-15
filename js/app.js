@@ -18,7 +18,7 @@ var app = {
 		headers.each(function(h) {
 			var id = +h.get('html').replace(/[^a-z0-9 ]/gi, '').replace(/\s+/g, '-').replace(/(^-|-$)/g, '');
 			h.id = id;
-			var a = '<a href="#'+id+">'+h.get('html')+'</a>';
+			var a = '<a href="#'+id+'">'+h.get('html')+'</a>';
 			var newlevel = parseInt(h.tagName.replace(/^h/i));
 			var li = new Element('li').set('html', a).inject(ul);
 			if(newlevel > level)
