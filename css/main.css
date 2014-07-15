@@ -32,7 +32,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .highlight pre {white-space: pre; background-color:#fff; border: 1px solid #ccc; font-size: 13px; line-height: 19px; overflow: auto; padding: 6px 10px; border-radius: 3px;}
 .highlight pre code {background: none !important;}
 
-.toc {width: 200px; float: right; padding: 10px 16px; background: #fff; border: 1px solid #ddd; border-radius: 4px;}
+.toc {width: 200px; float: right; padding: 10px 16px 10px 32px; background: #fff; border: 1px solid #ddd; border-radius: 4px;}
 .toc ul {margin: 0; padding: 0; list-style: disc;}
 .toc ul ul {margin-left: 16px;}
 
