@@ -147,7 +147,7 @@ alert('Name? '+ model.get('name'));
 
 Clear all data from the model. 
 
-This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
