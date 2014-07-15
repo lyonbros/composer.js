@@ -19,6 +19,10 @@ form submitted, etc) and can update its model(s) accordingly.
 Events let you wire eveything in your app together while keeping things simple
 and maintainable.
 
+## Built-in events
+
+Many objects ([Models](/composer.js/docs/model#events
+
 ## Composer.Event
 
 This is the main class others that need eventing extend. It provides some simple
