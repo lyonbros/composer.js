@@ -258,3 +258,59 @@ var res = collection.map(function(m) { return m.get('name'); });
 alert('Names: '+ JSON.stringify(res));
 {% endhighlight %}
 
+### find (callback, sortfn)
+
+Finds the first model that `callback` returns `true` for. Optionally allows
+specifying a `sortfn`, which is applied on a *copy* of the models (doesn't
+actually change the model sort in the collection) before the find operation
+begins.
+
+{% highlight js %}
+var collection = new Composer.Collection([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
+var moe = collection.find(function(m) { return m.get('name') == 'moe'; });
+alert('Found moe? '+ (moe ? true : false));
+{% endhighlight %}
+
+### exists (callback)
+
+Like [find](#find), but just returns `true` if at least one model is found that
+satisfies `callback`.
+
+{% highlight js %}
+var collection = new Composer.Collection([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
+alert('Found curly? '+ collection.exists(function(m) { return m.get('name') == 'curly'; }));
+{% endhighlight %}
+
+### find_by_id (id, options)
+
+Find a model in the collection by its ID.
+
+`options` can contain the following items:
+
+- `strict` - boolean passed to the call to [Model.id](/composer.js/docs/model#id)
+- `allow_cid` - boolean indicating if we are allowing a match on CID (client ID)
+as well as a normal ID.
+
+{% highlight js %}
+var collection = new Composer.Collection([{id: 3, name: 'larry'}, {id: 6, name: 'curly'}, {id: 9, name: 'moe'}]);
+var larry = collection.find_by_id(3);
+alert('Found larry? '+ (larry ? true : false));
+{% endhighlight %}
+
+### find_by_cid (cid)
+
+Exactly like [find_by_id](#find-by-id), except that it specifically searches
+using models' CID values instead of ID. This is useful if you need to look for
+models that may or may not have a real ID (but all objects have a CID assigned
+on creation, so there will always be a CID).
+
+### index_of (model_or_id)
+
+Returns the index of the given model (or model's ID) in the collections models.
+
+{% highlight js %}
+var collection = new Composer.Collection([{id: 3, name: 'larry'}, {id: 6, name: 'curly'}, {id: 9, name: 'moe'}]);
+var larry = collection.index_of(6);
+alert('Larry index: '+ larry);
+{% endhighlight %}
+
