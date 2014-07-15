@@ -58,6 +58,22 @@ var MyModel = Composer.Model.extend({
 alert('Name: '+ new MyModel().get('name'));
 {% endhighlight %}
 
+### id_key
+
+Default: `'id'`. Tells the model where to look for the ID when calling [id](#id)
+or other ID-related functions.
+
+### url
+
+Default: `false`. Tells the model what *exact* URL endpoint to use for [get_url](#get-url)
+when using the syncing functions. It's more pragmatic to use [base_url](#base-url)
+instead, but this can be a useful override in some instances.
+
+### base_url
+
+Default: `false`. Prepended to the model's ID when doing syncing calls. See
+[get_url](#get-url).
+
 ### initialize (data, options)
 
 The model's constructor. `data` is a hash object that contains the initial data
