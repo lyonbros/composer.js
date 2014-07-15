@@ -21,7 +21,7 @@ options: {}
 </div>
 
 This is an empty object. Extending objects can use this to store various
-internal options.
+internal options. See [set_options](#set-options).
 
 ### cid ()
 
@@ -45,4 +45,21 @@ Composer.cid = (function() {
 // grab a cid!
 var obj = new Composer.Model();
 alert('cid: '+ obj.cid());
+{% endhighlight %}
+
+### set_options (options)
+
+This convenience function makes it easy for objects to set an options object
+(many times passed into the `initialize` constructor) into [this.options](#options).
+
+{% highlight js %}
+var MyObj = Composer.Base.extend({
+    initialize: function(options)
+    {
+        this.set_options(options);
+    }
+});
+
+var obj = new MyObj({allow_clicks: true});
+alert('Allow clicks? '+ obj.options.allow_clicks);
 {% endhighlight %}
