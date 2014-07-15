@@ -15,7 +15,7 @@ as well as syncing your data to your servers (assuming you have them).
 Models have a number of built-in events you can tie into.
 
 ### change
-Fired any time data in the model is changed. Note that all [change:&lt;field&gt;](change-field)
+Fired any time data in the model is changed. Note that all [change:&lt;field&gt;](#change-field)
 events will fire *before* `change` is fired
 
 ### change:&lt;field&gt;

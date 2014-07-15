@@ -20,6 +20,8 @@ var app = {
 			var no_paren = h.get('html').replace(/\(.*/, '');
 			h.set('html', h.get('html').replace(/(\(.*\))/, '<code>$1</code>'));
 			var id = no_paren
+				.replace(/&lt;/g, '-')
+				.replace(/&gt;/g, '-')
 				.replace(/[^a-z0-9\._ -]/gi, '')
 				.replace(/[\._ ]+/g, '-')
 				.replace(/(^-|-$)/g, '')
