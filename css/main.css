@@ -21,7 +21,7 @@ h1, h2 {margin-left: -4px;}
 h1 code, h2 code, h3 code {font-size: 12px;}
 h1 {font-size: 2.0em;}
 h2 {font-size: 1.5em;}
-h3 {padding: 0 0 0 6px; font-size: 1.2em; border-left: 3px solid #666;}
+h3 {margin-top: .8em; font-size: 1.2em;}
 ul {margin: 0 0 16px 32px;}
 p {padding: 0 0 16px 0;}
 strong {font-weight: bold;}
