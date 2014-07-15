@@ -21,7 +21,12 @@ and maintainable.
 
 ## Built-in events
 
-Many objects ([Models](/composer.js/docs/model#events
+Many objects (models, collections, controllers, etc) trigger built-in events
+when certain actions happen on them. For instance, a model triggers a `change`
+event when it is updated with new data.
+
+This allows you to listen to events for many common actions in your objects and
+act accordingly.
 
 ## Composer.Event
 
