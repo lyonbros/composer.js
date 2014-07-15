@@ -16,7 +16,7 @@ var app = {
 		var last = [];
 		var level = 2;
 		headers.each(function(h) {
-			var id = +h.get('html').replace(/[^a-z0-9 ]/gi, '').replace(/\s+/g, '-').replace(/(^-|-$)/g, '');
+			var id = h.get('html').replace(/[^a-z0-9 ]/gi, '').replace(/\s+/g, '-').replace(/(^-|-$)/g, '');
 			h.id = id;
 			var a = '<a href="#'+id+'">'+h.get('html')+'</a>';
 			var newlevel = parseInt(h.tagName.replace(/^h/i));
