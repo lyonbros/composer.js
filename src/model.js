@@ -59,6 +59,9 @@
 		// doesn't have a collection or the url needs to change manually).
 		base_url: false,
 
+		// validation function, used to check data before it's set into the model
+		validate: function(data, options) { return false; },
+
 		/**
 		 * CTOR, allows passing in of data to set that data into the model.
 		 */
