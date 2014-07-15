@@ -98,7 +98,7 @@ objects, or an array of flat data. If data is passed instead of models, the
 [model parameter](#model) is used to determine what kind of model to create.
 
 `params` allows setting top-level values into the collection on instantiation
-(such as [the model parameter](#model)).
+(such as [the model parameter](#model) or [sortfn](#sortfn)).
 
 `options` is a hash object that can be passed in to various operations in the
 contructor. Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
@@ -175,4 +175,59 @@ for each model removed. Also fires the [clear](#clear) event if any models were
 removed.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+### reset (data, options)
+
+Reset the models in the collection with new ones. This is the same as a [clear](#clear-1)
+followed by an [add](#add-1).
+
+Fires the [reset](#reset) event.
+
+`options` can contain the following items:
+
+- `append` - boolean indicating of the given data should be appended to the
+current data (as opposed to the current data being wiped first)
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+### reset_async (data, options)
+
+List [reset](#reset-1), except that data is added incrementally once per event
+cycle, triggering a [reset](#reset) event when complete.
+
+`options` can contain the following items:
+
+- `complete` - a function of 0 arguments that gets called when the operation
+completes
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+### sort (options)
+
+Sorts the models in the collection, manually, using [sortfn](#sortfn). Fires the
+[reset](#reset) event on completion.
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+### sort_index (model)
+
+Returns the index (in [Collection.models()](#models)) of the given model. If no
+[sortfn](#sortfn) property is present in the collection, returns false.
+
+### parse (data)
+
+Allows pre-processing of data from external API sources before adding to the
+collection (see [Model.parse](/composer.js/docs/model#parse)).
+
+### each (callback, bind)
+
+Runs the given `callback` (optionall bound to `bind`'s scope) on each model in
+the collection (the only argument being the model itself).
+
+{% highlight js %}
+var collection = new Composer.Collection([{name: 'sasha'}, {name: 'sandra'}]);
+var res = [];
+collection.each(function(m) { res.push(m.get('name')); });
+alert('Names: '+ JSON.stringify(res));
+{% endhighlight %}
 
