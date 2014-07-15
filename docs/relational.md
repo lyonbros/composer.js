@@ -149,7 +149,9 @@ var Dog = Animal.extend({
 });
 
 var dog = new Dog({legs: {num: 4}, tail: {name: 'waggy'}});
-alert('Legs and tail name: '+ dog.get('legs').get('num') + ' ' + dog.get('tial').get('name'));
+var legs = dog.get('legs').get('num');
+var tail = dog.get('tail').get('name');
+alert('Legs / tail name: '+ legs + ' / ' + tail);
 {% endhighlight %}
 
 ### toJSON ()
