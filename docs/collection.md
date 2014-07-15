@@ -236,13 +236,25 @@ collection (see [Model.parse](/composer.js/docs/model#parse)).
 
 ### each (callback, bind)
 
-Runs the given `callback` (optionall bound to `bind`'s scope) on each model in
+Runs the given `callback` (optionally bound to `bind`'s scope) on each model in
 the collection (the only argument being the model itself).
 
 {% highlight js %}
 var collection = new Composer.Collection([{name: 'sasha'}, {name: 'sandra'}]);
 var res = [];
 collection.each(function(m) { res.push(m.get('name')); });
+alert('Names: '+ JSON.stringify(res));
+{% endhighlight %}
+
+### map (callback, bind)
+
+Runs a javascript `map` on the models in the collection using the `callback` as
+the map function (optionally bound to `bind`'s scope), aggregating the results
+into the returned array.
+
+{% highlight js %}
+var collection = new Composer.Collection([{name: 'sasha'}, {name: 'sandra'}]);
+var res = collection.map(function(m) { return m.get('name'); });
 alert('Names: '+ JSON.stringify(res));
 {% endhighlight %}
 
