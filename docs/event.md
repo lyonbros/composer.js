@@ -56,7 +56,8 @@ but powerful functions.
 ### bind (event_name, fn, bind_name)
 
 Bind a function to an event on this object. `event_name` can be any string (ie
-`change`, `click`, etc).
+`change`, `click`, etc). Note that `event_name` can also be an array of strings,
+and each one will have the same function bound to it.
 
 `fn` is a function to call when the event is triggered on the object. It can
 take any number of arguments, which are passed in verbatim from the
@@ -77,7 +78,8 @@ obj.trigger('hello');
 ### bind_once (event_name, fn, bind_name)
 
 Exactly like bind, except that one the binding is triggered *once* it is unbound
-from the object.
+from the object. Note that `event_name` can also be an array of strings, and
+each one will have the same function bound to it.
 
 This makes it easy to create one-off bindings to event on an object without
 having to worry about manually unbinding the event.
@@ -87,6 +89,9 @@ having to worry about manually unbinding the event.
 Unbind an event from an object. `event_name` is the event name that's bound and
 `function_or_name` is either the reference to `fn` (passed into [bind](#bind) or
 [bind_once](#bind_once)) *or* the `bind_name` passed in.
+
+Note that `event_name` can also be an array of strings, and each one will have
+the same function (or binding name) unbound from it.
 
 If `function_or_name` is falsy (null, false, etc) then *all* bindings under
 `event_name` are removed.
@@ -107,6 +112,9 @@ obj.bind('alert', fn);
 // bind an anonymous function, and assign the binding a name
 obj.bind('yell', function() { alert('AHHHH'); }, 'obj:example:yell');
 
+// bind an array of events
+obj.bind(['walk', 'run', 'crawl'], function() { alert('moving...'); }, 'bind-arrays');
+
 // here we unbind using the function reference, which we have to save if we use
 // this method
 obj.unbind('alert', fn);
@@ -118,6 +126,9 @@ obj.unbind('yell', 'obj:example:yell');
 
 // unbind all 'yell' events
 obj.unbind('yell');
+
+// unbind our array of bindings from above (by name)
+obj.unbind(['walk', 'run', 'crawl'], 'bind-arrays');
 
 // unbind ALL EVENTS
 obj.unbind();
