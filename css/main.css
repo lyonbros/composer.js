@@ -33,5 +33,5 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .highlight pre code {background: none !important;}
 
 .toc {width: 200px; float: right; background: #fff; border: 1px solid #ddd; border-radius: 4px;}
-.toc ul {list-style: none;}
+.toc ul {margin: 0; padding: 0; list-style: none;}
 
