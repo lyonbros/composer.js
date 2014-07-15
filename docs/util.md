@@ -129,7 +129,7 @@ var clone = Composer.object.clone({horses: 'goodbye'});
 {% endhighlight %}
 </div>
 
-## merge (to, ...)
+### merge (to, ...)
 
 Merge a number of objects into `to`, objects being listed later having
 preference.
