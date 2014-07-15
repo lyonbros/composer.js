@@ -41,4 +41,61 @@ reference to the function.
 
 ### bind_once (event_name, fn, bind_name)
 
+Exactly like bind, except that one the binding is triggered *once* it is unbound
+from the object.
+
+This makes it easy to create one-off bindings to event on an object without
+having to worry about manually unbinding the event.
+
+### unbind (event_name, function_or_name)
+
+Unbind an event from an object. `event_name` is the event name that's bound and
+`function_or_name` is either the reference to `fn` (passed into [bind](#bind) or
+[bind_once](#bind_once)) *or* the `bind_name` passed in.
+
+If `function_or_name` is falsy (null, false, etc) then *all* bindings under
+`event_name` are removed.
+
+If `event_name` is falsy (null, false, etc) then *all* bindings in the object
+are removed. All of them.
+
+Example usage:
+
+{% highlight js %}
+var obj = new Composer.Event();
+var fn = function() { alert('omg'); };
+
+// bind our referenced function
+obj.bind('alert', fn);
+
+// bind an anonymous function, and assign the binding a name
+obj.bind('yell', function() { alert('AHHHH'); }, 'obj:example:yell');
+
+// here we unbind using the function reference, which we have to save if we use
+// this method
+obj.unbind('alert', fn);
+
+// here we unbind using the binding name, which can not only make unbind easy
+// (no need to keep a function reference around) but can also be used to
+// document the binding in cetain instances
+obj.unbind('yell', 'obj:example:yell');
+
+// unbind all 'yell' events
+obj.unbind('yell');
+
+// unbind ALL EVENTS
+obj.unbind();
+{% endhighlight %}
+
+### trigger (event_name, ...)
+
+Trigger an event on an object. `event_name` can be any string, and any other
+arguments passed to `trigger` are available as the arguments the the functions
+bound with [bind](#bind).
+
+{% highlight js %}
+var obj = new Composer.Event();
+obj.bind('change', function(field) { alert('changed '+ field); });
+obj.trigger('change', 'name');
+{% endhighlight %}
 
