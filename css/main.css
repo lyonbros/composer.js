@@ -6,7 +6,9 @@ header {width: 254px; float: left; margin: 0 32px 0 0;}
 
 content {width: 738px; float: right; padding: 64px 0 0 0;}
 
-footer {}
+footer {border-top: 1px solid #ccc;}
+footer ul {list-style: none;}
+footer ul li {display: inline-block;}
 
 a {color: #3173C4; text-decoration: none;}
 a:hover {text-decoration: underline;}
