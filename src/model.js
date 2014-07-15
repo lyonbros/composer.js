@@ -34,10 +34,6 @@
 		 */
 		__composer_type: 'model',
 
-		// for internal object testing
-		// NOTE: deprecated in favor of __composer_type
-		__is_model: true,
-
 		// default values for the model, merged with the data passed in on CTOR
 		defaults: {},
 
@@ -62,6 +58,9 @@
 		// can be used to manually set a base url for this model (in the case it
 		// doesn't have a collection or the url needs to change manually).
 		base_url: false,
+
+		// validation function, used to check data before it's set into the model
+		validate: function(data, options) { return false; },
 
 		/**
 		 * CTOR, allows passing in of data to set that data into the model.
