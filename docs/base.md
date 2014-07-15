@@ -14,9 +14,11 @@ The base class all others extend. Provides one public function, and a handful of
 public attributes.
 
 ### options
+<div class="noeval">
 {% highlight js %}
-    options: {}
+options: {}
 {% endhighlight %}
+</div>
 
 This is an empty object. Extending objects can use this to store various
 internal options.
