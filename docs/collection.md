@@ -168,3 +168,11 @@ collection.upsert(new Composer.Model({id: '1212', name: 'sandra'}));
 alert('New name: '+ collection.first().get('name'));
 {% endhighlight %}
 
+### clear (options)
+
+Clear (remove) all models from the collection. Fires [remove](#remove) events
+for each model removed. Also fires the [clear](#clear) event if any models were
+removed.
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
