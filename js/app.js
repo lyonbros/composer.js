@@ -28,10 +28,9 @@ var app = {
 				.replace(/[\._ ]+/g, '-')
 				.replace(/(^-|-$)/g, '')
 				.toLowerCase();
-			var x = 0;
 			while(used_ids[id])
 			{
-				id += '-'+x
+				id += '-1';
 			}
 			used_ids[id] = true;
 			h.id = id;
