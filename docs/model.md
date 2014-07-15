@@ -157,3 +157,80 @@ alert('model data: '+ model.get('name') + ' / '+ model.get('age'));
 
 ### fetch (options)
 
+This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
+grab the model from your app's API. If successful, the data returned is set into
+to model.
+
+`options` can contain both `success` and `fail` callbacks, fired depending on
+the result of the operation.
+
+This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+events.
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+### save (options)
+
+This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
+save the model to your app's API. If successful, the data returned is set into
+to model. Depending on the result of [is_new](#is-new), will perform either a
+'create' or 'update'.
+
+`options` can contain both `success` and `fail` callbacks, fired depending on
+the result of the operation.
+
+This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+events.
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+### destroy (options)
+
+This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
+delete the model to your app's API. If successful, the data returned is set into
+to model.
+
+`options` can contain both `success` and `fail` callbacks, fired depending on
+the result of the operation.
+
+This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+events.
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+### parse (data)
+
+Replace this function to handle any data returned from your API before it's set
+into the model. For instance, if your API returns JSON and your method of
+calling the API doesn't parse JSON, you could do it here:
+
+<div class="noeval">
+{% highlight js %}
+var model = new Composer.Model({id: '1234'});
+model.parse = function(data) { return JSON.parse(data); };
+model.fetch();
+{% endhighlight %}
+</div>
+
+### id (no_cid)
+
+Returns the model's `id` field. If `id` doesn't exist, returns the model's
+[CID](/composer.js/docs/base#cid). If `no_cid` is true, returns `false` if no
+`id` field is present.
+
+{% highlight js %}
+var model = new Composer.Model({id: '1234'});
+alert('ID: ' + model.id());
+{% endhighlight %}
+
+### clone ()
+
+Clone a model into a new model.
+
+{% highlight js %}
+var model = new Composer.Model({name: 'andrew'});
+var clone = model.clone();
+alert('Clone '+ clone.get('name') + ' / ' + (clone == model));
+{% endhighlight %}
+
+
