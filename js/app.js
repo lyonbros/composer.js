@@ -30,6 +30,7 @@ var app = {
 			{
 				ul = last.pop();
 			}
+			level = newlevel;
 		});
 	},
 
