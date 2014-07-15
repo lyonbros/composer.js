@@ -121,7 +121,7 @@ events.
 {% highlight js %}
 var model = new Composer.Model();
 model.bind('change:dogs', function(dogs) {
-    alert('Dogs: ' + dogs[1] + ', eq: ' + dogs == this.get('dogs'));
+    alert('Dogs: ' + dogs[1] + ', eq: ' + (dogs == this.get('dogs')));
 });
 model.set({dogs: ['larry', 'curly', 'moe']});
 {% endhighlight %}
