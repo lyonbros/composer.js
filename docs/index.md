@@ -12,8 +12,8 @@ assumptions about the structure of your data or your architecture, politely
 bowing out of your way to let you build your app.
 
 Composer.js is currently being used as the driving force of
-[Turtl](https://turtl.it) and [Musio.com](http://musio.com), both being
-data-driven apps that run completely in the client.
+[Turtl](https://turtl.it) and [Musio](http://musio.com), both being data-driven
+apps that run completely in the client.
 
 Composer used to run on top of Mootools, but as of version 1.0 is now framework
 agnostic (jQuery/Mootools can be used interchangeably with Composer).

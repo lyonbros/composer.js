@@ -11,6 +11,7 @@ footer ul {display: inline-block; list-style: none; margin: 0; padding: 0;}
 footer ul li {display: inline-block; margin-right: 32px;}
 footer p {float: right;}
 
+/* content styles */
 a {color: #3173C4; text-decoration: none;}
 a:hover {text-decoration: underline;}
 h1, h2, h3 {margin: 0 0 .6em 0; font-weight: bold; color: #444;}
@@ -24,4 +25,9 @@ em {font-style: italic;}
 code {margin: 0 2px; padding: 0 5px; white-space: nowrap; font-family: Consolas, "Liberation Mono", Courier, monospace; background: #edebdd; border-radius: 3px;}
 pre code {color: #c9bf9f; white-space: pre; background: none;}
 em code, strong code {font-style: normal; font-weight: normal;}
+
+.highlight {position: relative; padding: 0 0 0 16px;}
+.highlight input[type=button] {position: absolute; top: 10px, right: 10px; opacity: .6;}
+.highlight input[type=button]:hover {opacity: 1;}
+
 
