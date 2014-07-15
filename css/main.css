@@ -26,7 +26,7 @@ code {margin: 0 2px; padding: 0 5px; white-space: nowrap; font-family: Consolas,
 pre code {color: #c9bf9f; white-space: pre; background: none;}
 em code, strong code {font-style: normal; font-weight: normal;}
 
-.highlight {position: relative; margin: 0 0 16px 16px;}
+.highlight {position: relative;}
 .highlight input[type=button] {position: absolute; top: 10px; right: 10px; opacity: .6;}
 .highlight input[type=button]:hover {opacity: 1;}
 .highlight pre {white-space: pre; background-color:#f8f8f8; border: 1px solid #ccc; font-size: 13px; line-height: 19px; overflow: auto; padding: 6px 10px; border-radius: 3px;}
