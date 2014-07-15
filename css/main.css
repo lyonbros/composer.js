@@ -4,6 +4,7 @@ body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #222; ba
 #main {width: 1024px; margin: 0 auto;}
 
 header {width: 254px; float: left; margin: 0 32px 0 0;}
+header h1 {margin-left: 0;}
 
 content {width: 738px; float: right; padding: 64px 0 0 0;}
 
@@ -20,7 +21,7 @@ h1, h2 {margin-left: -4px;}
 h1 code, h2 code, h3 code {font-size: 12px;}
 h1 {font-size: 2.0em;}
 h2 {font-size: 1.5em;}
-h3 {font-size: 1.2em;}
+h3 {margin-left: -2px; font-size: 1.2em;}
 ul {margin: 0 0 16px 32px;}
 p {padding: 0 0 16px 0;}
 strong {font-weight: bold;}
