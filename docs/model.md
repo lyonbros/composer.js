@@ -132,6 +132,9 @@ model.set({dogs: ['larry', 'curly', 'moe']});
 
 Unset an item in a model. `key` is the key to unset in the model's data.
 
+This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
+events.
+
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
 {% highlight js %}
