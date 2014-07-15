@@ -101,6 +101,11 @@ HTML view.
 
 Returns `true` if the model contains the `key` in its data.
 
+{% highlight js %}
+var model = new Composer.Model({age: 27});
+alert('Has key? '+ model.has('age') + ' / ' + model.has('tears'));
+{% endhighlight %}
+
 ### set (data, options)
 
 Sets data into the model. `data` is a hash object of data to set into the model,
@@ -128,3 +133,5 @@ var model = new Composer.Model({name: 'Scooter'});
 model.unset('name');
 alert('Name? '+ model.get('name'));
 {% endhighlight %}
+
+
