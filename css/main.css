@@ -1,4 +1,4 @@
-body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #222;}
+body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #222; background: #f6f6f6;}
 
 #main {width: 1024px; margin: 0 auto;}
 
@@ -6,7 +6,7 @@ header {width: 254px; float: left; margin: 0 32px 0 0;}
 
 content {width: 738px; float: right; padding: 64px 0 0 0;}
 
-footer {margin: 0 0 32px 0; padding: 6px 0 0 0; font-size: .85em; border-top: 1px solid #ccc;}
+footer {margin: 64px 0 32px 0; padding: 6px 0 0 0; font-size: .85em; border-top: 1px solid #ccc;}
 footer ul {display: inline-block; list-style: none; margin: 0; padding: 0;}
 footer ul li {display: inline-block; margin-right: 32px;}
 footer p {float: right;}
@@ -14,7 +14,7 @@ footer p {float: right;}
 /* content styles */
 a {color: #3173C4; text-decoration: none;}
 a:hover {text-decoration: underline;}
-h1, h2, h3 {margin: 0 0 .6em 0; font-weight: bold; color: #444;}
+h1, h2, h3 {margin: .1em 0 .6em 0; font-weight: bold; color: #444;}
 h1 {font-size: 2.2em;}
 h2 {font-size: 1.9em;}
 h3 {font-size: 1.6em;}
@@ -32,4 +32,6 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .highlight pre {white-space: pre; background-color:#f8f8f8; border: 1px solid #ccc; font-size: 13px; line-height: 19px; overflow: auto; padding: 6px 10px; border-radius: 3px;}
 .highlight pre code {background: none !important;}
 
+.toc {width: 200px; float: right; background: #fff; border: 1px solid #ddd; border-radius: 4px;}
+.toc ul {list-style: none;}
 
