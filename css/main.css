@@ -29,7 +29,7 @@ code {margin: 0 2px; padding: 2px 5px; white-space: nowrap; font-family: Consola
 pre code {color: #c9bf9f; white-space: pre; background: none;}
 em code, strong code {font-style: normal; font-weight: normal;}
 
-.highlight {position: relative; margin: 0 0 24px 0;}
+.highlight {position: relative; z-index: -1; margin: 0 0 24px 0;}
 .highlight input[type=button] {position: absolute; top: 10px; right: 10px; opacity: .6;}
 .highlight input[type=button]:hover {opacity: 1;}
 .noeval .highlight input[type=button] {display: none;}
