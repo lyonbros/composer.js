@@ -131,6 +131,27 @@ var MyModel = Composer.RelationalModel.extend({
 {% endhighlight %}
 </div>
 
+### Specification merging
+
+Relational models that extend others automatically get the relationships defined
+in the parent class, even if the child specifies another set of relations:
+
+{% highlight js %}
+var Animal = Composer.RelationalModel.extend({
+    relations: {
+        legs: { model: Composer.Model }
+    }
+});
+var Dog = Animal.extend({
+    relations: {
+        tail: { model: Composer.Model }
+    }
+});
+
+var dog = new Dog({legs: {num: 4}, tail: {name: 'waggy'}});
+alert('Legs and tail name: '+ dog.get('legs').get('num') + ' ' + dog.get('tial').get('name'));
+{% endhighlight %}
+
 ### toJSON ()
 
 Like [Model.toJSON](/composer.js/docs/model#tojson), this function serializes
