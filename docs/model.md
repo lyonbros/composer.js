@@ -233,4 +233,34 @@ var clone = model.clone();
 alert('Clone '+ clone.get('name') + ' / ' + (clone == model));
 {% endhighlight %}
 
+### toJSON ()
+
+Returns a bare copy of the model's data. Good for passing into views or for
+serializing into JSON.
+
+{% highlight js %}
+var model = new Composer.Model({id: '888', name: 'fisty'});
+alert('Data '+ JSON.stringify(model.toJSON));
+{% endhighlight %}
+
+### validate (data, options)
+
+Validate data passed to the model. This happens whenever dat in the model
+changes. Return `false` from this function to signify a *success*.
+
+### get_url ()
+
+Returns the model's URL, as it relates to your API. Uses `Model.base_url` to
+determine the base, and then appends the ID from there (if it exists).
+
+For instance:
+
+{% highlight js %}
+var model = new Composer.Model({id: '69'});
+model.base_url = '/users';
+alert('URL: '+ model.get_url());
+{% endhighlight %}
+
+*Also*, model's can pull a URL from a collection they exist in. See
+[Collection.url](/composer.js/docs/collection#url).
 
