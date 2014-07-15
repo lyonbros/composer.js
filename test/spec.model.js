@@ -50,6 +50,13 @@ describe('Composer.Model', function() {
 		expect(c).toBe(3);
 	});
 
+	it('has working defaults', function() {
+		var MyModel = Composer.Model.extend({
+			defaults: { name: 'sandra' }
+		});
+		expect(new MyModel().get('name')).toBe('sandra');
+	});
+
 	it('will handle events properly', function() {
 		var state = {};
 		var model = new Composer.Model();
