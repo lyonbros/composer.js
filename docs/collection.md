@@ -21,9 +21,22 @@ Collections have a number of built-in events you can tie into:
 
 ### add
 
-Triggered when a new model is added to a collection. The triggering arguments
-are the model being added, the collection adding the new model, and the options
-passed to the [add](#add) function.
+Triggered when a new model is added to a collection. Arguments passed:
+
+- the model being added
+- the collection adding the new model
+- the options passed to the [add](#add-1) function.
+
+### remove
+
+Triggered when a model is removed from the collection. Arguments passed:
+
+- the model being removed
+
+### sort
+
+Fired when an upserted model is put into a new position (it wasn't added, but
+its position changed). Triggering arguments are the model and the options pass
 
 ## Composer.Collection
 

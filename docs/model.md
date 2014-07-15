@@ -17,8 +17,11 @@ Models have a number of built-in events you can tie into.
 ### change
 
 Fired any time data in the model is changed. Note that all [change:&lt;field&gt;](#change-field)
-events will fire *before* `change` is fired. The only argument to the bound
-function is the model.
+events will fire *before* `change` is fired. Arguments passed:
+
+- the model being changed
+- the options passed to the changing function (set, unset, etc)
+- the full data the change occured on
 
 ### change:&lt;field&gt;
 
@@ -31,17 +34,31 @@ mymodel.set({name: 'larry'});
 {% endhighlight %}
 </div>
 
+Arguments passed:
+
+- the model being changed
+- the value of the changed field
+- the options passed to the changing function (set, unset, etc)
+
 The first argument of the bound function will be the model, the second is the
 value of the changed field.
 
 ### destroy
 
-Fired whenever [destroy](#destroy) is called on a model.
+Fired whenever [destroy](#destroy) is called on a model. Arguments passed:
+
+- the model being destroyed
+- the model being destroyed's collections array
+- the options passed to the destroying function
 
 ### error
 
 Fired when the model's [validate](#validate) function fails when data is being
-set.
+set. Arguments passed:
+
+- the model the validation error occured on
+- the error that occurred
+- the options passed to the validation function
 
 ## Composer.Model
 
