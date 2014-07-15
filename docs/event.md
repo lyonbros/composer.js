@@ -78,8 +78,8 @@ obj.trigger('hello');
 ### bind_once (event_name, fn, bind_name)
 
 Exactly like bind, except that one the binding is triggered *once* it is unbound
-from the object. Note that `event_name` can also be an array of strings, and
-each one will have the same function bound to it.
+from the object. Note that `event_name` can be an array of strings, and each one
+will have the same function bound to it.
 
 This makes it easy to create one-off bindings to event on an object without
 having to worry about manually unbinding the event.
@@ -90,8 +90,8 @@ Unbind an event from an object. `event_name` is the event name that's bound and
 `function_or_name` is either the reference to `fn` (passed into [bind](#bind) or
 [bind_once](#bind_once)) *or* the `bind_name` passed in.
 
-Note that `event_name` can also be an array of strings, and each one will have
-the same function (or binding name) unbound from it.
+Note that `event_name` can be an array of strings, and each one will have the
+same function (or binding name) unbound from it.
 
 If `function_or_name` is falsy (null, false, etc) then *all* bindings under
 `event_name` are removed.
