@@ -28,6 +28,21 @@ event when it is updated with new data.
 This allows you to listen to events for many common actions in your objects and
 act accordingly.
 
+### all
+
+When any event is [triggered](#trigger), it also fires an "all" event. This
+event can be bound to in order to be notified of any events occuring on an
+object. The "all" event fires with the arguments being the name of the actual
+event being fired, and the rest of the arguments appended:
+
+{% highlight js %}
+var obj = new Composer.Event();
+obj.bind('all', function(event, name, age) {
+    alert('Event: '+ event + '/' + name + '/' + age);
+});
+obj.trigger('change-user', 'andrew', 27);
+{% endhighlight %}
+
 ### Silencing
 
 Many (if not all) built-in events can be silenced during various operations by
@@ -140,6 +155,10 @@ obj.unbind();
 Trigger an event on an object. `event_name` can be any string, and any other
 arguments passed to `trigger` are available as the arguments the the functions
 bound with [bind](#bind).
+
+`trigger` also fires an event called "all" each time it is called, the arguments
+of the event being `event_name` with the other arguments appended. This lets you
+bind to *any* event triggering.
 
 {% highlight js %}
 var obj = new Composer.Event();
