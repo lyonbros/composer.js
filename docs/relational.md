@@ -131,7 +131,7 @@ var MyModel = Composer.RelationalModel.extend({
 {% endhighlight %}
 </div>
 
-### toJSON
+### toJSON ()
 
 Like [Model.toJSON](/composer.js/docs/model#tojson), this function serializes
 the data contained in the model into objects/arrays. However, this function also
@@ -150,4 +150,14 @@ var model = new MyModel({
 var serialized = model.toJSON();
 alert('Second friend: '+ serialized.friends[1].name);
 {% endhighlight %}
+
+### set (data, options)
+
+Set, like [Model.set](/composer.js/docs/model#set), sets data into the
+relational model, but is also responsible for turning the nested data into your
+object hierarchy.
+
+While its funcationality is the same as `Model.set`, it's worth mentioning that
+this function does most of the magic.
+
 
