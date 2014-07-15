@@ -51,7 +51,7 @@ model on instantiation.
 var MyModel = Composer.Model.extend({
     defaults: { name: 'sandra' }
 });
-alert('Name: ', new MyModel().get('name'));
+alert('Name: '+ new MyModel().get('name'));
 {% endhighlight %}
 
 ### initialize (data, options)
