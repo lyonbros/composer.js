@@ -17,7 +17,8 @@ Models have a number of built-in events you can tie into.
 ### change
 
 Fired any time data in the model is changed. Note that all [change:&lt;field&gt;](#change-field)
-events will fire *before* `change` is fired.
+events will fire *before* `change` is fired. The only argument to the bound
+function is the model.
 
 ### change:&lt;field&gt;
 
@@ -30,7 +31,8 @@ mymodel.set({name: 'larry'});
 {% endhighlight %}
 </div>
 
-The first argument of the bound function will be the value of the changed field.
+The first argument of the bound function will be the model, the second is the
+value of the changed field.
 
 ### destroy
 
@@ -138,4 +140,20 @@ model.unset('name');
 alert('Name? '+ model.get('name'));
 {% endhighlight %}
 
+### clear (options)
+
+Clear all data from the model. 
+
+This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+events.
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+{% highlight js %}
+var model = new Composer.Model({name: 'andrew', age: 27});
+model.clear();
+alert('model data: '+ model.get('name') + ' / '+ model.get('age'));
+{% endhighlight %}
+
+### fetch (options)
 
