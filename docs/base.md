@@ -14,6 +14,9 @@ The base class all others extend. Provides one public function, and a handful of
 public attributes.
 
 ### options
+{% highlight js %}
+    options: {}
+{% endhighlight %}
 
 This is an empty object. Extending objects can use this to store various
 internal options.
