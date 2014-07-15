@@ -27,7 +27,7 @@ pre code {color: #c9bf9f; white-space: pre; background: none;}
 em code, strong code {font-style: normal; font-weight: normal;}
 
 .highlight {position: relative; padding: 0 0 0 16px;}
-.highlight input[type=button] {position: absolute; top: 10px, right: 10px; opacity: .6;}
+.highlight input[type=button] {position: absolute; top: 10px; right: 10px; opacity: .6;}
 .highlight input[type=button]:hover {opacity: 1;}
 
 
