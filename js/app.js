@@ -15,22 +15,25 @@ var app = {
 		var ul = new Element('ul').inject(toc);
 		var last = [];
 		var level = 2;
+		var last_li = null;
 		headers.each(function(h) {
 			var id = h.get('html').replace(/[^a-z0-9 ]/gi, '').replace(/\s+/g, '-').replace(/(^-|-$)/g, '');
 			h.id = id;
 			var a = '<a href="#'+id+'">'+h.get('html')+'</a>';
 			var newlevel = parseInt(h.tagName.replace(/^h/i, ''));
-			var li = new Element('li').set('html', a).inject(ul);
+			var li = new Element('li').set('html', a);
 			console.log('lev: ', h.tagName, level, newlevel);
 			if(newlevel > level)
 			{
 				last.push(ul);
-				ul = new Element('ul').inject(li);
+				ul = new Element('ul').inject(last_li);
 			}
 			else if(newlevel < level)
 			{
 				ul = last.pop();
 			}
+			li.inject(ul);
+			last_li = li;
 			level = newlevel;
 		});
 	},
