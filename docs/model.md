@@ -167,7 +167,7 @@ to model.
 `options` can contain both `success` and `fail` callbacks, fired depending on
 the result of the operation.
 
-This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
@@ -182,7 +182,7 @@ to model. Depending on the result of [is_new](#is-new), will perform either a
 `options` can contain both `success` and `fail` callbacks, fired depending on
 the result of the operation.
 
-This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
@@ -196,7 +196,7 @@ to model.
 `options` can contain both `success` and `fail` callbacks, fired depending on
 the result of the operation.
 
-This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
