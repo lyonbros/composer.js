@@ -17,7 +17,7 @@ Models have a number of built-in events you can tie into.
 ### change
 
 Fired any time data in the model is changed. Note that all [change:&lt;field&gt;](#change-field)
-events will fire *before* `change` is fired
+events will fire *before* `change` is fired.
 
 ### change:&lt;field&gt;
 
@@ -29,6 +29,8 @@ Whenever the value of &lt;field&gt; is changed, this is fired. For instance:
 mymodel.set({name: 'larry'});
 {% endhighlight %}
 </div>
+
+The first argument of the bound function will be the value of the changed field.
 
 ### destroy
 
@@ -118,8 +120,10 @@ events.
 
 {% highlight js %}
 var model = new Composer.Model();
+model.bind('change:dogs', function(dogs) {
+    alert('Dogs: ' + dogs[1] + ', eq: ' + dogs == this.get('dogs'));
+});
 model.set({dogs: ['larry', 'curly', 'moe']});
-alert('Dog 1: ' + model.get('dogs')[1]);
 {% endhighlight %}
 
 ### unset (key, options)
