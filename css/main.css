@@ -7,3 +7,18 @@ header {width: 254px; float: left; margin: 0 32px 0 0;}
 content {width: 738px; float: right;}
 
 footer {}
+
+a {color: #3173C4; text-decoration: none;}
+a:hover {text-decoration: underline;}
+h1, h2, h3 {margin: 0 0 .2em 0; font-weight: bold;}
+h1 {font-size: 28px;}
+h2 {font-size: 24px;}
+h3 {font-size: 20px;}
+ul {margin: 0 0 16px 32px;}
+p {padding: 0 0 16px 0;}
+strong {font-weight: bold;}
+em {font-style: italic;}
+code {margin: 0 2px; padding: 0 5px; white-space: nowrap; font-family: Consolas, "Liberation Mono", Courier, monospace; background: #edebdd; border-radius: 3px;}
+pre code {color: #c9bf9f; white-space: pre; background: none;}
+em code, strong code {font-style: normal; font-weight: normal;}
+
