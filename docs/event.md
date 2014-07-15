@@ -39,6 +39,12 @@ anonymous function, for instance) in the case that you later want to [unbind](#u
 it. Naming allows you to unbind by a unique name instead of keeping the
 reference to the function.
 
+{% highlight js %}
+var obj = new Composer.Event();
+obj.bind('hello', function() { alert('Hi!'); });
+obj.trigger('hello');
+{% endhighlight %}
+
 ### bind_once (event_name, fn, bind_name)
 
 Exactly like bind, except that one the binding is triggered *once* it is unbound
