@@ -11,7 +11,7 @@ var app = {
 		var toc = doc.getElement('> .toc');
 		if(!toc) return false;
 
-		var headers = dog.getElements(':docheader()');
+		var headers = doc.getElements(':docheader()');
 		var ul = new Element('ul').inject(toc);
 		var last = [];
 		var level = 2;
