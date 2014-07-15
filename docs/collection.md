@@ -190,6 +190,12 @@ current data (as opposed to the current data being wiped first)
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
+{% highlight js %}
+var collection = new Composer.Collection({name: 'shemp'});
+collection.reset([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
+alert('Have '+ collection.models().length +' models!');
+{% endhighlight %}
+
 ### reset_async (data, options)
 
 List [reset](#reset-1), except that data is added incrementally once per event
@@ -201,6 +207,15 @@ cycle, triggering a [reset](#reset) event when complete.
 completes
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+{% highlight js %}
+var collection = new Composer.Collection();
+collection.reset_async([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}], {
+    complete: function() {
+        alert('Done, have '+ collection.models().length +' models!');
+    }
+});
+{% endhighlight %}
 
 ### sort (options)
 
