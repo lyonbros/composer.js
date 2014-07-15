@@ -197,8 +197,10 @@ This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
 grab the model from your app's API. If successful, the data returned is set into
 to model.
 
-`options` can contain both `success` and `fail` callbacks, fired depending on
-the result of the operation.
+`options` can contain the following items:
+
+- `success` - callback called if the operation completed successfully
+- `error` - callback called if operation failed
 
 This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
@@ -212,8 +214,10 @@ save the model to your app's API. If successful, the data returned is set into
 to model. Depending on the result of [is_new](#is-new), will perform either a
 'create' or 'update'.
 
-`options` can contain both `success` and `fail` callbacks, fired depending on
-the result of the operation.
+`options` can contain the following items:
+
+- `success` - callback called if the operation completed successfully
+- `error` - callback called if operation failed
 
 This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
@@ -226,8 +230,10 @@ This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
 delete the model to your app's API. If successful, the data returned is set into
 to model.
 
-`options` can contain both `success` and `fail` callbacks, fired depending on
-the result of the operation.
+`options` can contain the following items:
+
+- `success` - callback called if the operation completed successfully
+- `error` - callback called if operation failed
 
 This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.

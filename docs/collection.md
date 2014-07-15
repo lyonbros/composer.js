@@ -376,3 +376,17 @@ var second = collection.at(1);
 alert('Second is '+ second.get('name'));
 {% endhighlight %}
 
+### fetch (options)
+
+This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
+grab a list of models from your app's API. If successful, the data returned is
+[reset](#reset-1) into the collection.
+
+`options` can contain the following items:
+
+- `success` - callback called if the operation completed successfully
+- `error` - callback called if operation failed
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+
