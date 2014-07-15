@@ -117,7 +117,7 @@ Sets data into the model. `data` is a hash object of data to set into the model,
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
 {% highlight js %}
