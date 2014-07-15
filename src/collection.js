@@ -311,7 +311,7 @@
 			if(!this.sortfn) return false;
 
 			this._models.sort(this.sortfn);
-			this.fire_event('reset', options, this, options);
+			this.fire_event('reset', options, options);
 		},
 
 		/**
