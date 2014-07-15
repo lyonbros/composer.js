@@ -320,10 +320,59 @@ Returns an array of models that `callback` (optionally bound to `bind`'s scope)
 returns `true` for.
 
 {% highlight js %}
-var collection = new Composer.Collection([{id: 3, name: 'larry'}, {id: 6, name: 'curly'}, {id: 9, name: 'moe'}]);
+var collection = new Composer.Collection([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
 var has_r = collection.filter(function(m) {
     return m.get('name', '').match(/r/i);
 });
 alert(has_r.length + ' models have "r" in the name');
+{% endhighlight %}
+
+### select (selector)
+
+Convenience function that allows "selecting" models based on an object query
+language (a very, very limited language!). Returns an array of models where the
+values given in the `selector` object match those keys in the models (using an
+`and` (&&) logic operation...all key/value pairs must match).
+
+{% highlight js %}
+var collection = new Composer.Collection([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
+var res = collection.select({name: 'curly'});
+alert('Found '+ res.length + ' result(s)');
+{% endhighlight %}
+
+### select_one (selector)
+
+Exactly like [select](#select), but only returns the first match.
+
+### first (n)
+
+Returns the first model in the collection. If `n` is optionally specified,
+returns an array of the first `n` models in the collection.
+
+{% highlight js %}
+var collection = new Composer.Collection([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
+var first = collection.first()
+alert('First is '+ first.get('name'));
+{% endhighlight %}
+
+### last (n)
+
+Returns the last model in the collection. If `n` is optionally specified,
+returns an array of the last `n` models in the collection.
+
+{% highlight js %}
+var collection = new Composer.Collection([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
+var last = collection.last()
+alert('Last is '+ last.get('name'));
+{% endhighlight %}
+
+### at (n)
+
+Returns the model at the index `n` (zero-based indexing).
+
+{% highlight js %}
+var collection = new Composer.Collection([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
+var second = collection.at(1);
+alert('Second is '+ second.get('name'));
 {% endhighlight %}
 
