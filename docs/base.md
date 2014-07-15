@@ -32,7 +32,8 @@ generating function in `Composer.cid`:
 Composer.cid = (function() {
     var x = 0;
     return function() {
-        return 'z'+x++;
+        x++;
+        return 'z'+x;
     }
 })();
 
