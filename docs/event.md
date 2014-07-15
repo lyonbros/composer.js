@@ -76,6 +76,7 @@ are removed. All of them.
 
 Example usage:
 
+<div class="noeval">
 {% highlight js %}
 var obj = new Composer.Event();
 var fn = function() { alert('omg'); };
@@ -101,6 +102,7 @@ obj.unbind('yell');
 // unbind ALL EVENTS
 obj.unbind();
 {% endhighlight %}
+</div>
 
 ### trigger (event_name, ...)
 
