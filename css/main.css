@@ -29,14 +29,14 @@ code {margin: 0 2px; padding: 2px 5px; white-space: nowrap; font-family: Consola
 pre code {color: #c9bf9f; white-space: pre; background: none;}
 em code, strong code {font-style: normal; font-weight: normal;}
 
-.highlight {position: relative; z-index: -1; margin: 0 0 24px 0;}
+.highlight {position: relative; margin: 0 0 24px 0;}
 .highlight input[type=button] {position: absolute; top: 10px; right: 10px; opacity: .6;}
 .highlight input[type=button]:hover {opacity: 1;}
 .noeval .highlight input[type=button] {display: none;}
 .highlight pre {white-space: pre; background-color:#fff; border: 1px solid #ccc; font-size: 13px; line-height: 19px; overflow: auto; padding: 6px 10px; border-radius: 3px;}
 .highlight pre code {background: none !important;}
 
-.toc {width: 184px; float: right; margin: 0 0 0 16px; padding: 10px 16px 10px 32px; background: #fff; border: 1px solid #ddd; border-radius: 4px;}
+.toc {position: relative; z-index: 2; width: 184px; float: right; margin: 0 0 0 16px; padding: 10px 16px 10px 32px; background: #fff; border: 1px solid #ddd; border-radius: 4px;}
 .toc ul {margin: 0; padding: 0; list-style: disc;}
 .toc ul ul {margin-left: 16px;}
 
