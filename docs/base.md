@@ -37,6 +37,6 @@ Composer.cid = (function() {
 })();
 
 // grab a cid!
-var obj = new Composer.Base();
+var obj = new Composer.Model();
 alert('cid: '+ obj.cid());
 {% endhighlight %}
