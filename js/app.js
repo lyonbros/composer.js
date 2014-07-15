@@ -17,13 +17,14 @@ var app = {
 		var level = 2;
 		var last_li = null;
 		headers.each(function(h) {
-			var id = h.get('html')
-				.replace(/\(.*/, '')
+			var no_paren = h.get('html').replace(/\(.*/, '');
+			h.set('html', h.get('html').replace(/ /, '<code>$1</code>'
+			var id = no_paren
 				.replace(/[^a-z0-9 ]/gi, '')
 				.replace(/\s+/g, '-')
 				.replace(/(^-|-$)/g, '');
 			h.id = id;
-			var a = '<a href="#'+id+'">'+h.get('html')+'</a>';
+			var a = '<a href="#'+id+'">'+no_paren+'</a>';
 			var newlevel = parseInt(h.tagName.replace(/^h/i, ''));
 			var li = new Element('li').set('html', a);
 			if(newlevel > level && last_li)
