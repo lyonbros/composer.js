@@ -15,6 +15,10 @@ A collection can contain many models, and a model can exist in many collections.
 This is in contrast to many other MVC frameworks where a model is only allowed
 to exist in one collection.
 
+Collections will also forward various events from the contained models
+(triggering the events that happen to the models on itself), which allows for
+monitoring a group of models all together.
+
 ## Events
 
 Collections have a number of built-in events you can tie into:
@@ -90,4 +94,59 @@ when a model calls [get_url](/composer.js/docs/model#get-url).
 ### initialize (models, params, options)
 
 The constructor. `models` can be an array of either [Composer.Model](/composer.js/docs/model)
-objects, or an array of flat data
+objects, or an array of flat data. If data is passed instead of models, the
+[model parameter](#model) is used to determine what kind of model to create.
+
+`params` allows setting top-level values into the collection on instantiation
+(such as [the model parameter](#model)).
+
+`options` is a hash object that can be passed in to various operations in the
+contructor. Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+__Note:__ unless you know what you're doing, you shouldn't overwrite the
+initialize function. Use [init](#init) instead.
+
+### init ()
+
+Called on creation of a new collection. Can be used to set up bindings or other
+initialization work. Meant to be overridden.
+
+### toJSON ()
+
+Calls [Model.toJSON](/composer.js/docs/model#tojson) on every contained model
+and shoves the results into a nice array. This is nice for serializing a
+collection into JSON or another format.
+
+### models ()
+
+Returns a javascript array of the contained models.
+
+### add (data, options)
+
+Add a new model to the collection. `data` can be a javascript hash object, a
+Composer model, or an array of either. In the case that `data` is a javascript
+object (or an array of objects), each object is used to create the model object
+given under [Collection.model](#model). This lets a collection maintain a
+certain model type for added data.
+
+`options` can contain the following items:
+
+- `at` - insert the model at a specific integer index in the collection's data
+
+Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
+
+{% highlight js %}
+var collection = new Composer.Collection();
+collection.add([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
+alert('Hello, '+ collection.at(2).get('name'));
+{% endhighlight %}
+
+### remove (model, options)
+
+Remove a model from the collection. `model` must be a Composer model object. If
+a model is passed that isn't in the current collection, no changes are made.
+
+Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
+
+
+
