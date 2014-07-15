@@ -95,6 +95,6 @@ var Dog = Base.extend({
 });
 
 var dog = new Dog();
-alert(JSON.stringify(dog.actions));  // ['site', 'bite']
+alert(JSON.stringify(dog.actions));  // ['sit', 'bite']
 {% endhighlight %}
 

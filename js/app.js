@@ -11,6 +11,24 @@ var app = {
 		var toc = doc.getElement('> .toc');
 		if(!toc) return false;
 
+		var headers = dog.getElements(':docheader()');
+		var ul = new Element('ul').inject(toc);
+		var last = [];
+		var level = 2;
+		headers.each(function(h) {
+			var a = '<a href="#'+h.get('html').replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, '-').replace(/(^-|-$)/g, '')+'">'+h.get('html')+'</a>';
+			var newlevel = parseInt(h.tagName.replace(/^h/i));
+			var li = new Element('li').set('html', a).inject(ul);
+			if(newlevel > level)
+			{
+				last.push(ul);
+				ul = new Element('ul').inject(li);
+			}
+			else if(newlevel < level)
+			{
+				ul = last.pop();
+			}
+		});
 	},
 
 	init_eval: function()
