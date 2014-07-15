@@ -240,7 +240,7 @@ serializing into JSON.
 
 {% highlight js %}
 var model = new Composer.Model({id: '888', name: 'fisty'});
-alert('Data '+ JSON.stringify(model.toJSON));
+alert('Data '+ JSON.stringify(model.toJSON()));
 {% endhighlight %}
 
 ### validate (data, options)
