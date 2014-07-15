@@ -11,6 +11,8 @@ var app = {
 		var toc = doc.getElement('> .toc');
 		if(!toc) return false;
 
+		var used_ids = {};
+
 		var headers = doc.getElements(':docheader()');
 		var ul = new Element('ul').inject(toc);
 		var last = [];
@@ -26,6 +28,12 @@ var app = {
 				.replace(/[\._ ]+/g, '-')
 				.replace(/(^-|-$)/g, '')
 				.toLowerCase();
+			var x = 0;
+			while(used_ids[id])
+			{
+				id += '-'+x
+			}
+			used_ids[id] = true;
 			h.id = id;
 			var a = '<a href="#'+id+'">'+no_paren+'</a>';
 			var newlevel = parseInt(h.tagName.replace(/^h/i, ''));

@@ -15,6 +15,16 @@ A collection can contain many models, and a model can exist in many collections.
 This is in contrast to many other MVC frameworks where a model is only allowed
 to exist in one collection.
 
+## Events
+
+Collections have a number of built-in events you can tie into:
+
+### add
+
+Triggered when a new model is added to a collection. The triggering arguments
+are the model being added, the collection adding the new model, and the options
+passed to the [add](#add) function.
+
 ## Composer.Collection
 
 This is the collection class. It extends [Composer.Base](/composer.js/docs/base),
