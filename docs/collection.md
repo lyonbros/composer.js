@@ -314,3 +314,16 @@ var larry = collection.index_of(6);
 alert('Larry index: '+ larry);
 {% endhighlight %}
 
+### filter (callback, bind)
+
+Returns an array of models that `callback` (optionally bound to `bind`'s scope)
+returns `true` for.
+
+{% highlight js %}
+var collection = new Composer.Collection([{id: 3, name: 'larry'}, {id: 6, name: 'curly'}, {id: 9, name: 'moe'}]);
+var has_r = collection.filter(function(m) {
+    return m.get('name', '').match(/r/i);
+});
+alert(has_r.length + ' models have "r" in the name');
+{% endhighlight %}
+
