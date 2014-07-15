@@ -57,7 +57,7 @@ alert('Name: '+ new MyModel().get('name'));
 ### initialize (data, options)
 
 The model's constructor. `data` is a hash object that contains the initial data
-to set into the model.
+to set into the model. Sets `data` into the model via [set](#set).
 
 `options` is a hash object that can be passed in to various operations in the
 contructor. Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
@@ -92,5 +92,39 @@ var model = new Composer.Model({name: 'larry'});
 alert('Data: '+ model.get('name') + ' / ' + model.get('test', 'nope'));
 {% endhighlight %}
 
+### escape (key)
 
+Like [get](#get), grabs data out of a model, but escapes it for inclusion in an
+HTML view.
 
+### has (key)
+
+Returns `true` if the model contains the `key` in its data.
+
+### set (data, options)
+
+Sets data into the model. `data` is a hash object of data to set into the model,
+`options` is a hash of options.
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+This function fires both the [change:&lt;field&gt;](change-field) and [change](#change)
+events.
+
+{% highlight js %}
+var model = new Composer.Model();
+model.set({dogs: ['larry', 'curly', 'moe']});
+alert('Dog 1: ' + model.get('dogs')[1]);
+{% endhighlight %}
+
+### unset (key, options)
+
+Unset an item in a model. `key` is the key to unset in the model's data.
+
+Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+{% highlight js %}
+var model = new Composer.Model({name: 'Scooter'});
+model.unset('name');
+alert('Name? '+ model.get('name'));
+{% endhighlight %}
