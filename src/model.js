@@ -34,10 +34,6 @@
 		 */
 		__composer_type: 'model',
 
-		// for internal object testing
-		// NOTE: deprecated in favor of __composer_type
-		__is_model: true,
-
 		// default values for the model, merged with the data passed in on CTOR
 		defaults: {},
 

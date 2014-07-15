@@ -63,3 +63,4 @@ var MyObj = Composer.Base.extend({
 var obj = new MyObj({allow_clicks: true});
 alert('Allow clicks? '+ obj.options.allow_clicks);
 {% endhighlight %}
+
