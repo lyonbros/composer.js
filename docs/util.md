@@ -23,6 +23,7 @@ Note that `options` also has two functions in it: `success` and `error`.
 being the data returned from the API. `error` should be called if any errors
 happen (first arg is the error, second is the XHR object).
 
+<div class="noeval">
 {% highlight js %}
 Composer.sync = function(method, model, options)
 {
@@ -50,6 +51,7 @@ Composer.sync = function(method, model, options)
     });
 };
 {% endhighlight %}
+</div>
 
 ## cid ()
 
@@ -77,6 +79,6 @@ arrays.
 alert('eq? ' + Composer.eq(
     {name: 'andrew', friends: ['larry', 'curly', 'moe']},
     {name: 'andrew', friends: ['larry', 'curly', 'moe']}
-);
+));
 {% endhighlight %}
 
