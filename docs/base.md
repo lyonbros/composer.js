@@ -13,7 +13,8 @@ object that all other components are based off of.
 The base class all others extend. All extending objects ([model](/composer.js/docs/model),
 [collection](/composer.js/docs/collection), [controller](/composer.js/docs/controller),
 etc) will have access to these attributes/functions (as well as any functions in
-the [Composer.Event class](/composer.js/docs/event#composer-event), which Composer.base extends.
+the [Composer.Event class](/composer.js/docs/event#composer-event), which
+Composer.base extends).
 
 ### options
 <div class="noeval">
