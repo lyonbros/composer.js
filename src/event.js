@@ -165,11 +165,11 @@
 			var handlers = this._handlers[event_name] || [];
 			var catch_all = this._handlers['all'] || [];
 			handlers.slice(0).forEach(function(handler) {
-				handler.apply(null, args.slice(1));
-			});
+				handler.apply(this, args.slice(1));
+			}.bind(this));
 			catch_all.slice(0).forEach(function(handler) {
-				handler.apply(null, args.slice(0));
-			});
+				handler.apply(this, args.slice(0));
+			}.bind(this));
 			if(this._forwards.length > 0)
 			{
 				this._forwards.forEach(function(to) {

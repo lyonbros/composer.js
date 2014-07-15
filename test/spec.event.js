@@ -16,6 +16,16 @@ describe('Composer.Event', function() {
 		expect(dog._handlers['bark'].length).toBe(0);
 	});
 
+	it('will correctly scope bound function', function() {
+		var dog = new Animal();
+		var scope = null;
+		dog.bind('bark', function() {
+			scope = this;
+		});
+		dog.trigger('bark');
+		expect(scope).toBe(dog);
+	});
+
 	it('can handle named bindings properly', function() {
 		var dog = new Animal();
 		var fn = function() {};
