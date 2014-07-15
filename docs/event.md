@@ -28,6 +28,26 @@ event when it is updated with new data.
 This allows you to listen to events for many common actions in your objects and
 act accordingly.
 
+### Silencing
+
+Many (if not all) built-in events can be silenced during various operations by
+passing a special object into the triggering function's `options`.
+
+This can be done in three ways:
+
+<div class="noeval">
+{% highlight js %}
+// silence all events
+mymodel.set({name: 'andrew'}, {silent: true});
+
+// silence some events
+mymodel.set({name: 'andrew'}, {silent: ['change', 'change:name']});
+
+// silence all but some events
+mymodel.set({name: 'andrew'}, {not_silent: ['change']});
+{% endhighlight %}
+</div>
+
 ## Composer.Event
 
 This is the main class others that need eventing extend. It provides some simple
