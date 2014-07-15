@@ -1,6 +1,6 @@
 ---
 title: Filter collection
-layout: default
+layout: documentation
 ---
 
 # Filter collection
