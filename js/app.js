@@ -18,7 +18,7 @@ var app = {
 		var last_li = null;
 		headers.each(function(h) {
 			var no_paren = h.get('html').replace(/\(.*/, '');
-			h.set('html', h.get('html').replace(/ /, '<code>$1</code>'
+			h.set('html', h.get('html').replace(/(\(.*\))/, '<code>$1</code>'));
 			var id = no_paren
 				.replace(/[^a-z0-9 ]/gi, '')
 				.replace(/\s+/g, '-')
