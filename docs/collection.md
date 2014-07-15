@@ -148,5 +148,23 @@ a model is passed that isn't in the current collection, no changes are made.
 
 Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
 
+### upsert (model, options)
 
+Upsert a model (insert if it doesn't exist, otherwise update the existing model
+with the given data). The model passed to `upsert` doesn't need to be the same
+reference as the existing model, only the IDs ([model.id()](/composer.js/docs/model#id))
+need to match.
+
+`options` can contain the following items:
+
+- `at` - insert the model at a specific integer index in the collection's data
+
+Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
+
+{% highlight js %}
+var collection = new Composer.Collection();
+collection.add({id: '1212', name: 'larry'});
+collection.upsert(new Composer.Model({id: '1212', name: 'sandra'}));
+alert('New name: '+ collection.first().get('name'));
+{% endhighlight %}
 
