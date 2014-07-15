@@ -77,3 +77,77 @@ alert('Owner: '+ owner_name +' / first member: '+ first_member);
 The obvious benefit to using the relational model is that your nested data now
 has the same capabilities your top-level items do (including eventing).
 
+Example relation specification, showing all options:
+
+<div class="noeval">
+{% highlight js %}
+var MyModel = Composer.RelationalModel.extend({
+    relations: {
+        // data passed with an `items` key will be converted to a collection
+        items: {
+            collection: Composer.Collection
+        },
+
+        // data passed nested, ie {extra: {user: {...}}} would be parsed such that
+        // the resulting nested `user` key would be the model.
+        //
+        // You'd access like so:
+        //  mymodel.get('extra').user.get('username')
+        //
+        // (note that we don't create models for each level of nesting, only the
+        // final layer)
+        'extra.user': {
+            model: MyUser
+        },
+
+        // we can also create filter collections
+        filtered: {
+            filter_collection: Composer.FilterCollection,
+            // allows creation of a master collection on instantiation, OR you
+            // return one from another object
+            master: function() {
+                return new Composer.Collection()
+            },
+            // options only applies if you're passing a FilterCollection, 
+            options: {
+                // these are all FilterCollection options, which are explained
+                // in the Composer.FilterCollection docs
+                filter: function(model) { return true; },
+                transform: ...,
+                sortfn: ...,
+                limit: ...
+            }
+        },
+
+        // you can also specify a delayed init, meaning the sub-object won't be
+        // created until data is set into it (the default is to set up all
+        // sub-object on instantiation).
+        delay: {
+            delayed_init: true,
+            model: Composer.Model
+        }
+    }
+});
+{% endhighlight %}
+</div>
+
+### toJSON
+
+Like [Model.toJSON](/composer.js/docs/model/#tojson), this function serializes
+the data contained in the model into objects/arrays. However, this function also
+aggregates the serialized results from all its sub-objects:
+
+{% highlight js %}
+var MyModel = Composer.RelationalModel.extend({
+    relations: {
+        friends: { collection: Composer.Collection }
+    }
+});
+var model = new MyModel({
+    friends: [{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]
+});
+
+var serialized = model.toJSON();
+alert('Second friend: '+ serialized[1].name);
+{% endhighlight %}
+
