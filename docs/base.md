@@ -29,7 +29,8 @@ Returns the object's *client ID*. This is an auto-assigned string value, used to
 distinguish various objects from each other *without* having to having to assign
 them an ID manually.
 
-See [Composer.cid](/composer.js/docs/util#cid).
+See [Composer.cid](/composer.js/docs/util#composer-cid).
+
 {% highlight js %}
 // grab a cid!
 var obj = new Composer.Model();
