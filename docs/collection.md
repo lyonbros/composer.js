@@ -36,7 +36,26 @@ Triggered when a model is removed from the collection. Arguments passed:
 ### sort
 
 Fired when an upserted model is put into a new position (it wasn't added, but
-its position changed). Triggering arguments are the model and the options pass
+its position changed). No arguments passed.
+
+### upsert
+
+Fired when an existing model is upserted. If a new model is upserted, [add](#add)
+is triggered instead. Arguments passed:
+
+- the model being upserted
+- the options passed to [upsert](#upsert)
+
+### clear
+
+Fired when a collection is [cleared](#clear-1). No arguments passed.
+
+### reset
+
+Triggered when a collection is [reset](#reset-1) with new data. Arguments
+passed:
+
+- the options passed to [reset](#reset-1).
 
 ## Composer.Collection
 
