@@ -48,6 +48,39 @@ is created.
 Default: `false`. A param holding a selector (or element) that we want to
 inject the controller's [main element](#el) into on creation.
 
+### tag
+
+Default: `"div"`. The type of tag that [el](#el) will be created as. For
+instance, if the controller was to describe an item in a list, you might set
+`tag` to be "li".
+
+### elements
+
+Default: `{}`. An object that provides selector -> attribute mapping. Note that
+the elements found by the selectors are searched for *within* the [el](#el)
+element and are updated after calling [html](#html).
+
+{% highlight js %}
+var MyController = Composer.Controller.extend({
+    elements: {
+        'h1': 'the_title',
+        'p': 'the_text'
+    },
+
+    init: function()
+    {
+        this.render();
+    },
+
+    render: function()
+    {
+        this.html('<h1>Test</h1><p>Hello</p>');
+    }
+});
+var con = new MyController();
+alert('Text: '+ con.the_text.innerHTML);
+{% endhighlight %}
+
 ### initialize 
 `options` can contain the following items:
 
