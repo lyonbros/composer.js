@@ -19,9 +19,9 @@ var app = {
 		var level = 2;
 		var last_li = null;
 		headers.each(function(h) {
-			var no_paren = h.get('html').replace(/\(.*/, '');
-			h.set('html', h.get('html').replace(/(\(.*\))/, '<code>$1</code>'));
-			var id = no_paren
+			var no_attr = h.get('html').replace(/ :: .*/, '');
+			h.set('html', h.get('html').replace(/ :: (.*?)$/, '<code>$1</code>'));
+			var id = no_attr
 				.replace(/&lt;/g, '-')
 				.replace(/&gt;/g, '-')
 				.replace(/[^a-z0-9\._ -]/gi, '')
@@ -34,7 +34,7 @@ var app = {
 			}
 			used_ids[id] = true;
 			h.id = id;
-			var a = '<a href="#'+id+'">'+no_paren+'</a>';
+			var a = '<a href="#'+id+'">'+no_attr+'</a>';
 			var newlevel = parseInt(h.tagName.replace(/^h/i, ''));
 			var li = new Element('li').set('html', a);
 			if(newlevel > level && last_li)
