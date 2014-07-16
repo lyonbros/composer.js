@@ -21,8 +21,8 @@ var app = {
 		var process_meta = function(str)
 		{
 			return str
-				.replace(/ :: (attribute\((.*?)\).*)/, '<code>attribute (default \2)</code>')
-				.replace(/ :: (function.*?)$/, '<code>$1</code>');
+				.replace(/ :: attribute\((.*?)\).*/, '<code>attribute (default: \1)</code>')
+				.replace(/ :: function(.*?)$/, '<code>function $1</code>');
 		};
 		headers.each(function(h) {
 			var no_attr = h.get('html').replace(/ :: .*/, '');
