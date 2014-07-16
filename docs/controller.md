@@ -33,9 +33,9 @@ Arguments passed:
 The main controller class. Extends [Composer.Base](/composer.js/docs/base),
 giving it access to all of Base's abilities.
 
-### el
+### el -- attribute, default: false
 
-Default: `false`. A param holding the current DOM element the controller is
+A param holding the current DOM element the controller is
 attached to. This is the element the controller renders into and removes when
 it is [released](#release-1).
 
@@ -43,20 +43,20 @@ If this param is a string, it is assumed to be a selector (Mootools/jQuery) and
 that element is used as the el. If not found, a new element of type [tag](#tag)
 is created.
 
-### inject
+### inject -- attribute, default: false
 
-Default: `false`. A param holding a selector (or element) that we want to
+A param holding a selector (or element) that we want to
 inject the controller's [main element](#el) into on creation.
 
-### tag
+### tag -- attribute, default: "div"
 
-Default: `"div"`. The type of tag that [el](#el) will be created as. For
+The type of tag that [el](#el) will be created as. For
 instance, if the controller was to describe an item in a list, you might set
 `tag` to be "li".
 
-### elements
+### elements -- attribute, default: {}
 
-Default: `{}`. An object that provides selector -> attribute mapping. Note that
+An object that provides selector -> attribute mapping. Note that
 the elements found by the selectors are searched for *within* the [el](#el)
 element and are updated after calling [html](#html).
 
@@ -80,6 +80,10 @@ var MyController = Composer.Controller.extend({
 var con = new MyController();
 alert('Text: '+ con.the_text.innerHTML);
 {% endhighlight %}
+
+### events -- attribute, default: {}
+
+Default: `{}`.
 
 ### initialize 
 `options` can contain the following items:
