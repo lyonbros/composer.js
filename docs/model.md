@@ -64,7 +64,8 @@ set. Arguments passed:
 
 The model class.
 
-### defaults
+### defaults :: attribute({})
+
 `Model.defaults` is an object that can be used to populate default data into the
 model on instantiation.
 
@@ -75,23 +76,23 @@ var MyModel = Composer.Model.extend({
 alert('Name: '+ new MyModel().get('name'));
 {% endhighlight %}
 
-### id_key
+### id_key :: attribute("id")
 
-Default: `'id'`. Tells the model where to look for the ID when calling [id](#id)
+Tells the model where to look for the ID when calling [id](#id)
 or other ID-related functions.
 
-### url
+### url :: attribute(false)
 
-Default: `false`. Tells the model what *exact* URL endpoint to use for [get_url](#get-url)
+Tells the model what *exact* URL endpoint to use for [get_url](#get-url)
 when using the syncing functions. It's more pragmatic to use [base_url](#base-url)
 instead, but this can be a useful override in some instances.
 
-### base_url
+### base_url :: attribute(false)
 
-Default: `false`. Prepended to the model's ID when doing syncing calls. See
+Prepended to the model's ID when doing syncing calls. See
 [get_url](#get-url).
 
-### initialize (data, options)
+### initialize :: function(data, options)
 
 The model's constructor. `data` is a hash object that contains the initial data
 to set into the model. Sets `data` into the model via [set](#set).
@@ -103,7 +104,7 @@ The `options` value is also passed into [init](#init).
 __Note:__ unless you know what you're doing, you shouldn't overwrite the
 initialize function. Use [init](#init) instead.
 
-### init (options)
+### init :: function(options)
 
 Local contructor for the model, passed the `options` object given to the
 constructor. If you want any operations to be run when a model is created, this
@@ -119,7 +120,7 @@ var MyModel = Composer.Model.extend({
 new MyModel({name: 'larry'}, {is_cool: true});
 {% endhighlight %}
 
-### get (key, default)
+### get :: function(key, default)
 
 Gets data out of the model by its key. If the value is not present, `default` is
 used instead.
@@ -129,12 +130,12 @@ var model = new Composer.Model({name: 'larry'});
 alert('Data: '+ model.get('name') + ' / ' + model.get('test', 'nope'));
 {% endhighlight %}
 
-### escape (key)
+### escape :: function(key)
 
 Like [get](#get), grabs data out of a model, but escapes it for inclusion in an
 HTML view.
 
-### has (key)
+### has :: function(key)
 
 Returns `true` if the model contains the `key` in its data.
 
@@ -143,7 +144,7 @@ var model = new Composer.Model({age: 27});
 alert('Has key? '+ model.has('age') + ' / ' + model.has('tears'));
 {% endhighlight %}
 
-### set (data, options)
+### set :: function(data, options)
 
 Sets data into the model. `data` is a hash object of data to set into the model,
 `options` is a hash of options.
@@ -161,7 +162,7 @@ model.bind('change:dogs', function(model, dogs) {
 model.set({dogs: ['larry', 'curly', 'moe']});
 {% endhighlight %}
 
-### unset (key, options)
+### unset :: function(key, options)
 
 Unset an item in a model. `key` is the key to unset in the model's data.
 
@@ -176,7 +177,7 @@ model.unset('name');
 alert('Name? '+ model.get('name'));
 {% endhighlight %}
 
-### clear (options)
+### clear :: function(options)
 
 Clear all data from the model. 
 
@@ -191,7 +192,7 @@ model.clear();
 alert('model data: '+ model.get('name') + ' / '+ model.get('age'));
 {% endhighlight %}
 
-### fetch (options)
+### fetch :: function(options)
 
 This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
 grab the model from your app's API. If successful, the data returned is set into
@@ -207,7 +208,7 @@ events.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-### save (options)
+### save :: function(options)
 
 This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
 save the model to your app's API. If successful, the data returned is set into
@@ -224,7 +225,7 @@ events.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-### destroy (options)
+### destroy :: function(options)
 
 This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
 delete the model to your app's API. If successful, the data returned is set into
@@ -240,7 +241,7 @@ events.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-### parse (data)
+### parse :: function(data)
 
 Replace this function to handle any data returned from your API before it's set
 into the model. For instance, if your API returns JSON and your method of
@@ -254,7 +255,7 @@ model.fetch();
 {% endhighlight %}
 </div>
 
-### id (no_cid)
+### id :: function(no_cid)
 
 Returns the model's `id` field. If `id` doesn't exist, returns the model's
 [CID](/composer.js/docs/base#cid). If `no_cid` is true, returns `false` if no
@@ -265,7 +266,7 @@ var model = new Composer.Model({id: '1234'});
 alert('ID: ' + model.id());
 {% endhighlight %}
 
-### clone ()
+### clone :: function()
 
 Clone a model into a new model.
 
@@ -275,7 +276,7 @@ var clone = model.clone();
 alert('Clone '+ clone.get('name') + ' / ' + (clone == model));
 {% endhighlight %}
 
-### toJSON ()
+### toJSON :: function()
 
 Returns a bare copy of the model's data. Good for passing into views or for
 serializing into JSON.
@@ -285,12 +286,12 @@ var model = new Composer.Model({id: '888', name: 'fisty'});
 alert('Data '+ JSON.stringify(model.toJSON()));
 {% endhighlight %}
 
-### validate (data, options)
+### validate :: function(data, options)
 
 Validate data passed to the model. This happens whenever dat in the model
 changes. Return `false` from this function to signify a *success*.
 
-### get_url ()
+### get_url :: function()
 
 Returns the model's URL, as it relates to your API. Uses `Model.base_url` to
 determine the base, and then appends the ID from there (if it exists).

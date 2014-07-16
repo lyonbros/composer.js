@@ -66,12 +66,12 @@ passed:
 This is the collection class. It extends [Composer.Base](/composer.js/docs/base),
 giving you everything base has.
 
-### model
+### model :: attribute(Composer.Model)
 
-This is a parameter (default: `Composer.Model`) that tells the collection what
-object to use for newly created models.
+This is a parameter tells the collection what object to use for newly created
+models.
 
-### sortfn (a, b)
+### sortfn :: function(a, b)
 
 If specified, newly added models will be sorted based on this function before
 being inserted into the collection. Note that sorting is only done on insertion,
@@ -80,18 +80,18 @@ and if the data in your models changes, the sort may not be correct.
 If you need a collection that maintains sort order of your models as they
 update, see the [Filter collection](/composer.js/docs/filtercollection).
 
-### url
+### url :: attribute("/mycollection")
 
-Default `'/mycollection'`. Tells the collection what URL base the models should
+Tells the collection what URL base the models should
 use (assuming they don't have a URL manually specified) when calling the [Composer.sync](/composer.js/docs/util#composer-sync)
 function.
 
-### priority
+### priority :: attribute(1)
 
-Default `1`. Used mainly to determine which collection to derive the URL from
+Used mainly to determine which collection to derive the URL from
 when a model calls [get_url](/composer.js/docs/model#get-url).
 
-### initialize (models, params, options)
+### initialize :: function(models, params, options)
 
 The constructor. `models` can be an array of either [Composer.Model](/composer.js/docs/model)
 objects, or an array of flat data. If data is passed instead of models, the
@@ -106,22 +106,22 @@ contructor. Note that `options` can contain [silencing directives](/composer.js/
 __Note:__ unless you know what you're doing, you shouldn't overwrite the
 initialize function. Use [init](#init) instead.
 
-### init ()
+### init :: function()
 
 Called on creation of a new collection. Can be used to set up bindings or other
 initialization work. Meant to be overridden.
 
-### toJSON ()
+### toJSON :: function()
 
 Calls [Model.toJSON](/composer.js/docs/model#tojson) on every contained model
 and shoves the results into a nice array. This is nice for serializing a
 collection into JSON or another format.
 
-### models ()
+### models :: function()
 
 Returns a javascript array of the contained models.
 
-### add (data, options)
+### add :: function(data, options)
 
 Add a new model to the collection. `data` can be a javascript hash object, a
 Composer model, or an array of either. In the case that `data` is a javascript
@@ -141,14 +141,14 @@ collection.add([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
 alert('Hello, '+ collection.at(2).get('name'));
 {% endhighlight %}
 
-### remove (model, options)
+### remove :: function(model, options)
 
 Remove a model from the collection. `model` must be a Composer model object. If
 a model is passed that isn't in the current collection, no changes are made.
 
 Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
 
-### upsert (model, options)
+### upsert :: function(model, options)
 
 Upsert a model (insert if it doesn't exist, otherwise update the existing model
 with the given data). The model passed to `upsert` doesn't need to be the same
@@ -168,7 +168,7 @@ collection.upsert(new Composer.Model({id: '1212', name: 'sandra'}));
 alert('New name: '+ collection.first().get('name'));
 {% endhighlight %}
 
-### clear (options)
+### clear :: function(options)
 
 Clear (remove) all models from the collection. Fires [remove](#remove) events
 for each model removed. Also fires the [clear](#clear) event if any models were
@@ -176,7 +176,7 @@ removed.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-### reset (data, options)
+### reset :: function(data, options)
 
 Reset the models in the collection with new ones. This is the same as a [clear](#clear-1)
 followed by an [add](#add-1).
@@ -196,7 +196,7 @@ collection.reset([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
 alert('Have '+ collection.models().length +' models!');
 {% endhighlight %}
 
-### reset_async (data, options)
+### reset_async :: function(data, options)
 
 List [reset](#reset-1), except that data is added incrementally once per event
 cycle, triggering a [reset](#reset) event when complete.
@@ -217,24 +217,24 @@ collection.reset_async([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}], {
 });
 {% endhighlight %}
 
-### sort (options)
+### sort :: function(options)
 
 Sorts the models in the collection, manually, using [sortfn](#sortfn). Fires the
 [reset](#reset) event on completion.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-### sort_index (model)
+### sort_index :: function(model)
 
 Returns the index (in [Collection.models()](#models)) of the given model. If no
 [sortfn](#sortfn) property is present in the collection, returns false.
 
-### parse (data)
+### parse :: function(data)
 
 Allows pre-processing of data from external API sources before adding to the
 collection (see [Model.parse](/composer.js/docs/model#parse)).
 
-### each (callback, bind)
+### each :: function(callback, bind)
 
 Runs the given `callback` (optionally bound to `bind`'s scope) on each model in
 the collection (the only argument being the model itself).
@@ -246,7 +246,7 @@ collection.each(function(m) { res.push(m.get('name')); });
 alert('Names: '+ JSON.stringify(res));
 {% endhighlight %}
 
-### map (callback, bind)
+### map :: function(callback, bind)
 
 Runs a javascript `map` on the models in the collection using the `callback` as
 the map function (optionally bound to `bind`'s scope), aggregating the results
@@ -258,7 +258,7 @@ var res = collection.map(function(m) { return m.get('name'); });
 alert('Names: '+ JSON.stringify(res));
 {% endhighlight %}
 
-### find (callback, sortfn)
+### find :: function(callback, sortfn)
 
 Finds the first model that `callback` returns `true` for. Optionally allows
 specifying a `sortfn`, which is applied on a *copy* of the models (doesn't
@@ -271,7 +271,7 @@ var moe = collection.find(function(m) { return m.get('name') == 'moe'; });
 alert('Found moe? '+ (moe ? true : false));
 {% endhighlight %}
 
-### exists (callback)
+### exists :: function(callback)
 
 Like [find](#find), but just returns `true` if at least one model is found that
 satisfies `callback`.
@@ -281,7 +281,7 @@ var collection = new Composer.Collection([{name: 'larry'}, {name: 'curly'}, {nam
 alert('Found curly? '+ collection.exists(function(m) { return m.get('name') == 'curly'; }));
 {% endhighlight %}
 
-### find_by_id (id, options)
+### find_by_id :: function(id, options)
 
 Find a model in the collection by its ID.
 
@@ -297,14 +297,14 @@ var larry = collection.find_by_id(3);
 alert('Found larry? '+ (larry ? true : false));
 {% endhighlight %}
 
-### find_by_cid (cid)
+### find_by_cid :: function(cid)
 
 Exactly like [find_by_id](#find-by-id), except that it specifically searches
 using models' CID values instead of ID. This is useful if you need to look for
 models that may or may not have a real ID (but all objects have a CID assigned
 on creation, so there will always be a CID).
 
-### index_of (model_or_id)
+### index_of :: function(model_or_id)
 
 Returns the index of the given model (or model's ID) in the collections models.
 
@@ -314,7 +314,7 @@ var larry = collection.index_of(6);
 alert('Larry index: '+ larry);
 {% endhighlight %}
 
-### filter (callback, bind)
+### filter :: function(callback, bind)
 
 Returns an array of models that `callback` (optionally bound to `bind`'s scope)
 returns `true` for.
@@ -327,7 +327,7 @@ var has_r = collection.filter(function(m) {
 alert(has_r.length + ' models have "r" in the name');
 {% endhighlight %}
 
-### select (selector)
+### select :: function(selector)
 
 Convenience function that allows "selecting" models based on an object query
 language (a very, very limited language!). Returns an array of models where the
@@ -340,11 +340,11 @@ var res = collection.select({name: 'curly'});
 alert('Found '+ res.length + ' result(s)');
 {% endhighlight %}
 
-### select_one (selector)
+### select_one :: function(selector)
 
 Exactly like [select](#select), but only returns the first match.
 
-### first (n)
+### first :: function(n)
 
 Returns the first model in the collection. If `n` is optionally specified,
 returns an array of the first `n` models in the collection.
@@ -355,7 +355,7 @@ var first = collection.first()
 alert('First is '+ first.get('name'));
 {% endhighlight %}
 
-### last (n)
+### last :: function(n)
 
 Returns the last model in the collection. If `n` is optionally specified,
 returns an array of the last `n` models in the collection.
@@ -366,7 +366,7 @@ var last = collection.last()
 alert('Last is '+ last.get('name'));
 {% endhighlight %}
 
-### at (n)
+### at :: function(n)
 
 Returns the model at the index `n` (zero-based indexing).
 
@@ -376,7 +376,7 @@ var second = collection.at(1);
 alert('Second is '+ second.get('name'));
 {% endhighlight %}
 
-### fetch (options)
+### fetch :: function(options)
 
 This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
 grab a list of models from your app's API. If successful, the data returned is

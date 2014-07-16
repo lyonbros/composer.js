@@ -31,35 +31,34 @@ fires, with no material differences.
 This is the filter collection class. It extends [Composer.Collection class](/composer.js/docs/collection#composer-collection),
 giving it all the Collection's abilities.
 
-### master
+### master :: attribute(null)
 
-Default: `null`. This parameter is the master collection this filter collection
+This parameter is the master collection this filter collection
 latches on to. It must be preset for the filter collection to function properly,
 and is generally set by [initialize](#initialize).
 
-### filter (model)
+### filter :: function(model)
 
 Default: `function() { return true; }`. The main filter function. This will
 return either true or false for every model passed (true meaning "yes this
 filter collection should contain this model", false meaning "exclude this model
 from the filter collection").
 
-### transform (model, action)
+### transform :: function(model, action)
 
 Default: `null`. A function you set that will run any needed data transformation
 on models [added](#add) or [removed](#remove) from the filter collection.
 `model` is the model being added/removed, `action` will be one of "add" or
 "remove".
 
-### limit
+### limit :: attribute(false)
 
-Default: `false`. Either false (disabled) or an integer value that determines
+Either false (disabled) or an integer value that determines
 the max number of models this filter collection should hold. This is applied
 *after* the [sortfn](/composer.js/docs/collection#sortfn).
 
-### options
+### options :: attribute
 
-Default:
 {% highlight js %}
 {
     forward_all_events: false,
@@ -84,7 +83,7 @@ data changes will trigger what events.
 `sort_event` tells the filter collection to fire a "sort" event whenever the
 sort order of items changes.
 
-### initialize (master, options)
+### initialize :: function(master, options)
 
 Constructor. `master` is the collection (or filter collection) to attach to and
 start filtering on.
@@ -102,18 +101,18 @@ var filter = new Composer.FilterCollection(new Composer.Collection, {
 {% endhighlight %}
 </div>
 
-### attach ()
+### attach :: function()
 
 Attach the filter collection to the [master](#master) collection. This is called
 by default by [initialize](#initialize).
 
-### detach ()
+### detach :: function()
 
 Stop listening to events on the [master](#master). This should be called on any
 filter collection you wish to remove from your app after it has been
 instantiated, otherwise it will not be garbage collected.
 
-### refresh (options)
+### refresh :: function(options)
 
 Refresh the models in the filter collection (brute force). This will clear the
 filter collection, re-filter the models from the master, re-sort them, and then
@@ -126,7 +125,7 @@ removed during the process and trigger "add" or "remove" events for them.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-### add (data, options)
+### add :: function(data, options)
 
 Like [Collection.add](/composer.js/docs/collection#add-1), but will apply the
 [transform](#transform) function to the model (with the "add" action) and also
@@ -141,7 +140,7 @@ This function also adds the model to the [master](#master) collection.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-### remove (model, options)
+### remove :: function(model, options)
 
 Like [Collection.remove](/composer.js/docs/collection#remove-1), but will apply
 the [transform](#transform) function the the model (with the "remove" action).

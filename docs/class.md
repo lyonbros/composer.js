@@ -72,6 +72,20 @@ var shiba = new Shiba();
 alert(JSON.stringify(shiba.bites));  // {people: true, rats: true}
 {% endhighlight %}
 
+## Constructors
+
+A class contructor is specified by its `initialize` function:
+
+{% highlight js %}
+var Class = Composer.Class({
+    initialize: function()
+    {
+        alert('hello!');
+    }
+});
+new Class();
+{% endhighlight %}
+
 ## Parent methods
 
 The class system allows calling parent methods using `this.parent()`:

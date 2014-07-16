@@ -156,7 +156,7 @@ var tail = dog.get('tail').get('name');
 alert('Legs / tail name: '+ legs + ' / ' + tail);
 {% endhighlight %}
 
-### toJSON ()
+### toJSON :: function()
 
 Like [Model.toJSON](/composer.js/docs/model#tojson), this function serializes
 the data contained in the model into objects/arrays. However, this function also
@@ -176,7 +176,7 @@ var serialized = model.toJSON();
 alert('Second friend: '+ serialized.friends[1].name);
 {% endhighlight %}
 
-### set (data, options)
+### set :: function(data, options)
 
 Set, like [Model.set](/composer.js/docs/model#set), sets data into the
 relational model, but is also responsible for turning the nested data into your
@@ -184,5 +184,4 @@ object hierarchy.
 
 While its funcationality is the same as `Model.set`, it's worth mentioning that
 this function does most of the magic.
-
 

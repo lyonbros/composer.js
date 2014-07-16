@@ -68,7 +68,7 @@ mymodel.set({name: 'andrew'}, {not_silent: ['change']});
 This is the main class others that need eventing extend. It provides some simple
 but powerful functions.
 
-### bind (event_name, fn, bind_name)
+### bind :: function(event_name, fn, bind_name)
 
 Bind a function to an event on this object. `event_name` can be any string (ie
 `change`, `click`, etc). Note that `event_name` can also be an array of strings,
@@ -90,7 +90,7 @@ obj.bind('hello', function() { alert('Hi!'); });
 obj.trigger('hello');
 {% endhighlight %}
 
-### bind_once (event_name, fn, bind_name)
+### bind_once :: function(event_name, fn, bind_name)
 
 Exactly like bind, except that one the binding is triggered *once* it is unbound
 from the object. Note that `event_name` can be an array of strings, and each one
@@ -99,7 +99,7 @@ will have the same function bound to it.
 This makes it easy to create one-off bindings to event on an object without
 having to worry about manually unbinding the event.
 
-### unbind (event_name, function_or_name)
+### unbind :: function(event_name, function_or_name)
 
 Unbind an event from an object. `event_name` is the event name that's bound and
 `function_or_name` is either the reference to `fn` (passed into [bind](#bind) or
@@ -150,7 +150,7 @@ obj.unbind();
 {% endhighlight %}
 </div>
 
-### trigger (event_name, ...)
+### trigger :: function(event_name, ...)
 
 Trigger an event on an object. `event_name` can be any string, and any other
 arguments passed to `trigger` are available as the arguments the the functions

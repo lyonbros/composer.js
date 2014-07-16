@@ -18,8 +18,15 @@ var app = {
 		var last = [];
 		var level = 2;
 		var last_li = null;
+		var process_meta = function(str)
+		{
+			return str
+				.replace(/ :: (attribute\((.*?)\).*)/, '<code>attribute (default \2)</code>')
+				.replace(/ :: (function.*?)$/, '<code>$1</code>');
+		};
 		headers.each(function(h) {
 			var no_attr = h.get('html').replace(/ :: .*/, '');
+			h.set('html', process_meta(h.get('html')));
 			h.set('html', h.get('html').replace(/ :: (.*?)$/, '<code>$1</code>'));
 			var id = no_attr
 				.replace(/&lt;/g, '-')

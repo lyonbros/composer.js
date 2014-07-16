@@ -55,7 +55,7 @@ Composer.sync = function(method, model, options)
 {% endhighlight %}
 </div>
 
-## Composer.cid ()
+## Composer.cid :: function()
 
 A function that generates client-ids for every object instantiated by Composer.
 This function can be replaced with your own.
@@ -72,7 +72,7 @@ Composer.cid = (function() {
 alert('CID: '+ new Composer.Model().cid());
 {% endhighlight %}
 
-## Composer.eq (a, b)
+## Composer.eq :: function(a, b)
 
 Determines if two objects are equal. Does a deep-inspection of objects and
 arrays.
@@ -92,7 +92,7 @@ See [Composer.merge_extend](/composer.js/docs/class#composer-merge-extend).
 
 A collection of array utilities, mimicked after Mootools.
 
-### erase (array, item)
+### erase :: function(array, item)
 
 Erase all instances of an item from an array.
 
@@ -106,7 +106,7 @@ alert('Result: '+ JSON.stringify(arr));
 
 A collection of object utilities, mimicked after Mootools.
 
-### each (obj, fn, bind)
+### each :: function(obj, fn, bind)
 
 Call `fn` for each key/value pair on `obj` (optionally binding `bind` to `fn`'s
 scope).
@@ -119,7 +119,7 @@ Composer.object.each({name: 'andrew', age: 27}, function(val, key) {
 {% endhighlight %}
 </div>
 
-### clone (obj)
+### clone :: function(obj)
 
 Clone an object.
 
@@ -129,7 +129,7 @@ var clone = Composer.object.clone({horses: 'goodbye'});
 {% endhighlight %}
 </div>
 
-### merge (to, ...)
+### merge :: function(to, ...)
 
 Merge a number of objects into `to`, objects being listed later having
 preference.
