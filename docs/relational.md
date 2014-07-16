@@ -143,6 +143,8 @@ var Animal = Composer.RelationalModel.extend({
     }
 });
 var Dog = Animal.extend({
+    // we'll get `legs` here even if we don't specify it because the relations
+    // are merged from the parent
     relations: {
         tail: { model: Composer.Model }
     }
