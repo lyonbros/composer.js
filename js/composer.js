@@ -2340,7 +2340,7 @@
 			if(!this.elements) return false;
 			Object.keys(this.elements).forEach(function(key) {
 				var iname = this.elements[key];
-				console.log('el: ', key, iname, this.el, Composer.find(this.el, key));
+				console.log('el: ', key, iname, this.el, this.el.innerHTML, Composer.find(this.el, key));
 				this[iname] = Composer.find(this.el, key);
 			}.bind(this));
 		}
