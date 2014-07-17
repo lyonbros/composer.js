@@ -75,7 +75,7 @@ var MyController = Composer.Controller.extend({
     render: function()
     {
         this.html('<h1>Test</h1><p>Hello</p>');
-        console.log('html: ', this.el);
+        console.log('html: ', this.el, this.the_title, this.the_text);
     }
 });
 var con = new MyController();
