@@ -95,7 +95,9 @@ var MyController = Composer.Controller.extend({
 
     init: function()
     {
-        this.html('<input type="button" value="Close"><h1>Click me!</h1>');
+        var tpl = '<input type="button" value="Close" style="float:right">';
+        tpl += '<h1>Click me!</h1>';
+        this.html(tpl);
     },
 
     click_title: function(e)
