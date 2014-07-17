@@ -56,6 +56,20 @@ describe('Composer.Controller', function() {
 		expect(con.clicked).toBe(true);
 	});
 
+	it('will create non-injected elements', function() {
+		var Controller = Composer.Controller.extend({
+			elements: { 'h1': 'the_title' },
+
+			init: function()
+			{
+				this.html('<h1>LOOL</h1><p>text text omg</p>');
+			}
+		});
+		var con = new Controller();
+		expect(con.el.parentNode).toBeFalsy();
+		expect(con.the_title.innerHTML).toBe('LOOL');
+	});
+
 	it('properly merges elements/events when extending', function() {
 		var Ext = MyController.extend({
 			elements: { 'p': 'my_p' },
