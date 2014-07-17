@@ -75,7 +75,6 @@ var MyController = Composer.Controller.extend({
     render: function()
     {
         this.html('<h1>Test</h1><p>Hello</p>');
-        console.log('html: ', this.el, this.the_title, this.the_text);
     }
 });
 var con = new MyController();
@@ -84,7 +83,28 @@ alert('Text: '+ con.the_text.innerHTML);
 
 ### events :: attribute({})
 
-Default: `{}`.
+An object that provides event monitoring for elements within [el](#el). It sets
+up events in '<event> [selector]' -> 'function_name' mapping:
+
+{% highlight js %}
+var MyController = Composer.Controller.extend({
+    events: {
+        'click h1': 'click_title'
+    },
+
+    init: function()
+    {
+        this.html('<h1>Click me!</h1>');
+    },
+
+    click_title: function(e)
+    {
+        alert('Title clicked!');
+    }
+});
+new MyController({ inject: '#contest1' });
+{% endhighlight %}
+<div id="contest1"></div>
 
 ### initialize 
 `options` can contain the following items:
