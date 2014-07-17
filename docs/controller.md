@@ -89,17 +89,23 @@ up events in '<event> [selector]' -> 'function_name' mapping:
 {% highlight js %}
 var MyController = Composer.Controller.extend({
     events: {
-        'click h1': 'click_title'
+        'click h1': 'click_title',
+        'click input[type=button]': 'close'
     },
 
     init: function()
     {
-        this.html('<h1>Click me!</h1>');
+        this.html('<input type="button" value="Close"><h1>Click me!</h1>');
     },
 
     click_title: function(e)
     {
         alert('Title clicked!');
+    },
+
+    close: function(e)
+    {
+        this.release();
     }
 });
 new MyController({ inject: '#contest1' });
