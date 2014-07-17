@@ -66,8 +66,14 @@ var app = {
 
 		var code = doc.getElements('.highlight > pre > code');
 		code.forEach(function(el) {
+			var entity_unescape = function(input)
+			{
+				var e = document.createElement('div');
+				e.innerHTML = input;
+				return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+			};
 			var hl = el.getParent().getParent();
-			var code = el.get('html').replace(/<.*?>/g, '');
+			var code = entity_unescape(el.get('html').replace(/<.*?>/g, ''));
 			var btn = new Element('input[type=button]').addEvent('click', function() {
 				var fn = new Function(code);
 				fn();
