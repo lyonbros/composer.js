@@ -99,7 +99,6 @@ var MyController = Composer.Controller.extend({
         tpl += '<h1>Click me!</h1>';
         this.html(tpl);
         this.el.style.background = '#fcc';
-        this.el.style.padding = '10px';
     },
 
     click_title: function(e)
