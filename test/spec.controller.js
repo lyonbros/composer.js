@@ -28,7 +28,7 @@ describe('Composer.Controller', function() {
 		}
 	});
 
-	it('can be instantiated properly', function() {
+	it('can be instantiated properly (and inits elements properly)', function() {
 		var con = new MyController({param1: 'omg'});
 		expect(con instanceof Composer.Controller).toBe(true);
 		expect(con.param1).toBe('omg');
