@@ -79,7 +79,7 @@ var MyController = Composer.Controller.extend({
     }
 });
 var con = new MyController();
-alert('Text: '+ JSON.stringify(con.elements));
+alert('Text: '+ con.the_text.innerHTML);
 {% endhighlight %}
 
 ### events :: attribute({})
