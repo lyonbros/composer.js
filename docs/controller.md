@@ -111,14 +111,158 @@ var MyController = Composer.Controller.extend({
         this.release();
     }
 });
-new MyController({ inject: '#contest1' });
+new MyController({ inject: '#event-test' });
 {% endhighlight %}
-<div id="contest1"></div>
+<div id="event-test"></div>
 
-### initialize 
+### initialize :: function(params, options)
+
+Controller constructor. Don't extend unless you know what you're doing (use
+[init](#init)) instead.
+
+`params` is a collection of parameters to set (top-level) into the controller.
+For instance you can choose your [el](#el) or [inject](#inject) selector here.
+
 `options` can contain the following items:
 
-- `at` - insert the model at a specific integer index in the collection's data
+- `clean_injection` - If true, will clear the object that contains the
+controller's [el](#el) before injecting the el. Otherwise (the default) is to
+append the controller into the container (at the end).
+
+<div class="noeval">
+{% highlight js %}
+var MyController = Composer.Controller.extend({
+    model: null,
+
+    init: function()
+    {
+        if(!this.model) return this.release();
+        ...
+    }
+});
+// all parameters can be changed on instantiation, although it's recommended to
+// keep the event/element/function definitions in your class definition and use
+// instantiation parameters for more temporary data. here we set the inject and
+// model params (very common to change on instantiation):
+var mymodel = new Composer.Model({ says: 'hello' });
+var con = new MyController({
+    inject: '#setting-on-initialize',
+    model: mymodel
+});
+{% endhighlight %}
+</div>
+
+### init :: function()
+
+Per-controller initialization function. Gets run on each controller
+instantiation. Override me!
+
+{% highlight js %}
+var MyController = Composer.Controller.extend({
+    num_messages: false,
+    init: function()
+    {
+        alert('Hello, Mr. Wayne. You have '+ this.num_messages +' new messages.');
+    }
+});
+var con = new MyController({ num_messages: 17 });
+{% endhighlight %}
+
+### render :: function()
+
+Your controller's render function. This function's purpose is to generate the
+view for your controller and update it (probably using [html](#html)). Override
+me! 
+
+{% highlight js %}
+var MyController = Composer.Controller.extend({
+    init: function()
+    {
+        this.render();
+    },
+
+    render: function()
+    {
+        // you can generate your HTML any way you like...pure javascript strings
+        // or some form of templating engine. here we do strings for simplicity.
+        this.html('<h1>HELLO!!</h1>');
+    }
+});
+var con = new MyController({ inject: '#render-test' });
+{% endhighlight %}
+<div id="render-test"></div>
+
+### html :: function(element_or_string)
+
+Update the controller's [el](#el)'s inner HTML. This also refreshes the
+[controller's elements](#elements), making sure they reflect the elements in the
+passed HTML.
+
+See [render](#render) for example usage.
+
+### with_bind :: function(object, ev, fn, name)
+
+This function wraps `object`'s [bind](/composer.js/docs/event#bind) and tracks
+the binding internally in the controller. When [release](#-1release) is called
+on the controller, all the bindings created with `with_bind` are unbound
+automatically.
+
+This is mainly to alleviate a common pattern of having to do manually clean up
+bound events in a custom release function. When your controller binds to events
+on, say, a model, it previously had to remember to [unbind](/composer.js/docs/event#unbind)
+the event otherwise the controller would never be garbage collected (even after
+all references to it are gone from your app) because the model still holds a
+reference to its function(s) that were bound.
+
+Here's an example of the old way of binding/unbinding:
+
+<div class="noeval">
+{% highlight js %}
+var MyController = Composer.Controller.extend({
+    model: false,
+
+    init: function()
+    {
+        // re-render when the model's data changes
+        this.model.bind('change', this.render.bind('this'), 'model:change:render');
+    },
+
+    release: function()
+    {
+        // manually unbind our 'change' event
+        this.model.unbind('change', 'model:change:render');
+        return this.parent.apply(this, arguments);
+    }
+});
+{% endhighlight %}
+</div>
+
+Here's how it works now:
+
+<div class="noeval">
+{% highlight js %}
+var MyController = Composer.Controller.extend({
+    model: false,
+
+    init: function()
+    {
+        // notice we don't need to use a named event here because the controller
+        // mangages the binding for us. you can still specify a name if you plan
+        // to unbind the event yourself, but it's optional.
+        this.with_bind(this.model.bind, 'change', this.render.bind('this'));
+    }
+
+    // notice we don't have to extend Controller.release here!
+});
+{% endhighlight %}
+</div>
+
+### release :: function(options)
+
+Remove the controller from the DOM (removes [el](#el)) and perform any cleanup
+needed (such as unbinding events bound using [with_bind](#with-bind)).
+
+Fires the [release event](#release).
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
