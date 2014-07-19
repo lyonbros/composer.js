@@ -268,5 +268,5 @@ Fires the [release event](#release).
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-See the [events section](#events) for a release example.
+See the [events section](#events-1) for a release example.
 
