@@ -181,6 +181,7 @@
 				var fn = binding[2];
 				obj.unbind(ev, fn);
 			});
+			this._bound_events = [];
 
 			this.fire_event('release', options, this);
 
