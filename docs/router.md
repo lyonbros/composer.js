@@ -177,7 +177,7 @@ window.pages = {
 };
 var routes = {
     '/composer.js/docs/router': ['pages', 'router_docs'],
-    '/.*', ['pages', 'not_found']
+    '/.*': ['pages', 'not_found']
 };
 var router = new Composer.Router(routes);
 router.destroy();
