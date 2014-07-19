@@ -103,6 +103,7 @@ the routed URL and *will pass the values in order* to the routing function.
 
 So given our above routing table, we might set up our code like so:
 
+<div class="noeval">
 {% highlight js %}
 var pages = {
     home: function()
@@ -126,6 +127,7 @@ var users = {
     }
 };
 {% endhighlight %}
+</div>
 
 Note that our top-level objects are usually just that: simple objects. You can
 create them as controllers, but it might introduce unneeded complexity. You
@@ -135,6 +137,7 @@ objects!
 
 ### options :: attribute({...})
 
+<div class="noeval">
 {% highlight js %}
 options: {
     suppress_initial_route: false,
@@ -142,6 +145,7 @@ options: {
     process_querystring: false
 }
 {% endhighlight %}
+</div>
 
 `suppress_initial_route` tells the router that when it's created it should *not*
 try to route the current URL (it will try to do so by default). So if your
