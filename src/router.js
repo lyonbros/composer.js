@@ -43,7 +43,6 @@
 		routes:		{},
 
 		options: {
-			redirect_initial: true,
 			suppress_initial_route: false,
 			enable_cb: function() { return true; },
 			process_querystring: false
