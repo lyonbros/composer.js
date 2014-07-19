@@ -242,4 +242,37 @@ var router = new Composer.Router(routes);
 alert('Route: '+ JSON.stringify(router.find_matching_route('/users/10', routes)));
 {% endhighlight %}
 
+### last_url :: function()
+
+Convenience function that returns the last *successfully* routed URL. Can be
+useful for managing various state within your application.
+
+### bind_links :: function(options)
+
+This function uses event delegation to bind an event to the window `document`
+that listens for clicks on &lt;a&gt; tags. When it detects a click, it routes
+the `href` of the element via `History.pushState`. This lets you write your
+links in your app as normal links like you would in a static app, but then use
+pushState to change pages.
+
+`bind_links` has a few criteria it must meet before triggering a
+`History.pushState`:
+
+- Control/Shift/Alt keys must *not* be pressed, otherwise the browser is allowed
+to do its default action (open a new tab, for instance).
+- The &gt;a&lt; tag must *not* have a `target="_blank"` attribute, otherwise the
+browser default is allowed (new tab/window opened).
+- The &gt;a&lt; tag must have an `href` must either be a relative URL, or must
+have a host that matches the current host the app is on. In other words, if your
+app is hosted on "http://myapp.com" and you click a link in the app to
+"http://slizzard.com", `bind_links` will detect this and treat it like a normal
+external link (the browser switches pages normally).
+
+These criteria ensure that your users have a smooth experience and can expect
+accepted conventions while using your app. I cannot count how many apps
+completely break control+click for opening a link in a new tab because they want
+to bind every link on the site (and suck doing it).
+
+Composer's router does it right. If you experience any problems where the router
+breaks conventions, please [let us know](https://github.com/lyonbros/composer.js/issues)!
 
