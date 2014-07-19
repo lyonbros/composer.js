@@ -44,7 +44,7 @@
 
 		options: {
 			suppress_initial_route: false,
-			enable_cb: function() { return true; },
+			enable_cb: function(url) { return true; },
 			process_querystring: false
 		},
 
