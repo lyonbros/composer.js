@@ -103,7 +103,7 @@ var MyController = Composer.Controller.extend({
 
     click_title: function(e)
     {
-        alert('Title clicked!');
+        this.el.style.background = '#cfc';
     },
 
     close: function(e)
