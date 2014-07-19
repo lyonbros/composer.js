@@ -214,6 +214,8 @@ the event otherwise the controller would never be garbage collected (even after
 all references to it are gone from your app) because the model still holds a
 reference to its function(s) that were bound.
 
+__Note:__ `object`s passed to `with_bind` *must* extend [Composer.event](/composer.js/docs/event#composer-event).
+
 Here's an example of the old way of binding/unbinding:
 
 <div class="noeval">
@@ -265,4 +267,6 @@ needed (such as unbinding events bound using [with_bind](#with-bind)).
 Fires the [release event](#release).
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+
+See the [events section](#events) for a release example.
 

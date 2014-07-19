@@ -57,10 +57,10 @@ Either false (disabled) or an integer value that determines
 the max number of models this filter collection should hold. This is applied
 *after* the [sortfn](/composer.js/docs/collection#sortfn).
 
-### options :: attribute
+### options :: attribute({...})
 
 {% highlight js %}
-{
+options: {
     forward_all_events: false,
     refresh_on_change: false,
     sort_event: false
