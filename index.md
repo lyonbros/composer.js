@@ -5,7 +5,7 @@ layout: home
 
 <div class="intro">
     <h1>Composer.js</h1>
-    <strong>Composer is an MVC framework for building powerful applications.</strong>
+    <strong>Composer is an MVC framework for building powerful javascript applications.</strong>
 
     <div class="download">
         <a href="/composer.js/js/composer.js" download="composer-{{ site.version }}.js">
