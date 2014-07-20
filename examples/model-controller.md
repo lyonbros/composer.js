@@ -1,5 +1,5 @@
 ---
-title: Examples: A simple model/controller setup
+title: Examples | A simple model/controller setup
 layout: documentation
 ---
 
