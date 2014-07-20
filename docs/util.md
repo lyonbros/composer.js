@@ -86,7 +86,7 @@ alert('eq? ' + Composer.eq(
 
 ## Composer.merge_extend :: function(class, array_of_property_names)
 
-See [Composer.merge_extend](/composer.js/docs/class#composer-merge-extend).
+See [Composer.merge_extend in the class docs](/composer.js/docs/class#composer-merge-extend).
 
 ## Composer.array
 
