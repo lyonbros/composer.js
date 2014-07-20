@@ -2291,6 +2291,7 @@
 				var fn = binding[2];
 				obj.unbind(ev, fn);
 			});
+			this._bound_events = [];
 
 			this.fire_event('release', options, this);
 
@@ -2395,9 +2396,8 @@
 		routes:		{},
 
 		options: {
-			redirect_initial: true,
 			suppress_initial_route: false,
-			enable_cb: function() { return true; },
+			enable_cb: function(url) { return true; },
 			process_querystring: false
 		},
 
@@ -2544,6 +2544,7 @@
 			var args = match;
 			args.shift();
 			this._last_url = url;	// save the last successfully routed url
+			this.trigger('route-success', route);
 			obj[action].apply(obj, args);
 		},
 
