@@ -37,6 +37,29 @@ hairs. But don't ignore eventing and try to wire everything up with trees of
 brittle function calls either. Use the best tool for the job (it's often
 eventing!).
 
+### Event bus
+
+Sometimes you want your app to have a global event bus. This allows various
+pieces of it to communicate without having direct knowledge of each other. This
+improves the scalability and maintainability of your app in many cases.
+
+So how do you create an event bus? Easy! Create an instance of [Composer.Event](/composer.js/docs/event#composer-event):
+
+{% highlight js %}
+// our app's top-level namespace
+var my_app = {
+    // ...
+
+    events: new Composer.Event()
+
+    // ...
+};
+my_app.events.bind('download-complete', function() { alert('Download finished!'); });
+
+// pretend this was fired somewhere else =]
+my_app.events.trigger('download-complete');
+{% endhighlight %}
+
 ## Controllers
 
 Controllers are the link between your data and your interface. Generally they
