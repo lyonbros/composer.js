@@ -17,9 +17,11 @@ Shows how to tie a model and controller together using eventing
 Use a controller to monitor form fields and update them into a model
 - [Simple TODO app](/composer.js/examples/todo)  
 Take what we've learned and build a simple TODO app
-- [Filter collection usage](/composer.js/examples/filtercollection)  
-Learn how to use a filter collection and when it's appropriate
 - [Using the Router](/composer.js/examples/router)  
 Use the router to switch "pages" in your app while maintaining state
 - More to come!
 
+<!--
+- [Filter collection usage](/composer.js/examples/filtercollection)  
+Learn how to use a filter collection and when it's appropriate
+-->
