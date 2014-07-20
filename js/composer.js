@@ -2629,18 +2629,20 @@
 			// override this action, it can just call event.stop().
 			var route_link = function(e)
 			{
-				console.log('route link!!', e);
 				if(e.control || e.shift || e.alt) return;
+				console.log('route link!0', e);
 
-				var a = find_parent('a', e.target);
+				var a = Composer.find_parent('a', e.target);
 				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
 
 				// don't trap links that are meant to open new windows, and don't
 				// trap middle mouse clicks (or anything more than left click)
+				console.log('route link!1', button);
 				if(a.target == '_blank' || button > 0) return;
 
 				var curhost = new String(global.location).replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1');
 				var linkhost = a.href.match(/^[a-z]+:\/\//) ? a.href.replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1') : curhost;
+				console.log('route link!2', curhost, linkhost);
 				if(
 					curhost != linkhost ||
 					(typeof(options.do_state_change) == 'function' && !options.do_state_change(a))
