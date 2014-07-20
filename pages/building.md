@@ -27,15 +27,15 @@ Some components require others, so be mindful of this if loading your Composer
 components manually. Here are the dependencies (in `Component: [Dep1, Dep2, ...]`
 format):
 
-- Util: `[]`
-- Class: `[Util]`
-- Event: `[Class]`
-- Base: `[Event]`
-- Model: `[Base]`
-- Relational model: `[Model]`
-- Collection: `[Base, Model]`
-- Filter collection: `[Collection]`
-- Adapter: `[Util]`
-- Controller: `[Base, Adapter]`
-- Router: `[Base]`
+- `Util: []`
+- `Class: [Util]`
+- `Event: [Class]`
+- `Base: [Event]`
+- `Model: [Base]`
+- `Relational model: [Model]`
+- `Collection: [Base, Model]`
+- `Filter collection: [Collection]`
+- `Adapter: [Util]`
+- `Controller: [Base, Adapter]`
+- `Router: [Base]`
 
