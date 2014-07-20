@@ -278,7 +278,7 @@
 			{
 				if(e.control || e.shift || e.alt) return;
 
-				var a = find_parent('a', e.target);
+				var a = Composer.find_parent('a', e.target);
 				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
 
 				// don't trap links that are meant to open new windows, and don't
