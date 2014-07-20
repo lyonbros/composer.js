@@ -7,7 +7,7 @@ layout: documentation
 
 Here we're going to tie a model and controller together using eventing.
 
-<div id="example" class="fade"></div>
+<div id="simple" class="example fade"></div>
 
 {% highlight js %}
 // create a model that counts stuff
@@ -62,8 +62,8 @@ var DisplayCounterController = Composer.Controller.extend({
 
 var counter = new Counter();
 var controller = new DisplayCounterController({
-    inject: '#example'
+    inject: '#simple'
 });
-Composer.find(document, '#example').className += ' enabled';
+Composer.find(document, '#simple').className += ' enabled';
 {% endhighlight %}
 
