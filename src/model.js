@@ -75,8 +75,8 @@
 			Composer.object.each(Composer.object.clone(this.defaults), merge_fn);
 			Composer.object.each(data, merge_fn);
 
-			// assign the unique app id
-			this._cid = Composer.cid();
+			// call Base.initialize
+			this.parent();
 
 			// set the data into the model (but don't trigger any events)
 			this.set(_data, options);

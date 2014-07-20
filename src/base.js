@@ -41,6 +41,15 @@
 		_cid: false,
 
 		/**
+		 * CTOR, assigns our CID
+		 */
+		initialize: function()
+		{
+			// assign the unique app id
+			this._cid = Composer.cid();
+		},
+
+		/**
 		 * Pull out the object's unique Composer ID
 		 */
 		cid: function()

@@ -6,6 +6,7 @@ describe('Composer.Model', function() {
 
 	it('performs basic operations (set, get, etc)', function() {
 		var model = new Composer.Model({name: 'larry', drives: 'SUV'});
+		expect(model.cid().match(/^c[0-9]+/)).toBeTruthy();
 		expect(model.id()).toBe(model.cid());
 		expect(model.is_new()).toBe(true);
 		model.set({id: '1234', needs: 'a fish'});

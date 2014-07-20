@@ -73,8 +73,8 @@
 				}
 			}.bind(this));
 
-			// assign the unique app id
-			this._cid = Composer.cid();
+			// call Base.initialize
+			this.parent();
 
 			this.master = master;
 

@@ -64,8 +64,8 @@
 				this[x] = params[x];
 			}
 
-			// assign the unique app id
-			this._cid = Composer.cid();
+			// call Base.initialize
+			this.parent();
 
 			// make sure we have an el
 			this._ensure_el();

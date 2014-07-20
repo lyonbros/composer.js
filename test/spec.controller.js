@@ -30,6 +30,7 @@ describe('Composer.Controller', function() {
 
 	it('can be instantiated properly (and inits elements properly)', function() {
 		var con = new MyController({param1: 'omg'});
+		expect(con.cid().match(/^c[0-9]+/)).toBeTruthy();
 		expect(con instanceof Composer.Controller).toBe(true);
 		expect(con.param1).toBe('omg');
 		expect(con.clicked).toBe(false);

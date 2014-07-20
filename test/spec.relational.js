@@ -38,6 +38,7 @@ describe('Composer.RelationalModel', function() {
 
 	it('is instantiated properly', function() {
 		var col = new Band(banddata);
+		expect(col.cid().match(/^c[0-9]+/)).toBeTruthy();
 		expect(col.get('members') instanceof BandMembers).toBe(true);
 		expect(col.get('members').first() instanceof BandMember).toBe(true);
 		expect(col.get('members').first().get('pet') instanceof Composer.Model).toBe(true);
