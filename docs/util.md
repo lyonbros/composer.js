@@ -8,7 +8,7 @@ layout: documentation
 Composer has a number of utilities that are used throughout the framework, but
 can also be used by your app as well.
 
-## Composer.sync (method, model, options)
+## Composer.sync :: function(method, model, options)
 
 Composer's syncing function. It provides a central location for models and
 collections to grab and post data to your servers. __By default, it does nothing
