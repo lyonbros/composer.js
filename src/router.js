@@ -191,6 +191,7 @@
 			var args = match;
 			args.shift();
 			this._last_url = url;	// save the last successfully routed url
+			this.trigger('route-success', route);
 			obj[action].apply(obj, args);
 		},
 
