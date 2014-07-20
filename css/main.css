@@ -66,8 +66,8 @@ em code, strong code {font-style: normal; font-weight: normal;}
 	background: linear-gradient(to bottom, #aaa 1%,#888 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aaa', endColorstr='#888',GradientType=0 ); /* IE6-9 */
 }
-.button-row {margin: 8px 0;}
-.button-row .button {display: inline-block; margin: 0 32px;}
+.button-row {margin: 32px 0;}
+.button-row .button {display: inline-block; margin: 0 8px;}
 .button-row .button a {display: inline-block; margin: 0; padding: 8px 16px; text-align: center; border-radius: 3px;}
 .button-row .button a {
 	background: #659324; /* Old browsers */
