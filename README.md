@@ -4,7 +4,7 @@ Composer is an MVC framework for building powerful javascript applications.
 As of v1.0, Composer now runs on top of either jQuery or Mootools, allowing you
 to build awesome apps no matter what DOM library you choose.
 
-[__Check out the doc site to get started!__](http://lyonbros.github.io/composer.js).
+[__Check out the doc site to get started__](http://lyonbros.github.io/composer.js)!
 
 A special thanks to our early users who helped shape Composer in its infancy by
 either reporting bugs or helping to write code!
