@@ -4,6 +4,7 @@ layout: home
 ---
 <div class="download">
     <a href="/composer.js/js/composer.js" download="composer-{{ site.version }}.js">
+        <img src="/composer.js/images/download.png" width="30" height="36">
         <h2>Download <em>Composer v{{ site.version }}</em></h2>
     </a>
 </div>
