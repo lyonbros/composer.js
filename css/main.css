@@ -1,6 +1,13 @@
 html {overflow-y: scroll; overflow-x: auto;}
 body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #222; background: #f6f6f6;}
 
+.clear:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.clear {display: inline-block;}
+/* hide IE mac \*/
+* html .clear {height: 1%;}
+.clear {display: block;}
+/* */
+
 #main {width: 1024px; margin: 0 auto;}
 
 header {width: 254px; float: left; margin: 0 32px 0 0;}
@@ -63,4 +70,23 @@ em code, strong code {font-style: normal; font-weight: normal;}
 }
 .home .download a h2 {display: inline-block; margin: 0; font-size: 1.6em; font-weight: normal; color: #fff;}
 .home .download a h2 em {display: block; font-size: .6em;}
+
+/* todo app */
+#todo-container {width: 500px; margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0; -o-box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
+#todo-container h1 {font-size: 32px; margin: 0 0 16px 0; text-align: center;}
+#todo-container form.add input[type=text] {width: 488px; font-size: 20px; padding: 5px;}
+#todo-container form.add input[type=submit] {display: none;}
+#todo-container ul.todos {padding: 16px 0; list-style: none;}
+#todo-container ul.todos li {padding: 5px 3px; margin-bottom: 5px; border-bottom: 1px dashed #bbb;}
+#todo-container ul.todos li input[type=checkbox] {float: left; margin: 8px 10px 0 0;}
+#todo-container ul.todos li h3 {float: left; width: 80%; font-size: 20px;}
+#todo-container ul.todos li.complete h3 {text-decoration: line-through;}
+#todo-container ul.todos li .actions {float: right; display: block;}
+#todo-container ul.todos li .actions a.delete {color: #a00; font-weight: bold; text-decoration: none;}
+#todo-container ul.todos li:hover .actions {display: block;}
+#todo-container ul.todos li form.edit {float: left; width: 80%;}
+#todo-container ul.todos li form.edit input[type=text] {width: 100%; font-size: 20px;}
+#todo-container ul.todos li form.edit input[type=submit] {display: none;}
+#todo-container .info .left {float: left;}
+#todo-container .info .clear-complete {float: right;}
 
