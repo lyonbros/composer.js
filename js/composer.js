@@ -2657,9 +2657,10 @@
 				if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
 				href = '/'+href;
 
-				History.pushState(options.global_state, '', href);
+				this.route(href, {state: options.global_state});
+				//History.pushState(options.global_state, '', href);
 				return false;
-			};
+			}.bind(this);
 
 			// build a selector that works for YOU.
 			if(options.selector)
