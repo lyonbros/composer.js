@@ -92,9 +92,9 @@ obj.trigger('hello');
 
 ### bind_once :: function(event_name, fn, bind_name)
 
-Exactly like bind, except that one the binding is triggered *once* it is unbound
-from the object. Note that `event_name` can be an array of strings, and each one
-will have the same function bound to it.
+Exactly like [bind](#bind), except that once the binding is triggered, it
+unbinds itself from the object. Note that `event_name` can be an array of
+strings, and each one will have the same function bound to it.
 
 This makes it easy to create one-off bindings to event on an object without
 having to worry about manually unbinding the event.
