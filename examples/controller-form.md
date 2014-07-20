@@ -20,7 +20,7 @@ var Dog = Composer.Model.extend({
 });
 
 // create a controller to show a dog in our view
-var ShowDog = Composer.Controller.extend({
+var ShowDogController = Composer.Controller.extend({
     elements: {
         'input[name=name]': 'inp_name'
     },
