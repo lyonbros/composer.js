@@ -3,7 +3,7 @@ title: Documentation
 layout: documentation
 ---
 
-# Introduction
+# Documentation
 
 Composer provides an MVC structure for you to build your app on top of. It also
 provides the glue between all objects, which is eventing.
