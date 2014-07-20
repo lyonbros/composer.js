@@ -1,16 +1,15 @@
 ---
 title: Try Composer
-layout: default
+layout: home
 ---
 
 <div class="download">
     <a href="/composer.js/js/composer.js" download="composer-{{ site.version }}.js">Composer v{{ site.version }}</a>
 </div>
 
-<strong>
-Composer is a powerful MVC-based framework for building applications in
-Javascript.
-</strong>
+# Composer.js
+
+__Composer is a powerful MVC-based framework for building applications in Javascript.__
 
 It is designed to allow more complicated setups than can be achieved easily
 with frameworks like the excellent Backbone.js. Composer makes no assumptions
