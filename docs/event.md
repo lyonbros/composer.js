@@ -5,7 +5,7 @@ layout: documentation
 
 # Eventing
 
-As mentioned in the [intro](/composer.js/docs/intro), eventing is the glue that
+As mentioned in the [intro](/composer.js/docs/index), eventing is the glue that
 ties everything in your app together. Actions (and associated data) flow from
 component to component using events. Instead of your objects needing to know the
 implementation details of other objects (ie how do I re-render the three views
