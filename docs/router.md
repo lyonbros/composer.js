@@ -276,10 +276,11 @@ element itself, just the URL after it's pulled from the element.
 call.
 - `selector` - Use a specific selector when binding to links. Note that the
 selector can be *anything*, not just links. So "ul.trees li" would bind to any
-&lt;li&gt; within &lt;ul class="trees"&gt; tag.
+&lt;li&gt; within a &lt;ul class="trees"&gt; tag.
 - `exclude_class` - A classname used to exclude specific links from pushState
 navigation. So a value of "nolink" would exclude any &lt;a class="nolink"&gt;
-elements from being bound.
+elements from being bound. This option is ignored if the `selector` options is
+provided.
 
 `bind_links` has a few criteria it must meet before triggering a
 route/`History.pushState`:

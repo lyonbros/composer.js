@@ -2629,6 +2629,7 @@
 			// override this action, it can just call event.stop().
 			var route_link = function(e)
 			{
+				console.log('route link!!', e);
 				if(e.control || e.shift || e.alt) return;
 
 				var a = find_parent('a', e.target);
@@ -2679,7 +2680,6 @@
 					var selector = 'a';
 				}
 			}
-			console.log('selector: ', selector);
 			Composer.add_event(document.body, 'click', route_link, selector);
 		}
 	});
