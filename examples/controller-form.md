@@ -1,5 +1,5 @@
 ---
-title: Examples: A form in a controller
+title: Examples | A form in a controller
 layout: documentation
 ---
 
@@ -7,6 +7,8 @@ layout: documentation
 
 Let's now monitor a form with a controller and update any saved data back into
 our heroic model.
+
+<div id="form-example" class="example fade"></div>
 
 {% highlight js %}
 // create a simple dog model with a bark action
@@ -24,7 +26,7 @@ var ShowDog = Composer.Controller.extend({
     },
 
     events: {
-        'click input[type=button]': 'update_dog'
+        'submit form': 'submit'
     },
 
     model: false,
@@ -44,16 +46,30 @@ var ShowDog = Composer.Controller.extend({
         var data = this.model.toJSON();
         var html = '';
         html += '<h1>Dog ('+ data.name +')</h1>';
+        html += '<form>';
         html += 'Rename dog: <input type="text" name="name" value="'+ data.name +'">';
-        html += '<input type="button"
+        html += '<br>';
+        html += '<input type="submit" value="Change dog name">';
+        html += '</form>';
         this.html(html);
+    },
+
+    submit: function(e)
+    {
+        if(e)
+        {
+            e.preventDefault();
+            e.stopPropagation();
+        }
     }
 });
 
-var dog = new Dog();
-
+var dog = new Dog({name: 'timmy'});
+var controller = new ShowDogController({
+    inject: '#form-example',
+    model: dog
+});
+Composer.find(document, '#form-example').className += ' enabled';
 {% endhighlight %}
-
-<div id="example"></div>
 
 
