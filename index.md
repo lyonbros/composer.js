@@ -2,9 +2,11 @@
 title: Try Composer
 layout: home
 ---
-
-<div class="download">
-    <a href="/composer.js/js/composer.js" download="composer-{{ site.version }}.js">Composer v{{ site.version }}</a>
+<div class="button huge firefox">
+    <a href="/composer.js/js/composer.js" download="composer-{{ site.version }}.js">
+        <h2>Composer <em>v{{ site.version }}</em></h2>
+        <small>(jQuery/Mootools ready)</small>
+    </a>
 </div>
 
 # Composer.js
