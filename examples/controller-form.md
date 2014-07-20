@@ -45,7 +45,7 @@ var ShowDogController = Composer.Controller.extend({
         // real templating engine to avoid such things =]
         var data = this.model.toJSON();
         var html = '';
-        html += '<h1>Dog ('+ data.name +')</h1>';
+        html += '<h3>Dog ('+ data.name +')</h3>';
         html += '<form>';
         html += 'Rename dog: <input type="text" name="name" value="'+ data.name +'">';
         html += '<br>';
