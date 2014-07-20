@@ -342,7 +342,16 @@ var routes = {
 
 // define our top-level app
 window.app = {
-    router: new Composer.Router(routes),
+    router: (function() {
+        var router = new Composer.Router(routes);
+        router.bind_links({
+            selector: '#bind-links-test a'
+        });
+        router.bind('fail', function(err) {
+            console.log('route: fail: ', err);
+        });
+        return router;
+    })(),
 
     handle_users: function()
     {
@@ -354,11 +363,6 @@ window.app = {
         new NotesController();
     }
 }
-
-// bind to links in our test area
-window.app.router.bind_links({
-    selector: '#bind-links-test a'
-});
 
 // create our test links
 var container = document.getElementById('bind-links-test');
