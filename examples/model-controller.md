@@ -64,6 +64,6 @@ var counter = new Counter();
 var controller = new DisplayCounterController({
     inject: '#example'
 });
-document.getElementById('example').className += ' enabled';
+Composer.find(document, '#example').className += ' enabled';
 {% endhighlight %}
 
