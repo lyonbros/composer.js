@@ -49,10 +49,10 @@ it is.
 When displaying a list of items, you generally have two options:
 
 1. Have one controller and one template. The controller listens to events on the
-collection holding the rendered list and *re-renders on every event*.
+collection holding the rendered list and *re-renders everything on every event*.
 1. Have a main controller that listens to `add` events on the rendered
 collection, and for each new added model, creates a sub-controller that tracks
-that specific model.
+that specific model. This requires a list template and an item template.
 
 The first way is quick and dirty. It is great for small lists of data or for
 large lists of data that *rarely change*. You will be re-rendering the entire
