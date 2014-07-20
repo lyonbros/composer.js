@@ -46,7 +46,9 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade {transition: background 1s;}
 .fade.enabled {background: #cfc;}
 
-.home .download {width: 30%; float: right; background: #;}
+div.button-row {display: block; margin: 0 0 64px 0; text-align: center;}
+div.button-row .button {margin: 0 12px 0 66px;}
+
 div.button.huge {
 	display: inline-block;
 	border: 0 none;
@@ -75,17 +77,7 @@ div.button.huge a {
 	width: 166px;
 	height: 108px;
 }
-div.button.huge.chrome a {
-	margin: -4px 0 0 -54px;
-	padding: 0 0 0 110px;
-	color: #FFFFFF;
-	cursor: pointer;
-	display: inline-block;
-	line-height: 20px;
-	text-decoration: none;
-	background: url(/images/chrome-large.png) left center no-repeat;
-}
-div.button.huge.firefox a {
+div.button.huge.download a {
 	margin: -4px 0 0 -54px;
 	padding: 0 0 0 110px;
 	color: #FFFFFF;
@@ -119,4 +111,3 @@ div.button.huge a small {
 	text-align: center;
 	text-decoration: none !important;
 }
-
