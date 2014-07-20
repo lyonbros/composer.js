@@ -2,15 +2,17 @@
 title: Get Composer
 layout: home
 ---
-# Composer.js
 
-__Composer is a powerful MVC-based framework for building applications in Javascript.__
+<div class="intro">
+    <h1>Composer.js</h1>
+    <strong>Composer is a powerful MVC-based framework for building applications in Javascript.__</strong>
 
-<div class="download">
-    <a href="/composer.js/js/composer.js" download="composer-{{ site.version }}.js">
-        <img src="/composer.js/images/download.png" width="30" height="36">
-        <h2>Download <em>Composer v{{ site.version }}</em></h2>
-    </a>
+    <div class="download">
+        <a href="/composer.js/js/composer.js" download="composer-{{ site.version }}.js">
+            <img src="/composer.js/images/download.png" width="30" height="36">
+            <h2>Download <em>Composer v{{ site.version }}</em></h2>
+        </a>
+    </div>
 </div>
 
 Composer is designed to allow more complicated setups than can be achieved easily

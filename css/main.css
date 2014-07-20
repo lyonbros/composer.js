@@ -46,6 +46,9 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade {transition: background 1s;}
 .fade.enabled {background: #cfc;}
 
+.home .intro {text-align: center;}
+.home .intro h1 {font-size: 2.6em; font-weight: normal;}
+.home .intro strong {font-size: 1.4em; font-weight: normal;}
 .home .download {width: 30%; margin: 16px auto; padding: 8px 16px 7px 16px; border-radius: 5px;}
 .home .download {
 	background: #659324; /* Old browsers */
