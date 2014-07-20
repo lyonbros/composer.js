@@ -52,6 +52,8 @@ var ShowDogController = Composer.Controller.extend({
         html += '<input type="submit" value="Change dog name">';
         html += '</form>';
         this.html(html);
+        // focus on the input element
+        setTimeout(function() { this.inp_name.focus(); }.bind(this), 100);
     },
 
     submit: function(e)
