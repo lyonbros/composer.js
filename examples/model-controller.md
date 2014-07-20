@@ -37,7 +37,7 @@ var DisplayCounterController = Composer.Controller.extend({
 
     init: function()
     {
-        if(!this.model) return false;
+        if(!this.model) return this.release();
 
         // use this.with_bind instead of this.model.bind so when the controller
         // is released, it cleans up any objects it bound itself to
@@ -48,7 +48,6 @@ var DisplayCounterController = Composer.Controller.extend({
 
     render: function()
     {
-        alert('RENDER!');
         var html = '';
         html += 'Current count is '+ this.model.get_count();
         html += ' <input type="button" value="Increase">'
@@ -66,7 +65,10 @@ var DisplayCounterController = Composer.Controller.extend({
 
 var counter = new Counter();
 var controller = new DisplayCounterController({
-    inject: '#simple'
+    inject: '#simple',
+
+    // be sure to pass in the model!
+    model: counter
 });
 Composer.find(document, '#simple').className += ' enabled';
 {% endhighlight %}
