@@ -49,7 +49,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .home .intro {text-align: center;}
 .home .intro h1 {font-size: 2.6em; font-weight: normal;}
 .home .intro strong {font-size: 1.4em; font-weight: normal;}
-.home .download {width: 30%; margin: 16px auto; padding: 8px 16px 7px 16px; border-radius: 5px;}
+.home .download {width: 30%; margin: 16px auto; padding: 8px 16px 7px 16px; text-align: left; border-radius: 5px;}
 .home .download {
 	background: #659324; /* Old browsers */
 	background: -moz-linear-gradient(top, #81bc2e 1%, #659324 100%); /* FF3.6+ */
