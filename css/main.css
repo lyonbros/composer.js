@@ -47,8 +47,8 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade.enabled {background: #cfc;}
 
 .home .intro {text-align: center;}
-.home .intro h1 {font-size: 2.6em; font-weight: normal;}
-.home .intro strong {font-size: 1.4em; font-weight: normal;}
+.home .intro h1 {font-size: 2.6em; font-weight: normal; color: #555;}
+.home .intro strong {font-size: 1.4em; font-weight: normal; color: #555;}
 .home .download img {float: left; margin: 4px 8px 0 28px;}
 .home .download a {display: block; width: 30%; margin: 32px auto; padding: 8px 16px 7px 16px; text-align: left; border-radius: 5px;}
 .home .download a {
