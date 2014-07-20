@@ -354,6 +354,7 @@ window.app = {
 window.app.router.bind_links({
     selector: '#bind-links-test a'
 });
+window.location = '#bind-links-test';
 {% endhighlight %}
 
 <div id="bind-links-test">
