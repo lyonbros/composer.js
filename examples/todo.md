@@ -10,7 +10,7 @@ better than everyone else's because it uses Composer. There are swaths of
 emperical evidence to support this claim (which we will link to at a later
 time).
 
-Until then, here's the app:
+Until then, here's the app (click __"Try it"__ to load):
 
 <div id="todo-container" style="display: none;">
     <h1>Todos</h1>
