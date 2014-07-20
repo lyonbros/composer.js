@@ -11,6 +11,7 @@ describe('Composer.FilterCollection', function() {
 
 	it('can be instantiated properly', function() {
 		var col = new Filter(master);
+		expect(col.cid().match(/^c[0-9]+/)).toBeTruthy();
 		expect(col instanceof Composer.FilterCollection).toBe(true);
 		col.detach();
 	});

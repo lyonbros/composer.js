@@ -2,6 +2,7 @@ describe('Composer.Collection', function() {
 	it('can be instantiated properly', function() {
 		var col = new Composer.Collection();
 		expect(col.models().length).toBe(0);
+		expect(col.cid().match(/^c[0-9]+/)).toBeTruthy();
 
 		var col = new Composer.Collection([
 			{name: 'larry', says: 'parker, if you\'re going to ask a question you better stick around for the answer'},
