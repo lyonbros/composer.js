@@ -19,3 +19,5 @@ for file in "${BUILDLIST[@]}"; do
 	cat src/$file >> composer.js
 done
 
+cat composer.js | jsmin > composer.min.js
+
