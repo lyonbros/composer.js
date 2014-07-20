@@ -8,8 +8,8 @@ layout: default
 Composer is a powerful MVC-based framework for building applications in
 Javascript. It is designed to allow more complicated setups than can be achieved
 easily with frameworks like the excellent Backbone.js. Composer makes no
-assumptions about the structure of your data or your architecture, politely
-bowing out of your way to let you build your app.
+assumptions about the structure of your data or your architecture; it provides a
+set of tools to help you build your app then politely bows out of your way.
 
 Composer.js is currently being used as the driving force of
 [Turtl](https://turtl.it) and [Musio](http://musio.com), both being data-driven
@@ -22,11 +22,12 @@ agnostic (jQuery/Mootools can be used interchangeably with Composer).
 
 Composer needs a selector library from jQuery or Mootools (Sizzle or Slick).
 jQuery or Mootools themselves can also be included. This dependency can be
-skipped if you are only using the data-driven portion of Composer (anything but
-Controllers).
+skipped if you are only using the data-driven portion of Composer (so, anything
+but Controllers).
 
-If you lan on using Composer's Router (which provides an easy way to run code
-when certain URLs are encountered), you need [History.js](https://github.com/browserstate/history.js/).
+If you plan on using [Composer's Router](/composer.js/docs/router) (which
+provides an easy way to run code when certain URLs are encountered), you need
+[History.js](https://github.com/browserstate/history.js/).
 
 ### Load order
 

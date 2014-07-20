@@ -54,4 +54,3 @@ This allows models to know nothing about rendering or the view, and allows the
 view to not worry about what models to notify if data changes. The controller is
 the piece that ties the two together.
 
-
