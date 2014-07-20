@@ -59,6 +59,7 @@ the max number of models this filter collection should hold. This is applied
 
 ### options :: attribute({...})
 
+<div class="noeval">
 {% highlight js %}
 options: {
     forward_all_events: false,
@@ -66,6 +67,7 @@ options: {
     sort_event: false
 }
 {% endhighlight %}
+</div>
 
 `forward_all_events` tells the filter collection whether or not to forward all
 events that happen on the master colleciton through itself. This can be useful
