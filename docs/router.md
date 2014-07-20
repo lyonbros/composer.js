@@ -303,16 +303,28 @@ to bind every link on the site (and suck at doing so).
 Composer's router does it right. If you experience any problems where the router
 breaks conventions, please [let us know](https://github.com/lyonbros/composer.js/issues)!
 
-This example will really tie the room together:
+## Full example
 
-<div id="bind-links-test" class="example fade">
-</div>
+This example will really tie the room together. We create two controllers that
+extend a base controller, and load one of the controllers depending on which
+link is clicked.
+
+Notice that the URL bar in the browser updates with the clicked link even
+though the page doesn't reload. We're using pushState here, and the router
+listens to the pushState events and loads the correct code for the given route.
+
+This can be done on a much larger scale, loading top-level controllers for
+various "pages" (wink wink) in your app, making it seem like a page has changed
+even though everything is still in the same javascript context. It's like a real
+desktop app in your browser!
+
+<div id="full-route-example" class="example fade"></div>
 
 {% highlight js %}
 // define a base controller the others extend that will a) inject to the correct
 // spot, and b) release itself when a successful route happens.
 var BaseController = Composer.Controller.extend({
-    inject: '#bind-links-test div',
+    inject: '#full-route-example div',
 
     init: function()
     {
@@ -345,7 +357,7 @@ window.app = {
     router: (function() {
         var router = new Composer.Router(routes);
         router.bind_links({
-            selector: '#bind-links-test a'
+            selector: '#full-route-example a'
         });
         router.bind('fail', function(err) {
             console.log('route: fail: ', err);
@@ -365,7 +377,7 @@ window.app = {
 }
 
 // create our test links
-var container = document.getElementById('bind-links-test');
+var container = document.getElementById('full-route-example');
 container.innerHTML =
     '<a href="/composer.js/docs/router/users">Load users</a> | ' +
     '<a href="/composer.js/docs/router/notes">Load notes</a>' +
