@@ -41,3 +41,6 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .toc ul {margin: 0; padding: 0; list-style: disc;}
 .toc ul ul {margin-left: 16px;}
 
+.fade {transition: background 1s;}
+.fade.enabled {background: #cfc;}
+

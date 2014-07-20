@@ -304,7 +304,7 @@ breaks conventions, please [let us know](https://github.com/lyonbros/composer.js
 
 This example will really tie the room together:
 
-<div id="bind-links-test">
+<div id="bind-links-test" class="fade">
 </div>
 
 {% highlight js %}
@@ -357,9 +357,12 @@ window.app = {
 window.app.router.bind_links({
     selector: '#bind-links-test a'
 });
-document.getElementById('bind-links-test').innerHTML =
+var container = document.getElementById('bind-links-test');
+container.innerHTML =
     '<a href="/composer.js/docs/router/users">Load users</a> | ' +
     '<a href="/composer.js/docs/router/notes">Load notes</a>' +
     '<div></div>';
+container.className += ' enabled';
+window.location = '#bind-links-test';
 {% endhighlight %}
 
