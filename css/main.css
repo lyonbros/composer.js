@@ -71,8 +71,13 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .home .download a h2 {display: inline-block; margin: 0; font-size: 1.4em; font-weight: normal; color: #fff;}
 .home .download a h2 em {display: block; font-size: .7em;}
 
+/* filter collection example */
+#filter-example {margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
+#filter-example .full {float: left; width: 45%;}
+#filter-example .filter {float: right; width: 45%;}
+
 /* todo app */
-#todo-container {width: 500px; margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0; -o-box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
+#todo-container {width: 500px; margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
 #todo-container h1 {font-size: 32px; margin: 0 0 16px 0; text-align: center;}
 #todo-container form.add input[type=text] {width: 488px; font-size: 20px; padding: 5px;}
 #todo-container form.add input[type=submit] {display: none;}
