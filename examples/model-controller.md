@@ -27,6 +27,8 @@ var Counter = Composer.Model.extend({
     }
 });
 
+// create a controller that's capable of showing the current count from our
+// model but also allows us to increase the count by pushing a button
 var DisplayCounterController = Composer.Controller.extend({
     events: {
         'click input[type=button]': 'increase_count'
@@ -39,6 +41,7 @@ var DisplayCounterController = Composer.Controller.extend({
 
     init: function()
     {
+        // no model present? bail. (you could also throw an exception here)
         if(!this.model) return this.release();
 
         // use this.with_bind instead of this.model.bind so when the controller
@@ -48,14 +51,18 @@ var DisplayCounterController = Composer.Controller.extend({
         this.render();
     },
 
+    // the render function shows our current count AND gives us a button to up
+    // the count
     render: function()
     {
         var html = '';
-        html += 'Current count is '+ this.model.get_count() +'<br>';
+        html += 'Current count is '+ this.model.get_count();
+        html += '&nbsp;&nbsp;';
         html += '<input type="button" value="Increase">'
         this.html(html);
     },
 
+    // this will be called by out event mapping when the button is clicked
     increase_count: function(e)
     {
         if(e) e.stop();
@@ -72,6 +79,11 @@ var controller = new DisplayCounterController({
     // be sure to pass in the model!
     model: counter
 });
+
+// add the "enabled" class to our example container to get a cheesy CSS fade-in
+// effect. Note that although undocumented, Composer.find is the abstraction
+// around the included selector engine (note that it always returns raw DOM
+// elements instead of jQuery-esque wrapped objects).
 Composer.find(document, '#simple').className += ' enabled';
 {% endhighlight %}
 
