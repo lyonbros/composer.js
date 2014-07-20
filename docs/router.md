@@ -353,10 +353,13 @@ window.app = {
         new NotesController();
     }
 }
+
 // bind to links in our test area
 window.app.router.bind_links({
     selector: '#bind-links-test a'
 });
+
+// create our test links
 var container = document.getElementById('bind-links-test');
 container.innerHTML =
     '<a href="/composer.js/docs/router/users">Load users</a> | ' +

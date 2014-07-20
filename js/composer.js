@@ -2679,6 +2679,7 @@
 					var selector = 'a';
 				}
 			}
+			console.log('selector: ', selector);
 			Composer.add_event(document.body, 'click', route_link, selector);
 		}
 	});
