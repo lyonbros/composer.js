@@ -7,11 +7,17 @@ layout: home
     <h1>Composer.js</h1>
     <strong>Composer is an MVC framework for building powerful javascript applications.</strong>
 
-    <div class="download">
-        <a href="/composer.js/js/composer.js" download="composer-{{ site.version }}.js">
-            <img src="/composer.js/images/download.png" width="30" height="36">
-            <h2>Download <em>Composer v{{ site.version }}</em></h2>
-        </a>
+    <div class="button-row">
+        <div class="button download min">
+            <a href="/composer.js/composer.min.js" download="composer-{{ site.version }}.min.js">
+                <h2>composer-{{ site.version }}.min.js</h2>
+            </a>
+        </div>
+        <div class="button download dev">
+            <a href="/composer.js/composer.js" download="composer-{{ site.version }}.js">
+                <h2>composer-{{ site.version }}.js (dev)</h2>
+            </a>
+        </div>
     </div>
 </div>
 
