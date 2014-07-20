@@ -363,6 +363,5 @@ container.innerHTML =
     '<a href="/composer.js/docs/router/notes">Load notes</a>' +
     '<div></div>';
 container.className += ' enabled';
-window.location = '#bind-links-test';
 {% endhighlight %}
 
