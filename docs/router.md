@@ -336,8 +336,8 @@ var NotesController = BaseController.extend({
 });
 
 var routes = {
-    '/composer.js/docs/router/users': ['routes', 'users'],
-    '/composer.js/docs/router/notes': ['routes', 'notes'],
+    '/composer.js/docs/router/users': ['routes', 'handle_users'],
+    '/composer.js/docs/router/notes': ['routes', 'handle_notes'],
 };
 
 // define our top-level app
