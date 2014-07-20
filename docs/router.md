@@ -351,7 +351,7 @@ window.app = {
     }
 }
 // bind to links in our test area
-window.app.route.bind_links({
+window.app.router.bind_links({
     selector: '#bind-links-test a'
 });
 {% endhighlight %}
