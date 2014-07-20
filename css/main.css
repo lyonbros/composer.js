@@ -46,7 +46,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade {transition: background 1s;}
 .fade.enabled {background: #cfc;}
 
-.home .download {width: 30%; margin: 16px 0; padding: 8px 16px 7px 16px; border-radius: 5px;}
+.home .download {width: 30%; margin: 16px auto; padding: 8px 16px 7px 16px; border-radius: 5px;}
 .home .download {
 	background: #659324; /* Old browsers */
 	background: -moz-linear-gradient(top, #81bc2e 1%, #659324 100%); /* FF3.6+ */
