@@ -61,6 +61,11 @@ var ShowDog = Composer.Controller.extend({
             e.preventDefault();
             e.stopPropagation();
         }
+        var name = this.inp_name.value;
+
+        // save the name back into the dog. this fires our "change" event, which
+        // re-renders
+        this.model.set({name: name});
     }
 });
 
