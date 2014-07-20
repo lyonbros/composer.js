@@ -813,6 +813,15 @@
 		_cid: false,
 
 		/**
+		 * CTOR, assigns our CID
+		 */
+		initialize: function()
+		{
+			// assign the unique app id
+			this._cid = Composer.cid();
+		},
+
+		/**
 		 * Pull out the object's unique Composer ID
 		 */
 		cid: function()
@@ -954,8 +963,8 @@
 			Composer.object.each(Composer.object.clone(this.defaults), merge_fn);
 			Composer.object.each(data, merge_fn);
 
-			// assign the unique app id
-			this._cid = Composer.cid();
+			// call Base.initialize
+			this.parent();
 
 			// set the data into the model (but don't trigger any events)
 			this.set(_data, options);
@@ -1353,8 +1362,8 @@
 				this[x] = params[x];
 			}
 
-			// assign the unique app id
-			this._cid = Composer.cid();
+			// call Base.initialize
+			this.parent();
 
 			// allow Collection.model to be a string so load-order dependencies can be
 			// kept to a minimum. here, we convert the string to an object on collection
@@ -2174,8 +2183,8 @@
 				this[x] = params[x];
 			}
 
-			// assign the unique app id
-			this._cid = Composer.cid();
+			// call Base.initialize
+			this.parent();
 
 			// make sure we have an el
 			this._ensure_el();
@@ -3070,8 +3079,8 @@
 				}
 			}.bind(this));
 
-			// assign the unique app id
-			this._cid = Composer.cid();
+			// call Base.initialize
+			this.parent();
 
 			this.master = master;
 
