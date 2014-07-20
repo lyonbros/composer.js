@@ -56,9 +56,9 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .home .intro {text-align: center;}
 .home .intro h1 {font-size: 2.6em; font-weight: normal; color: #555;}
 .home .intro strong {font-size: 1.4em; font-weight: normal; color: #555;}
-.button-row {}
+.button-row {margin: 32px 0;}
 .button-row .button {display: inline-block; margin: 0 32px;}
-.button-row .button a {display: block; width: 200px; margin: 0; padding: 4px 16px 3px 16px; text-align: center; border-radius: 3px;}
+.button-row .button a {display: inline-block; margin: 0; padding: 4px 16px 3px 16px; text-align: center; border-radius: 3px;}
 .button-row .button a {
 	background: #659324; /* Old browsers */
 	background: -moz-linear-gradient(top, #81bc2e 1%, #659324 100%); /* FF3.6+ */
@@ -69,7 +69,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 	background: linear-gradient(to bottom, #81bc2e 1%,#659324 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#81bc2e', endColorstr='#659324',GradientType=0 ); /* IE6-9 */
 }
-.button-row .button a h2 {margin: 0; font-size: 1.4em; font-weight: normal; color: #fff;}
+.button-row .button a h2 {margin: 0; font-size: 1.3em; font-weight: normal; color: #fff;}
 
 /* filter collection example */
 #filter-example {margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
