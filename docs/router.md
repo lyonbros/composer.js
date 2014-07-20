@@ -361,6 +361,5 @@ document.getElementById('bind-links-test').innerHTML =
     '<a href="/composer.js/docs/router/users">Load users</a> | ' +
     '<a href="/composer.js/docs/router/notes">Load notes</a>' +
     '<div></div>';
-window.location = '#bind-links-test';
 {% endhighlight %}
 
