@@ -5,7 +5,9 @@ layout: documentation
 
 # A simple model/controller setup
 
-Here we're going to tie a model and controller together using eventing.
+Here we're going to tie a model and controller together using eventing. Notice
+that if you click "Try it" multiple times, it loads multiple controllers and
+each one manages its own state without butting heads with the others. Very nice.
 
 <div id="simple" class="example fade"></div>
 
