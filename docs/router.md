@@ -312,6 +312,7 @@ link is clicked.
 Notice that the URL bar in the browser updates with the clicked link even
 though the page doesn't reload. We're using pushState here, and the router
 listens to the pushState events and loads the correct code for the given route.
+Even the back button works properly, loading the corresponding controller.
 
 This can be done on a much larger scale, loading top-level controllers for
 various "pages" (wink wink) in your app, making it seem like a page has changed
