@@ -13,6 +13,7 @@ time).
 Until then, here's the app:
 
 <div id="todo-container">
+    <h1>Todos</h1>
 	<div class="app"></div>
 </div>
 
