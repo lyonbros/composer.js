@@ -304,7 +304,7 @@ breaks conventions, please [let us know](https://github.com/lyonbros/composer.js
 
 This example will really tie the room together:
 
-<div id="bind-links-test" class="fade">
+<div id="bind-links-test" class="example fade">
 </div>
 
 {% highlight js %}
