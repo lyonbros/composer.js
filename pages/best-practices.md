@@ -48,10 +48,7 @@ So how do you create an event bus? Easy! Create an instance of [Composer.Event](
 {% highlight js %}
 // our app's top-level namespace
 var my_app = {
-    // ...
-
     events: new Composer.Event()
-
     // ...
 };
 my_app.events.bind('download-complete', function() { alert('Download finished!'); });
