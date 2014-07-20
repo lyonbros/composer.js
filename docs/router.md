@@ -304,6 +304,9 @@ breaks conventions, please [let us know](https://github.com/lyonbros/composer.js
 
 This example will really tie the room together:
 
+<div id="bind-links-test">
+</div>
+
 {% highlight js %}
 // define a base controller the others extend that will a) inject to the correct
 // spot, and b) release itself when a successful route happens.
@@ -354,12 +357,10 @@ window.app = {
 window.app.router.bind_links({
     selector: '#bind-links-test a'
 });
+document.getElementById('bind-links-test').innerHTML =
+    '<a href="/composer.js/docs/router/users">Load users</a> | ' +
+    '<a href="/composer.js/docs/router/notes">Load notes</a>' +
+    '<div></div>';
 window.location = '#bind-links-test';
 {% endhighlight %}
-
-<div id="bind-links-test">
-    <a href="/composer.js/docs/router/users">Load users</a> |
-    <a href="/composer.js/docs/router/notes">Load notes</a>
-    <div></div>
-</div>
 
