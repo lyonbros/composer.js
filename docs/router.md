@@ -52,10 +52,18 @@ route on instead of the on in the URL bar.
 ### route
 
 Triggered when a route happens in the router. The router itself listens to this
-event to determine when to run the route and its matching code. Arguments
-passed:
+event to determine when to run the route and its matching code. This happens
+*before* the matching route (if any) is run. Arguments passed:
 
 - The (string) path being routed on
+
+### route-success
+
+Triggered when a route happens successfully (no errors, found a matching route).
+Note that this happens *just before* the found route function is called.
+Arguments passed:
+
+- the matching route object
 
 ## Composer.Router
 
@@ -249,14 +257,32 @@ useful for managing various state within your application.
 
 ### bind_links :: function(options)
 
-This function uses event delegation to bind an event to the window `document`
-that listens for clicks on &lt;a&gt; tags. When it detects a click, it routes
-the `href` of the element via `History.pushState`. This lets you write your
-links in your app as normal links like you would in a static app, but then use
-pushState to change pages.
+This function makes all links in your app behave as pushState links that change
+the browser's URL without actually reloading the page. `bind_links` uses event
+delegation to bind an event to the window `document` that listens for clicks on
+&lt;a&gt; tags. When it detects a click, it routes the `href` of the element via
+`History.pushState`. This lets you write your links in your app as normal links
+like you would in a static app, but then use pushState to change pages.
+
+`options` can contain the following items:
+
+- `do_state_change` - A function that takes one argument (the &lt;a&gt; tag
+element that was clicked) that if it returns `false`, will cancel the route and
+let the browser perform the default action.
+- `filter_trailing_slash` - If true, will remove trailing slashes from &lt;a&gt;
+tags before routing on their `href` attribute. Note that this doesn't affect the
+element itself, just the URL after it's pulled from the element.
+- `global_state` - Any object that is used as the `state` value in the pushState
+call.
+- `selector` - Use a specific selector when binding to links. Note that the
+selector can be *anything*, not just links. So "ul.trees li" would bind to any
+&lt;li&gt; within &lt;ul class="trees"&gt; tag.
+- `exclude_class` - A classname used to exclude specific links from pushState
+navigation. So a value of "nolink" would exclude any &lt;a class="nolink"&gt;
+elements from being bound.
 
 `bind_links` has a few criteria it must meet before triggering a
-`History.pushState`:
+route/`History.pushState`:
 
 - Control/Shift/Alt keys must *not* be pressed, otherwise the browser is allowed
 to do its default action (open a new tab, for instance).
@@ -271,8 +297,68 @@ external link (the browser switches pages normally).
 These criteria ensure that your users have a smooth experience and can expect
 accepted conventions while using your app. I cannot count how many apps
 completely break control+click for opening a link in a new tab because they want
-to bind every link on the site (and suck doing it).
+to bind every link on the site (and suck at doing so).
 
 Composer's router does it right. If you experience any problems where the router
 breaks conventions, please [let us know](https://github.com/lyonbros/composer.js/issues)!
+
+This example will really tie the room together:
+
+{% highlight js %}
+// define a base controller the others extend that will a) inject to the correct
+// spot, and b) release itself when a successful route happens.
+var BaseController = Composer.Controller.extend({
+    inject: '#bind-links-test div',
+
+    init: function()
+    {
+        this.render();
+        // release ourself on each successful route
+        this.with_bind(window.app.router, 'route-success', this.release.bind(this));
+    }
+});
+var UsersController = BaseController.extend({
+    render: function()
+    {
+        this.html('<h1>Users</h1><ul><li>andrew</li><li>leonard</li><li>larry</li></ul>');
+    }
+});
+
+var NotesController = BaseController.extend({
+    render: function()
+    {
+        this.html('<h1>Notes</h1><ul><li>TODO: get a job</li><li>i had the silliest dream...</li><li>Bookmark: google.com</li></ul>');
+    }
+});
+
+var routes = {
+    '/composer.js/docs/router/users': ['routes', 'users'],
+    '/composer.js/docs/router/notes': ['routes', 'notes'],
+};
+
+// define our top-level app
+window.app = {
+    router: new Composer.Router(routes),
+
+    handle_users: function()
+    {
+        new UsersController();
+    },
+
+    handle_notes: function()
+    {
+        new NotesController();
+    }
+}
+// bind to links in our test area
+window.app.route.bind_links({
+    selector: '#bind-links-test a'
+});
+{% endhighlight %}
+
+<div id="bind-links-test">
+    <a href="/composer.js/docs/router/users">Load users</a> |
+    <a href="/composer.js/docs/router/notes">Load notes</a>
+    <div></div>
+</div>
 
