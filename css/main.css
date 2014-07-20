@@ -46,7 +46,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade {transition: background 1s;}
 .fade.enabled {background: #cfc;}
 
-home .download {
+.home .download {
 	background: #659324; /* Old browsers */
 	background: -moz-linear-gradient(top, #81bc2e 1%, #659324 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#81bc2e), color-stop(100%,#659324)); /* Chrome,Safari4+ */
@@ -56,7 +56,7 @@ home .download {
 	background: linear-gradient(to bottom, #81bc2e 1%,#659324 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#81bc2e', endColorstr='#659324',GradientType=0 ); /* IE6-9 */
 }
-home .download a {color: #fff;}
-home .download a h2 {font-size: 1.6em;}
-home .download a h2 em {font-size: .7em; color: #aaa;}
+.home .download a {color: #fff;}
+.home .download a h2 {font-size: 1.6em;}
+.home .download a h2 em {font-size: .7em; color: #aaa;}
 
