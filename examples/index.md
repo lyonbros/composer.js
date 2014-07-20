@@ -19,5 +19,7 @@ Use a controller to monitor form fields and update them into a model
 Take what we've learned and build a simple (obligatory) TODO app
 - [Filter collection usage](/composer.js/examples/filtercollection)  
 Learn how to use a filter collection and when it's appropriate
+- [Using the Router](/composer.js/examples/router)  
+Use the router to switch "pages" in your app while maintaining state
 - More to come!
 
