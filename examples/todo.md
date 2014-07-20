@@ -12,7 +12,7 @@ time).
 
 Until then, here's the app:
 
-<div id="todo-container">
+<div id="todo-container" style="display: none;">
     <h1>Todos</h1>
 	<div class="app"></div>
 </div>
@@ -253,6 +253,9 @@ var TodoApp = Composer.Controller.extend({
 		}
 	}
 });
+
+// show the container
+Composer.find(document, '#todo-container').style.display = 'block';
 
 // load it!
 new TodoApp();
