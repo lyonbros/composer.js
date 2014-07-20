@@ -47,7 +47,7 @@ var ShowDogController = Composer.Controller.extend({
         var html = '';
         html += '<h3>This dog\'s name is '+ data.name +'</h3>';
         html += '<form>';
-        html += 'Rename dog: <input type="text" name="name" value="'+ data.name +'">';
+        html += 'Rename dog: <input type="text" name="name" value="">';
         html += '<br>';
         html += '<input type="submit" value="Change dog name">';
         html += '</form>';
