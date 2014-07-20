@@ -34,7 +34,7 @@ alert(larry.options.bites);  // true
 
 Classes can be extended two ways. The vanilla, simple way is `MyClass.extend`.
 
-### Class.extend
+### Class.extend :: function(definition)
 {% highlight js %}
 var Dog = Composer.Class({
     bark: function() { return 'woof'; }
@@ -45,7 +45,7 @@ var shiba = new Shiba();
 alert(shiba.bark());   // 'woof'
 {% endhighlight %}
 
-### Composer.merge\_extend
+### Composer.merge_extend :: function(class, array_of_property_names)
 Another way, which is used internally in Composer, is very similar to the above
 extension method. It allows a class to additively extend certain static
 properties of the parent class. This sounds a bit esoteric, so let's dive in:
