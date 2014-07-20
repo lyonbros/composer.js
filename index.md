@@ -1,5 +1,5 @@
 ---
-title: Try Composer
+title: Get Composer
 layout: home
 ---
 # Composer.js
@@ -13,7 +13,7 @@ __Composer is a powerful MVC-based framework for building applications in Javasc
     </a>
 </div>
 
-It is designed to allow more complicated setups than can be achieved easily
+Composer is designed to allow more complicated setups than can be achieved easily
 with frameworks like the excellent Backbone.js. Composer makes no assumptions
 about the structure of your data or your architecture; it provides a set of
 tools to help you build your app then politely bows out of your way.
