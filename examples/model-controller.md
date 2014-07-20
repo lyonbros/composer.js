@@ -48,7 +48,11 @@ var DisplayCounterController = Composer.Controller.extend({
 
     render: function()
     {
-        this.html('Current count is '+ this.model.get_count());
+        alert('RENDER!');
+        var html = '';
+        html += 'Current count is '+ this.model.get_count();
+        html += ' <input type="button" value="Increase">'
+        this.html(html);
     },
 
     increase_count: function(e)
