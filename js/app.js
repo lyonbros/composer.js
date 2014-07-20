@@ -57,6 +57,10 @@ var app = {
 			last_li = li;
 			level = newlevel;
 		});
+		if(toc.getElement('ul').getChildren().length == 0)
+		{
+			toc.setStyle('display', 'none'); 
+		}
 	},
 
 	init_eval: function()
