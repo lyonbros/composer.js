@@ -68,8 +68,8 @@ em code, strong code {font-style: normal; font-weight: normal;}
 	background: linear-gradient(to bottom, #81bc2e 1%,#659324 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#81bc2e', endColorstr='#659324',GradientType=0 ); /* IE6-9 */
 }
-.home .download a h2 {display: inline-block; margin: 0; font-size: 1.6em; font-weight: normal; color: #fff;}
-.home .download a h2 em {display: block; font-size: .6em;}
+.home .download a h2 {display: inline-block; margin: 0; font-size: 1.4em; font-weight: normal; color: #fff;}
+.home .download a h2 em {display: block; font-size: .7em;}
 
 /* todo app */
 #todo-container {width: 500px; margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0; -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0; -o-box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
