@@ -58,6 +58,6 @@ em code, strong code {font-style: normal; font-weight: normal;}
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#81bc2e', endColorstr='#659324',GradientType=0 ); /* IE6-9 */
 }
 .home .download a {color: #fff;}
-.home .download a h2 {margin: 0; font-size: 1.6em; font-weight: normal; color: #fff;}
-.home .download a h2 em {margin-left: 4px; font-size: .7em;}
+.home .download a h2 {text-align: left; margin: 0; font-size: 1.6em; font-weight: normal; color: #fff;}
+.home .download a h2 em {display: block; font-size: .6em;}
 
