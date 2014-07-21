@@ -338,6 +338,6 @@ See the [events section](#events-1) for a release example.
 ### replace :: function(element)
 
 Replace the controller's [el](#el) with another DOM element. Once the replace is
-complete, the [elements](#elements) and [events](#events) are refreshed for the
-controller.
+complete, the [elements](#elements) and [events](#events-1) are refreshed for
+the controller.
 
