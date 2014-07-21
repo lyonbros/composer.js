@@ -36,8 +36,8 @@
 		else if(has_moo)
 		{
 			return function(context, selector) {
-				context || (context = document.id(document));
-				return context.getElement(selector);
+				context || (context = document);
+				return document.id(context).getElement(selector);
 			};
 		}
 		else if(has_slick)
