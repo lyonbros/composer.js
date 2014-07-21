@@ -78,8 +78,8 @@
 					_fn.apply(this, arguments);
 				};
 
-				if(selector) return el.addEvent(ev+':relay('+selector+')', fn);
-				else return el.addEvent(ev, fn);
+				if(selector) return document.id(el).addEvent(ev+':relay('+selector+')', fn);
+				else return document.id(el).addEvent(ev, fn);
 			};
 		}
 		else
