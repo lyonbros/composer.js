@@ -259,6 +259,71 @@ var MyController = Composer.Controller.extend({
 {% endhighlight %}
 </div>
 
+### track_subcontroller :: function(name, create_fn)
+
+A common pattern is for a controller to have one or more sub-controllers. So you
+may have a Dashboard controller and it could have a UserList controller and a
+RecentComments controller.
+
+When the Dashboard controller [releases](#release-1), you want it to release its
+sub-controllers automatically. `track_subcontroller` does this for you! It keeps
+track of sub-controllers you are using and frees them on release.
+
+`name` is the (string) name you wish to give your sub-controller. It must be
+unique from other sub-controllers you're tracking.
+
+`create_fn` is a function of zero arguments that *must return a controller
+instance*. This function is where you create, set up, and return your
+sub-controller.
+
+Note that `track_subcontroller` will check if a controller is already stored
+under the given `name`. If one exists, it is released and removed from tracking
+before the new one is put into its place. This is very useful in situations
+where your master controller re-creates its sub-controllers on [render](#render)
+and you don't want to have to worry about dangling controllers not being cleaned
+up. `track_subcontrollers` handles everything for you.
+
+<div class="noeval">
+{% highlight js %}
+var UserListController = Composer.Controller.extend({
+    init: function()
+    {
+        this.render();
+    },
+
+    render: function()
+    {
+        this.html('<ul><li>user1</li><li>user2</li>...</ul>');
+    }
+});
+var DashboardController = Composer.Controller.extend({
+    elements: {
+        'div.users': 'user_list'
+    },
+
+    init: function()
+    {
+        this.render();
+    },
+
+    render: function()
+    {
+        this.html('<h1>Dashboard</h1><div class="users"></div>');
+        // track our UserListController. if DashboardController renders again,
+        // the sub-controller will be released and recreated. if the Dashboard
+        // is released, so is the sub-controller.
+        this.track_subcontroller('Users', function() {
+            return new UserListController();
+        });
+    }
+});
+{% endhighlight %}
+</div>
+
+In the above, `DashboardController` will automatically clean its
+`UserListController` sub-controller each time it renders (or when it's released)
+so you can focus on building your app and not a bunch of boilerplate cleanup BS.
+
 ### release :: function(options)
 
 Remove the controller from the DOM (removes [el](#el)) and perform any cleanup
