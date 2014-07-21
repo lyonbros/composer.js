@@ -52,7 +52,7 @@
 		options: {
 			forward_all_events: false,
 			refresh_on_change: false,	// performance hit, but needed for backward compat
-			sort_event: false,			// if true, fires a 'sort' event instead of 'reset' when sorting
+			sort_event: false			// if true, fires a 'sort' event instead of 'reset' when sorting
 		},
 
 		initialize: function(master, options)
