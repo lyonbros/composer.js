@@ -2336,6 +2336,21 @@
 		},
 
 		/**
+		 * replace this controller's container element (this.el) with another element.
+		 * also refreshes the events/elements associated with the controller
+		 */
+		replace: function(element)
+		{
+			if(this.el.parentNode) this.el.parentNode.replaceChild(element, this.el);
+			this.el	=	element;
+
+			this.refresh_elements();
+			this.delegate_events();
+
+			return element;
+		},
+
+		/**
 		 * set up the events (by delegation) to this controller (events are stored
 		 * under this.events).
 		 */

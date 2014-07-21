@@ -103,6 +103,20 @@ describe('Composer.Controller', function() {
 		expect(ext.clicked_p).toBe(2);
 	});
 
+	it('will properly replace its el (and refresh elements/events)', function() {
+		var con = new MyController();
+		var div = document.createElement('div');
+		var h1 = document.createElement('h1');
+		h1.innerHTML = 'Replaced';
+		div.appendChild(h1);
+		con.replace(div);
+
+		expect(con.title == h1).toBe(true);
+		expect(con.clicked).toBe(false);
+		Composer.fire_event(h1, 'click');
+		expect(con.clicked).toBe(true);
+	});
+
 	it('will properly manage bindings', function() {
 		var model = new Composer.Model();
 		var rendered = 0;
