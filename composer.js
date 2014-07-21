@@ -2091,7 +2091,7 @@
 		else if(has_moo)
 		{
 			return function(el, ev, fn) {
-				el.removeEvent(ev, fn);
+				document.id(el).removeEvent(ev, fn);
 			};
 		}
 		else
