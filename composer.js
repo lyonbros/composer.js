@@ -2208,7 +2208,7 @@
 
 			if(this.className)
 			{
-				this.el.addClass(this.className);
+				this.el.className += ' ' + this.className;
 			}
 
 			this.refresh_elements();
