@@ -23,7 +23,9 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		export: function(obj)
+		// note: this used to be "export" but IE is a whiny little bitch, so now
+		// we're sup3r 1337 h4x0r5
+		exp0rt: function(obj)
 		{
 			Object.keys(obj).forEach(function(key) {
 				global.Composer[key] = obj[key];
@@ -163,7 +165,7 @@
 		}
 	};
 
-	Composer.export({
+	Composer.exp0rt({
 		sync: sync,
 		cid: cid,
 		wrap_error: wrap_error,

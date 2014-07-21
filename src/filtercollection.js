@@ -392,5 +392,5 @@
 		}
 	});
 
-	Composer.export({ FilterCollection: FilterCollection });
+	Composer.exp0rt({ FilterCollection: FilterCollection });
 })();

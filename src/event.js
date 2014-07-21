@@ -191,6 +191,6 @@
 	});
 
 	Event._make_lookup_name = make_lookup_name;
-	Composer.export({ Event: Event });
+	Composer.exp0rt({ Event: Event });
 }).apply((typeof exports != 'undefined') ? exports : this);
 

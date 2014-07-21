@@ -280,6 +280,6 @@
 
 	Composer.merge_extend(Controller, ['events', 'elements']);
 
-	Composer.export({ Controller: Controller });
+	Composer.exp0rt({ Controller: Controller });
 })();
 

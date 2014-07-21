@@ -330,6 +330,6 @@
 		}
 	});
 
-	Composer.export({ Router: Router });
+	Composer.exp0rt({ Router: Router });
 }).apply((typeof exports != 'undefined') ? exports : this);
 

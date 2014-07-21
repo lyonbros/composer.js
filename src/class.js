@@ -395,6 +395,6 @@
     Class.errors = errors;
     Class.version = "1.1.0";
 
-	Composer.export({ Class: Class });
+	Composer.exp0rt({ Class: Class });
 }());
 

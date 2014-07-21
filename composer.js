@@ -23,7 +23,9 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		export: function(obj)
+		// note: this used to be "export" but IE is a whiny little bitch, so now
+		// we're sup3r 1337 h4x0r5
+		exp0rt: function(obj)
 		{
 			Object.keys(obj).forEach(function(key) {
 				global.Composer[key] = obj[key];
@@ -163,7 +165,7 @@
 		}
 	};
 
-	Composer.export({
+	Composer.exp0rt({
 		sync: sync,
 		cid: cid,
 		wrap_error: wrap_error,
@@ -571,7 +573,7 @@
     Class.errors = errors;
     Class.version = "1.1.0";
 
-	Composer.export({ Class: Class });
+	Composer.exp0rt({ Class: Class });
 }());
 
 /**
@@ -767,7 +769,7 @@
 	});
 
 	Event._make_lookup_name = make_lookup_name;
-	Composer.export({ Event: Event });
+	Composer.exp0rt({ Event: Event });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -883,7 +885,7 @@
 		}
 	});
 
-	Composer.export({ Base: Base });
+	Composer.exp0rt({ Base: Base });
 })();
 
 /**
@@ -1288,7 +1290,7 @@
 		}
 	});
 
-	Composer.export({ Model: Model });
+	Composer.exp0rt({ Model: Model });
 })();
 
 /**
@@ -1885,7 +1887,7 @@
 			this.trigger.apply(this, arguments);
 		}
 	});
-	Composer.export({ Collection: Collection });
+	Composer.exp0rt({ Collection: Collection });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -2107,7 +2109,7 @@
 		return find_parent(selector, par);
 	};
 
-	Composer.export({
+	Composer.exp0rt({
 		find: find,
 		match: match,
 		add_event: add_event,
@@ -2399,7 +2401,7 @@
 
 	Composer.merge_extend(Controller, ['events', 'elements']);
 
-	Composer.export({ Controller: Controller });
+	Composer.exp0rt({ Controller: Controller });
 })();
 
 /**
@@ -2734,7 +2736,7 @@
 		}
 	});
 
-	Composer.export({ Router: Router });
+	Composer.exp0rt({ Router: Router });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -3039,7 +3041,7 @@
 
 	Composer.merge_extend(RelationalModel, ['relations']);
 
-	Composer.export({
+	Composer.exp0rt({
 		HasOne: -1,		// no longer used but needed for backwards compat
 		HasMany: -1,	// " "
 		RelationalModel: RelationalModel
@@ -3440,5 +3442,5 @@
 		}
 	});
 
-	Composer.export({ FilterCollection: FilterCollection });
+	Composer.exp0rt({ FilterCollection: FilterCollection });
 })();

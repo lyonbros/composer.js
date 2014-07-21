@@ -400,6 +400,6 @@
 		}
 	});
 
-	Composer.export({ Model: Model });
+	Composer.exp0rt({ Model: Model });
 })();
 
