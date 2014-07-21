@@ -300,7 +300,7 @@
 
 	Composer.merge_extend(RelationalModel, ['relations']);
 
-	Composer.export({
+	Composer.exp0rt({
 		HasOne: -1,		// no longer used but needed for backwards compat
 		HasMany: -1,	// " "
 		RelationalModel: RelationalModel

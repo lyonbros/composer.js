@@ -111,6 +111,6 @@
 		}
 	});
 
-	Composer.export({ Base: Base });
+	Composer.exp0rt({ Base: Base });
 })();
 

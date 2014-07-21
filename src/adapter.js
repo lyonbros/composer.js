@@ -217,7 +217,7 @@
 		return find_parent(selector, par);
 	};
 
-	Composer.export({
+	Composer.exp0rt({
 		find: find,
 		match: match,
 		add_event: add_event,
