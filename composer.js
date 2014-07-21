@@ -2152,6 +2152,9 @@
 		// holds events bound with with_bind
 		_bound_events: [],
 
+		// tracks sub-controllers
+		_subcontrollers: {},
+
 		// the DOM element to tie this controller to (a container element)
 		el: false,
 
@@ -2266,6 +2269,24 @@
 		},
 
 		/**
+		 * keep track of a sub controller that will release when this controller
+		 * does
+		 */
+		track_subcontroller: function(name, create_fn)
+		{
+			// if we have an existing controller with the same name, release and
+			// remove it.
+			if(this._subcontrollers[name])
+			{
+				this._subcontrollers[name].release();
+				delete this._subcontrollers[name];
+			}
+			var instance = create_fn();
+			this._subcontrollers[name] = instance;
+			return instance;
+		},
+
+		/**
 		 * make sure el is defined as an HTML element
 		 */
 		_ensure_el: function() {
@@ -2301,6 +2322,12 @@
 				obj.unbind(ev, fn);
 			});
 			this._bound_events = [];
+
+			// auto-release/remove sub-controllers
+			Object.keys(this._subcontrollers).forEach(function(key) {
+				this._subcontrollers[key].release();
+			}.bind(this));
+			this._subcontrollers = {};
 
 			this.fire_event('release', options, this);
 

@@ -145,6 +145,43 @@ describe('Composer.Controller', function() {
 		expect(clicked).toBe(1);
 	});
 
+	it('will properly manage sub-controllers', function() {
+		var sub_released = 0;
+		var Sub = Composer.Controller.extend({
+			init: function()
+			{
+			},
+
+			release: function()
+			{
+				sub_released++;
+				return this.parent.apply(this, arguments);
+			}
+		});
+		var Master = Composer.Controller.extend({
+			elements: {
+				'.sub': 'sub_container'
+			},
+
+			init: function()
+			{
+				this.render();
+			},
+
+			render: function()
+			{
+				this.html('<div class="sub"></div>');
+				this.track_subcontroller('Sub', function() {
+					return new Sub();
+				});
+			}
+		});
+		var master = new Master();
+		master.render();
+		master.render();
+		expect(sub_released).toBe(2);
+	});
+
 	it('will merge_extend other classes properly', function() {
 		var Band = Composer.Controller.extend({
 			play: function() { return 'la la la'; }
