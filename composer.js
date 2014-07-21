@@ -1925,11 +1925,18 @@
 				return jQuery(context).find(selector)[0];
 			};
 		}
+		else if(has_moo)
+		{
+			return function(context, selector) {
+				context || (context = document.id(document));
+				return context.getElement(selector);
+			};
+		}
 		else if(has_slick)
 		{
 			return function(context, selector) {
 				context || (context = document);
-				return Slick.find(context, selector)
+				return Slick.find(context, selector);
 			};
 		}
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer.');
@@ -2201,7 +2208,7 @@
 
 			if(this.className)
 			{
-				this.el.addClass(this.className);
+				this.el.className += ' ' + this.className;
 			}
 
 			this.refresh_elements();
