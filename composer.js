@@ -3015,7 +3015,7 @@
 				{
 					obj[path] = {};
 				}
-				else if(typeOf(obj[path]) != 'object')
+				else if(typeof(obj) != 'object' || obj instanceof Array)
 				{
 					obj[path] = {};
 				}
