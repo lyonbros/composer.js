@@ -72,7 +72,9 @@
 		if ( a === b ) return true;
 		if(a instanceof Function) return false;
 		if(typeof(a) != typeof(b)) return false;
-		if(a.constructor != b.constructor) return false;
+		if((a && a.constructor) && !b || !b.constructor) return false;
+		if((b && b.constructor) && !a || !a.constructor) return false;
+		if(a && b && a.constructor != b.constructor) return false;
 		if(a instanceof Array)
 		{
 			if(a.length != b.length) return false;
