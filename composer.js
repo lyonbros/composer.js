@@ -72,6 +72,7 @@
 		if ( a === b ) return true;
 		if(a instanceof Function) return false;
 		if(typeof(a) != typeof(b)) return false;
+		if(a.constructor != b.constructor) return false;
 		if(a instanceof Array)
 		{
 			if(a.length != b.length) return false;
@@ -84,7 +85,6 @@
 		}
 		else if(a instanceof Object)
 		{
-			if ( a.constructor !== b.constructor ) return false;
 			for( var p in b )
 			{
 				if( b.hasOwnProperty(p) && ! a.hasOwnProperty(p) ) return false;
