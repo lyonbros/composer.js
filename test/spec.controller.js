@@ -46,7 +46,14 @@ describe('Composer.Controller', function() {
 		var el = con.el;
 		expect(el.parentNode).toBe(test);
 		con.release();
-		expect(el.parentNode).toBe(null);
+		if(el.parentNode)
+		{
+			expect(el.parentNode.tagName).toBeUndefined();
+		}
+		else
+		{
+			expect(el.parentNode).toBe(null);
+		}
 	});
 
 	it('can delegate events properly', function() {
@@ -67,7 +74,14 @@ describe('Composer.Controller', function() {
 			}
 		});
 		var con = new Controller();
-		expect(con.el.parentNode).toBeFalsy();
+		if(con.el.parentNode)
+		{
+			expect(con.el.parentNode.tagName).toBeUndefined();
+		}
+		else
+		{
+			expect(con.el.parentNode).toBeFalsy();
+		}
 		expect(con.the_title.innerHTML).toBe('LOOL');
 	});
 

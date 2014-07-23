@@ -2019,6 +2019,11 @@
 		return function(node, eventName, options) {
 			options || (options = {});
 
+			if(eventName == 'click' && node.click)
+			{
+				return node.click();
+			}
+
 			// Make sure we use the ownerDocument from the provided node to avoid cross-window problems
 			var doc;
 			if (node.ownerDocument) {
@@ -2063,21 +2068,7 @@
 
 				var bubbles = true;
 				var event = doc.createEvent(eventClass);
-
-				switch(eventClass)
-				{
-				case 'KeyboardEvent':
-					var key = options.key || 0;
-					event.initKeyEvent(eventName, bubbles, true, document.defaultView, false, false, false, false, key, key);
-				case 'MouseEvents':
-				case 'UIEvents':
-					event.initUIEvent(eventName, bubbles, true, global, 1); // All events created as bubbling and cancelable.
-					break;
-				default:
-					event.initEvent(eventName, bubbles, true); // All events created as bubbling and cancelable.
-					break;
-				}
-
+				event.initEvent(eventName, bubbles, true); // All events created as bubbling and cancelable.
 				event.synthetic = true; // allow detection of synthetic events
 				// The second parameter says go ahead with the default action
 				node.dispatchEvent(event, true);
@@ -2498,7 +2489,7 @@
 			if(!this.options.suppress_initial_route)
 			{
 				// run the initial route
-				History.Adapter.trigger(global, 'statechange', [global.location.pathname]);
+				History.Adapter.trigger(global, 'statechange', [this.cur_path()]);
 			}
 		},
 
@@ -2518,7 +2509,15 @@
 		 */
 		cur_path: function()
 		{
-			return new String(global.location.pathname+global.location.search).toString();
+			if(History.emulated.pushState)
+			{
+				var path = '/' + new String(global.location.hash).toString().replace(/^[#!\/]+/, '');
+			}
+			else
+			{
+				var path = global.location.pathname+global.location.search;
+			}
+			return path;
 		},
 
 		/**
@@ -2550,6 +2549,16 @@
 			var old = this.cur_path();
 			if(old == href)
 			{
+				this.trigger('statechange', href, true);
+			}
+			else if(History.emulated.pushState)
+			{
+				// we're using hashbangs, which are async (if we use
+				// History.pushState). we really want sync behavior so let's
+				// fool History into thinking it already routed this hash (so it
+				// doesn't double-fire) then trigger the event manually.
+				History.saveHash(url);		// makes History.js not fire on hash
+				window.location.hash = '#'+href;
 				this.trigger('statechange', href, true);
 			}
 			else
@@ -3212,7 +3221,7 @@
 				return this.filter(model, this);
 			}.bind(this));
 			this.sort({silent: true});
-			if(this.limit) this._models.splice(this.limit);
+			if(this.limit) this._models.splice(this.limit, this._models.length);
 			if(options.diff_events)
 			{
 				var arrdiff = function(arr1, arr2) { return arr1.filter(function(el) { return arr2.indexOf(el) < 0; }); };

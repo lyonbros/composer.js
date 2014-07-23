@@ -15,7 +15,7 @@ describe('Composer', function() {
 		];
 		// Composer.array.*
 		var array_exports = [
-			'erase',
+			'erase'
 		];
 		// Composer.object.*
 		var object_exports = [
