@@ -125,6 +125,11 @@
 		return function(node, eventName, options) {
 			options || (options = {});
 
+			if(eventName == 'click' && node.click)
+			{
+				return node.click();
+			}
+
 			// Make sure we use the ownerDocument from the provided node to avoid cross-window problems
 			var doc;
 			if (node.ownerDocument) {
@@ -169,21 +174,7 @@
 
 				var bubbles = true;
 				var event = doc.createEvent(eventClass);
-
-				switch(eventClass)
-				{
-				case 'KeyboardEvent':
-					var key = options.key || 0;
-					event.initKeyEvent(eventName, bubbles, true, document.defaultView, false, false, false, false, key, key);
-				case 'MouseEvents':
-				case 'UIEvents':
-					event.initUIEvent(eventName, bubbles, true, global, 1); // All events created as bubbling and cancelable.
-					break;
-				default:
-					event.initEvent(eventName, bubbles, true); // All events created as bubbling and cancelable.
-					break;
-				}
-
+				event.initEvent(eventName, bubbles, true); // All events created as bubbling and cancelable.
 				event.synthetic = true; // allow detection of synthetic events
 				// The second parameter says go ahead with the default action
 				node.dispatchEvent(event, true);

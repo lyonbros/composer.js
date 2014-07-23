@@ -153,7 +153,7 @@
 				return this.filter(model, this);
 			}.bind(this));
 			this.sort({silent: true});
-			if(this.limit) this._models.splice(this.limit);
+			if(this.limit) this._models.splice(this.limit, this._models.length);
 			if(options.diff_events)
 			{
 				var arrdiff = function(arr1, arr2) { return arr1.filter(function(el) { return arr2.indexOf(el) < 0; }); };

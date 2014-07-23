@@ -15,7 +15,7 @@ describe('Composer', function() {
 		];
 		// Composer.array.*
 		var array_exports = [
-			'erase',
+			'erase'
 		];
 		// Composer.object.*
 		var object_exports = [
@@ -60,12 +60,7 @@ describe('Composer', function() {
 			tests.forEach(function(test, i) {
 				// test the given order and the reverse
 				expect(Composer.eq(test[0], test[1])).toBe(true_or_false);
-				var res = Composer.eq(test[0], test[1]);
-				if(res != true_or_false)
-				{
-					console.log('eq? ', i, test[0], test[1], Composer.eq(test[0], test[1]), true_or_false);
-				}
-				//expect(Composer.eq(test[1], test[0])).toBe(true_or_false);
+				expect(Composer.eq(test[1], test[0])).toBe(true_or_false);
 			});
 		};
 
@@ -109,6 +104,8 @@ describe('Composer', function() {
 			[84],
 			[1, 2],
 			[1, 2, 3],
+			['Frank'],
+			['frank'],
 			[undefined],
 			[null],
 			[true],
@@ -116,20 +113,14 @@ describe('Composer', function() {
 			a1
 		];
 		tests = [];
-		console.log('json: ', falsevals);
 		for(var i = 0; i < falsevals.length; i++)
 		{
 			for(var c = 0; c < falsevals.length; c++)
 			{
 				if(c == i) continue;	// don't compare a value to itself
 				tests.push([falsevals[i], falsevals[c]]);
-				if(tests.length == 163 || tests.length == 463)
-				{
-					console.log('fail: ', i, c, falsevals[i], falsevals[c]);
-				}
 			}
 		}
-		console.log('test: ', tests);
 		run(false);
 	});
 });

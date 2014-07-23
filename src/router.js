@@ -83,7 +83,7 @@
 			if(!this.options.suppress_initial_route)
 			{
 				// run the initial route
-				History.Adapter.trigger(global, 'statechange', [global.location.pathname]);
+				History.Adapter.trigger(global, 'statechange', [this.cur_path()]);
 			}
 		},
 
@@ -103,7 +103,15 @@
 		 */
 		cur_path: function()
 		{
-			return new String(global.location.pathname+global.location.search).toString();
+			if(History.emulated.pushState)
+			{
+				var path = '/' + new String(global.location.hash).toString().replace(/^[#!\/]+/, '');
+			}
+			else
+			{
+				var path = global.location.pathname+global.location.search;
+			}
+			return path;
 		},
 
 		/**
@@ -135,6 +143,16 @@
 			var old = this.cur_path();
 			if(old == href)
 			{
+				this.trigger('statechange', href, true);
+			}
+			else if(History.emulated.pushState)
+			{
+				// we're using hashbangs, which are async (if we use
+				// History.pushState). we really want sync behavior so let's
+				// fool History into thinking it already routed this hash (so it
+				// doesn't double-fire) then trigger the event manually.
+				History.saveHash(url);		// makes History.js not fire on hash
+				window.location.hash = '#'+href;
 				this.trigger('statechange', href, true);
 			}
 			else

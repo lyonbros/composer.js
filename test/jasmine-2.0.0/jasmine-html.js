@@ -230,7 +230,11 @@ jasmineRequire.HtmlReporter = function(j$) {
     return this;
 
     function find(selector) {
-      return getContainer().querySelector(selector);
+      if(getContainer().querySelector) {
+        return getContainer().querySelector(selector);
+      } else if(Slick) {
+        return Slick.find(getContainer(), selector);
+      }
     }
 
     function createDom(type, attrs, childrenVarArgs) {
