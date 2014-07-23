@@ -5,7 +5,7 @@ layout: default
 
 # Building / load order
 
-Generally, you should include the provided pre-packaged [composer.js](/composer.js/js/composer.js)
+Generally, you should include the provided pre-packaged [composer.js](/composer.js/composer.js)
 file for inclusion in your app, however you can mix and match or build your own
 by using the following load order:
 
