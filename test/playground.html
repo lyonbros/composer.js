@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Playground. Open the console and do stuff.</title>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta http-equiv="Content-language" content="en">
+
+		<!--<script src="slick.js"></script>-->
+		<script src="mootools-core-1.4.5.js"></script>
+		<!--<script src="jquery-1.11.1.js"></script>-->
+		<script src="History.js"></script>
+		<script src="../src/util.js"></script>
+		<script src="../src/class.js"></script>
+		<script src="../src/event.js"></script>
+		<script src="../src/base.js"></script>
+		<script src="../src/model.js"></script>
+		<script src="../src/collection.js"></script>
+		<script src="../src/adapter.js"></script>
+		<script src="../src/controller.js"></script>
+		<script src="../src/router.js"></script>
+		<script src="../src/relational.js"></script>
+		<script src="../src/filtercollection.js"></script>
+		<script>
+			var pages = {
+				home: function()
+				{
+					console.log('Home!');
+				},
+
+				users: function()
+				{
+					console.log('Users!');
+				}
+			};
+			var router;
+			function init_router()
+			{
+				router = new Composer.Router({
+					'/': ['pages', 'home'],
+					'/users': ['pages', 'users']
+				});
+				router.bind_links();
+			}
+		</script>
+	</head>
+	<body>
+		Ready to PLAY??? Open the console.<br>
+		<a href="/">Home</a> |
+		<a href="/users">Users</a> |
+		<a href="#">Blank link</a>
+	</body>
+</html>
