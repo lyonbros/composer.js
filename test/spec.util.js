@@ -51,8 +51,8 @@ describe('Composer', function() {
 		var s2 = 'my string';
 		var o1 = {name: 'charlie', position: null, can: false};
 		var o2 = {name: 'charlie', position: null, can: false};
-		var a1 = [1,false,null,undefined];
-		var a2 = [1,false,null,undefined];
+		var a1 = [1,o1,null,s1];
+		var a2 = [1,o2,null,s2];
 
 		var tests = [];
 		var run = function(true_or_false)
@@ -76,7 +76,8 @@ describe('Composer', function() {
 			[{}, {}],
 			[o1, o2],
 			[[], []],
-			[a1, a2]
+			[a1, a2],
+			[{hai: a1}, {hai: a2}]
 		];
 		run(true);
 
