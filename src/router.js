@@ -299,6 +299,11 @@
 				var a = Composer.find_parent('a', e.target);
 				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
 
+				if(History.emulated.pushState && a.href.replace(/^.*?#/, '') == '')
+				{
+					return false;
+				}
+
 				// don't trap links that are meant to open new windows, and don't
 				// trap middle mouse clicks (or anything more than left click)
 				if(a.target == '_blank' || button > 0) return;
