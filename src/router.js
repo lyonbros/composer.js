@@ -299,6 +299,7 @@
 				var a = Composer.find_parent('a', e.target);
 				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
 
+				if(a.href.match(/^javascript:/)) return false;
 				if(History.emulated.pushState && a.href.replace(/^.*?#/, '') == '')
 				{
 					return false;
