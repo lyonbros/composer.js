@@ -21,12 +21,27 @@
 
 	var global = this;
 
+	var has_sizzle = !!global.Sizzle;
 	var has_jquery = !!global.jQuery;
 	var has_slick = !!global.Slick;
 	var has_moo = !!global.MooTools;
 
 	var find = (function() {
-		if(has_jquery)
+		if(has_sizzle)
+		{
+			return function(context, selector) {
+				context || (context = document);
+				return Sizzle.select(selector, context)[0];
+			};
+		}
+		else if(has_slick)
+		{
+			return function(context, selector) {
+				context || (context = document);
+				return Slick.find(context, selector);
+			};
+		}
+		else if(has_jquery)
 		{
 			return function(context, selector) {
 				context || (context = document);
@@ -40,22 +55,15 @@
 				return document.id(context).getElement(selector);
 			};
 		}
-		else if(has_slick)
-		{
-			return function(context, selector) {
-				context || (context = document);
-				return Slick.find(context, selector);
-			};
-		}
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer.');
 	})();
 
 	var match = (function() {
-		if(has_jquery)
+		if(has_sizzle)
 		{
 			return function(element, selector) {
 				element || (element = document);
-				return jQuery(element).is(selector);
+				return Sizzle.matchesSelector(element, selector);
 			};
 		}
 		else if(has_slick)
@@ -63,6 +71,13 @@
 			return function(element, selector) {
 				element || (element = document);
 				return Slick.match(element, selector);
+			};
+		}
+		else if(has_jquery)
+		{
+			return function(element, selector) {
+				element || (element = document);
+				return jQuery(element).is(selector);
 			};
 		}
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer.');
@@ -107,6 +122,27 @@
 						fn.apply(this, [event].concat(event.params || []));
 					});
 				}
+			};
+		}
+	})();
+
+	var remove_event = (function() {
+		if(has_jquery)
+		{
+			return function(el, ev, fn) {
+				jQuery(el).off(ev, fn);
+			};
+		}
+		else if(has_moo)
+		{
+			return function(el, ev, fn) {
+				document.id(el).removeEvent(ev, fn);
+			};
+		}
+		else
+		{
+			return function(el, ev, fn) {
+				el.removeEventListener(ev, fn, false);
 			};
 		}
 	})();
@@ -185,27 +221,6 @@
 				node.fireEvent("on" + eventName, event);
 			}
 		};
-	})();
-
-	var remove_event = (function() {
-		if(has_jquery)
-		{
-			return function(el, ev, fn) {
-				jQuery(el).off(ev, fn);
-			};
-		}
-		else if(has_moo)
-		{
-			return function(el, ev, fn) {
-				document.id(el).removeEvent(ev, fn);
-			};
-		}
-		else
-		{
-			return function(el, ev, fn) {
-				el.removeEventListener(ev, fn, false);
-			};
-		}
 	})();
 
 	var find_parent = function(selector, element)
