@@ -57,5 +57,12 @@ describe('Composer.Router', function() {
 		expect(error.url).toBeTruthy();
 		expect(error.route).toBeFalsy();
 	});
+
+	it('can parse querystring variables', function() {
+		var qs = '?get=job&num_friends=0&dog=lucy';
+		expect(router.get_param(qs, 'get')).toBe('job');
+		expect(router.get_param(qs, 'num_friends')).toBe('0');
+		expect(router.get_param(qs, 'dog')).toBe('lucy');
+	});
 });
 

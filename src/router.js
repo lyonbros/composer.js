@@ -117,11 +117,11 @@
 		/**
 		 * Get a value (by key) out of the current query string
 		 */
-		get_param: function(key)
+		get_param: function(search, key)
 		{
 			key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 			var regex = new RegExp("[\\?&]" + key + "=([^&#]*)");
-			var results = regex.exec(location.search);
+			var results = regex.exec(search);
 			return results == null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 		},
 
