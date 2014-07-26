@@ -10,7 +10,7 @@ describe('Composer.Controller', function() {
 			'click h1': 'click_title'
 		},
 
-		clicked: false,
+		clicked_h1: false,
 
 		init: function()
 		{
@@ -19,12 +19,12 @@ describe('Composer.Controller', function() {
 
 		render: function()
 		{
-			this.html('<h1>Mai title</h1><p>Lorum ippsem dollar sin amut or something</p><div class="gutter"></div>');
+			this.html('<h1>Mai title</h1><p>Lorum ippsem dollar sin amut or something<span>lol</span></p><div class="gutter"></div>');
 		},
 
 		click_title: function()
 		{
-			this.clicked = true;
+			this.clicked_h1 = true;
 		}
 	});
 
@@ -33,9 +33,9 @@ describe('Composer.Controller', function() {
 		expect(con.cid().match(/^c[0-9]+/)).toBeTruthy();
 		expect(con instanceof Composer.Controller).toBe(true);
 		expect(con.param1).toBe('omg');
-		expect(con.clicked).toBe(false);
+		expect(con.clicked_h1).toBe(false);
 		con.click_title();
-		expect(con.clicked).toBe(true);
+		expect(con.clicked_h1).toBe(true);
 		expect(con.el.tagName.toLowerCase()).toBe('div');
 		expect(con.title.tagName.toLowerCase()).toBe('h1');
 	});
@@ -59,9 +59,9 @@ describe('Composer.Controller', function() {
 	it('can delegate events properly', function() {
 		var con = new MyController();
 		var title = con.title;
-		expect(con.clicked).toBe(false);
+		expect(con.clicked_h1).toBe(false);
 		Composer.fire_event(title, 'click');
-		expect(con.clicked).toBe(true);
+		expect(con.clicked_h1).toBe(true);
 	});
 
 	it('will create non-injected elements', function() {
@@ -87,10 +87,19 @@ describe('Composer.Controller', function() {
 
 	it('properly merges elements/events when extending', function() {
 		var Ext = MyController.extend({
-			elements: { 'p': 'my_p' },
-			events: { 'click p': 'click_p' },
+			elements: {
+				'p': 'my_p',
+				'span': 'my_span'
+			},
+			events: {
+				'click p': 'click_p',
+				'click p span': 'click_span',
+				'click': 'click_el'
+			},
 
 			clicked_p: 0,
+			clicked_span: 0,
+			clicked_el: 0,
 
 			init: function()
 			{
@@ -100,12 +109,23 @@ describe('Composer.Controller', function() {
 			click_p: function()
 			{
 				this.clicked_p++;
+			},
+
+			click_span: function()
+			{
+				this.clicked_span++;
+			},
+
+			click_el: function()
+			{
+				this.clicked_el++;
 			}
 		});
 
 		var ext = new Ext();
-		expect(ext.clicked).toBe(false);
+		expect(ext.clicked_h1).toBe(false);
 		expect(ext.clicked_p).toBe(0);
+		expect(ext.clicked_span).toBe(0);
 		expect(ext.elements['h1']).toBeDefined();
 		expect(ext.elements['p']).toBeDefined();
 		expect(ext.events['click h1']).toBeDefined();
@@ -114,7 +134,11 @@ describe('Composer.Controller', function() {
 
 		Composer.fire_event(ext.my_p, 'click');
 		Composer.fire_event(ext.my_p, 'click');
+
+		expect(ext.clicked_h1).toBe(false);
 		expect(ext.clicked_p).toBe(2);
+		expect(ext.clicked_span).toBe(0);
+		expect(ext.clicked_el).toBe(2);
 	});
 
 	it('will properly replace its el (and refresh elements/events)', function() {
@@ -126,9 +150,9 @@ describe('Composer.Controller', function() {
 		con.replace(div);
 
 		expect(con.title == h1).toBe(true);
-		expect(con.clicked).toBe(false);
+		expect(con.clicked_h1).toBe(false);
 		Composer.fire_event(h1, 'click');
-		expect(con.clicked).toBe(true);
+		expect(con.clicked_h1).toBe(true);
 	});
 
 	it('will properly manage bindings', function() {
