@@ -45,7 +45,8 @@
 		options: {
 			suppress_initial_route: false,
 			enable_cb: function(url) { return true; },
-			process_querystring: false
+			process_querystring: false,
+			base: false
 		},
 
 		/**
@@ -98,6 +99,15 @@
 			this.unbind();
 		},
 
+		debasify: function(path)
+		{
+			if(this.options.base && path.indexOf(this.options.base) == 0)
+			{
+				path = path.substr(this.options.base.length);
+			}
+			return path;
+		},
+
 		/**
 		 * get the current url path
 		 */
@@ -111,7 +121,7 @@
 			{
 				var path = global.location.pathname+global.location.search;
 			}
-			return path;
+			return this.debasify(path);
 		},
 
 		/**
@@ -139,8 +149,9 @@
 			options || (options = {});
 			options.state || (options.state = {});
 
-			var href = '/' + url.trim().replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
-			var old = this.cur_path();
+			var base = (this.options.base || '');
+			var href = base + '/' + url.trim().replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
+			var old = base + this.cur_path();
 			if(old == href)
 			{
 				this.trigger('statechange', href, true);
@@ -245,7 +256,8 @@
 		state_change: function(path, force)
 		{
 			if(path && path.stop != undefined) path = false;
-			path || (path = this.cur_path());
+			if(path) path = this.debasify(path);
+			if(!path) path = this.cur_path();
 			force = !!force;
 
 			// check if we are routing to the same exact page. if we are, return
