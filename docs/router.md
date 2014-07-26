@@ -150,7 +150,8 @@ objects!
 options: {
     suppress_initial_route: false,
     enable_cb: function(url) { return true; },
-    process_querystring: false
+    process_querystring: false,
+    base: false
 }
 {% endhighlight %}
 </div>
@@ -169,6 +170,17 @@ parameters into account when routing. This makes writing your routes a lot
 trickier because you have to account for URL query parameters now, but also
 gives you the power to route on them (and capture their values) if that's what
 your app requires.
+
+`base` tells the router that when you call [route](#route-1), you want it to
+prepend the string `options.base` to the URL when its passed to `pushState`.
+Note that if you set a base, it is removed post-URL-change, and will be ignored
+by your routing table. So you write your routes as if `base` isn't in the URL.
+This is for applications where you absolutely need all resources to fall under a
+certain path. While this seems useful, it is mainly for apps that run in a
+container such as a Firefox or Node-webkit *app* that needs all `pushState` URLs
+to fall under a predetermined folder (ie `/content`) that otherwise would cause
+a `SecurityError`. In other words, don't use `base` unless you really need it.
+It won't hurt things, but it might make them harder to debug.
 
 ### initialize :: function(routes, options)
 
@@ -200,15 +212,21 @@ router.destroy();
 Destroys the router and any bindings it has (either other objects' bindings to
 it or its bindings to the History object).
 
-### get_param :: function(key)
+### get_param :: function(search, key)
 
 Convenience function to get the value of a URL query parameter out of the
-*current* URL by its key.
+*current* URL by its `key`.
+
+`search` is the query string (preusmably you got this from `window.location.search`.
 
 ### route: function(url, options)
 
 Route to a URL. This function is provided as an abstraction around setting your
-URL directly via pushState.
+URL directly via pushState. Note that if `base` is set to a string in your
+[options](#options), that base is prepended to the URL that's routed. So a base
+of "/content" would case `router.route('/users')` to change the URL in the
+address bar to "/content/users". *However* you would still write your routing
+table as though "/content" didn't exist.
 
 <div class="noeval">
 {% highlight js %}
