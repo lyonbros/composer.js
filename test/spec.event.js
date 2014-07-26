@@ -11,8 +11,7 @@ describe('Composer.Event', function() {
 		var fn = function() {};
 		dog.bind('bark', fn);
 		expect(dog._handlers['bark'].length).toBe(1);
-		expect(dog.unbind('bark', fn)).toBe(true);
-		expect(dog.unbind('bark', fn)).toBe(false);
+		expect(dog.unbind('bark', fn)).toBe(dog);
 		expect(dog._handlers['bark'].length).toBe(0);
 	});
 
