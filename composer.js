@@ -2007,17 +2007,17 @@
 				if(selector)
 				{
 					el.addEventListener(ev, function(event) {
-						fn.apply(this, [event].concat(event.params || []));
-					}, false);
-				}
-				else
-				{
-					el.addEventListener(ev, function(event) {
 						var target = event.target || event.srcElement;
 						if(event.__composer_handled || !match(target, selector)) return false;
 						event.__composer_handled = true;
 						fn.apply(this, [event].concat(event.params || []));
 					});
+				}
+				else
+				{
+					el.addEventListener(ev, function(event) {
+						fn.apply(this, [event].concat(event.params || []));
+					}, false);
 				}
 			};
 		}
