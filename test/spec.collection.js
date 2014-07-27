@@ -16,7 +16,6 @@ describe('Composer.Collection', function() {
 	});
 
 	it('can use a custom model type', function() {
-
 		var MyModel = Composer.Model.extend({
 			defaults: { name: 'roxy' }
 		});
@@ -68,11 +67,13 @@ describe('Composer.Collection', function() {
 		col.remove(model1);
 		col.remove(model1);
 		expect(col.models().length).toBe(1);
+		expect(col.length()).toBe(1);
 		expect(remove).toBe(2);
 		var next = col.first();
 		col.remove(next);
 		col.remove(next);
 		expect(col.models().length).toBe(0);
+		expect(col.length()).length).toBe(0);
 		expect(remove).toBe(3);
 	});
 
@@ -88,12 +89,14 @@ describe('Composer.Collection', function() {
 		model.bind('change:name', function() { name_changed = true; });
 
 		expect(col.models().length).toBe(1);
+		expect(col.length()).length).toBe(1);
 		expect(name_changed).toBe(false);
 
 		var model2 = new Composer.Model({id: 1234, name: 'philip'});
 		col.upsert(model2);
 
 		expect(col.models().length).toBe(1);
+		expect(col.length()).toBe(1);
 		expect(name_changed).toBe(false);	// upserts are silent
 		expect(upsert).toBe(1);
 		expect(add).toBe(0);
@@ -103,6 +106,7 @@ describe('Composer.Collection', function() {
 
 		col.upsert(new Composer.Model({id: 1233, name: 'gertrude'}));
 		expect(col.models().length).toBe(2);
+		expect(col.length()).toBe(2);
 		expect(upsert).toBe(1);
 		expect(add).toBe(1);
 	});
@@ -111,9 +115,11 @@ describe('Composer.Collection', function() {
 		var col = new Composer.Collection([{},{},{}]);
 		var cleared = 0;
 		expect(col.models().length).toBe(3);
+		expect(col.length()).toBe(3);
 		col.bind('clear', function() { cleared++; });
 		col.clear();
 		expect(col.models().length).toBe(0);
+		expect(col.length()).toBe(0);
 		expect(cleared).toBe(1);
 		col.clear();
 		col.clear();
