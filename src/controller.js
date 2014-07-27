@@ -223,7 +223,7 @@
 		replace: function(element)
 		{
 			if(this.el.parentNode) this.el.parentNode.replaceChild(element, this.el);
-			this.el	=	element;
+			this.el = element;
 
 			this.refresh_elements();
 			this.delegate_events();
