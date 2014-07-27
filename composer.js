@@ -1411,6 +1411,14 @@
 		},
 
 		/**
+		 * get the number of models in the collection
+		 */
+		length: function()
+		{
+			return this.models().length;
+		},
+
+		/**
 		 * add a model to this collection, and hook up the correct wire in doing so
 		 * (events and setting the model's collection).
 		 */
