@@ -125,6 +125,11 @@ Returns a javascript array of the contained models.
 
 Returns the number of models held in this collection.
 
+{% highlight js %}
+var collection = new Composer.Collection([{name: 'bella'}, {name: 'sally'}, {name: 'andrea'}]);
+alert('Size: '+ collection.size());
+{% endhighlight %}
+
 ### add :: function(data, options)
 
 Add a new model to the collection. `data` can be a javascript hash object, a
