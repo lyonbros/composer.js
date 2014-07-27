@@ -73,7 +73,7 @@ describe('Composer.Collection', function() {
 		col.remove(next);
 		col.remove(next);
 		expect(col.models().length).toBe(0);
-		expect(col.length()).length).toBe(0);
+		expect(col.length()).toBe(0);
 		expect(remove).toBe(3);
 	});
 
@@ -89,7 +89,7 @@ describe('Composer.Collection', function() {
 		model.bind('change:name', function() { name_changed = true; });
 
 		expect(col.models().length).toBe(1);
-		expect(col.length()).length).toBe(1);
+		expect(col.length()).toBe(1);
 		expect(name_changed).toBe(false);
 
 		var model2 = new Composer.Model({id: 1234, name: 'philip'});
