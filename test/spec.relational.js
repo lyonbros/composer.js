@@ -92,5 +92,12 @@ describe('Composer.RelationalModel', function() {
 		expect(good.play()).toBe('...');
 		expect(cover.play()).toBe('let the music be your master');
 	});
+
+	it('will clear related models/collections when cleared', function() {
+		var band = new Band(banddata);
+		var members = band.get('members');
+		band.clear();
+		expect(members.models().length).toBe(0);
+	});
 });
 

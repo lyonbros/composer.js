@@ -2942,6 +2942,26 @@
 		},
 
 		/**
+		 * clear this model's data *and* its related sub-objects
+		 */
+		clear: function(options)
+		{
+			options || (options = {});
+
+			if(this.relations && !options.skip_relational)
+			{
+				Composer.object.each(this.relations, function(relation, k) {
+					var obj = this._get_key(this.relation_data, k);
+					if(typeof(obj) == 'undefined') return;
+					if(obj.clear && typeof(obj.clear) == 'function') obj.clear();
+				}, this);
+			}
+
+			// call Model.clear()
+			return this.parent.apply(this, arguments);
+		},
+
+		/**
 		 * a wrapper around bind that makes sure our relational objects exist
 		 */
 		bind_relational: function(key)
