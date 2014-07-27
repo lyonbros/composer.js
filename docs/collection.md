@@ -121,6 +121,11 @@ collection into JSON or another format.
 
 Returns a javascript array of the contained models.
 
+### length :: function()
+
+Returns the number of models held in this collection. Notice that this is a
+*function*, not a *property*.
+
 ### add :: function(data, options)
 
 Add a new model to the collection. `data` can be a javascript hash object, a
