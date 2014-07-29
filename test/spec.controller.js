@@ -232,6 +232,7 @@ describe('Composer.Controller', function() {
 		master.render();
 		master.render();
 		expect(sub_released).toBe(2);
+		expect(master.get_subcontroller('Sub') instanceof Sub).toBe(true);
 	});
 
 	it('will merge_extend other classes properly', function() {
