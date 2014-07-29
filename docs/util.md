@@ -102,6 +102,17 @@ Composer.array.erase(arr, 2);
 alert('Result: '+ JSON.stringify(arr));
 {% endhighlight %}
 
+### is :: function(obj)
+
+Determine if `obj` is an Array object. This can usually be done with
+`instanceof`, however if you get an array from another window/iframe, the test
+will crash and burn. `Composer.array.is` has some provisions to work around
+this.
+
+{% highlight js %}
+alert('Is array: '+ Composer.array.is([1,2,3]) + ' / ' + Composer.array.is({name: 'larry'}));
+{% endhighlight %}
+
 ## Composer.object
 
 A collection of object utilities, mimicked after Mootools.
