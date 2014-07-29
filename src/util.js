@@ -139,7 +139,7 @@
 
 		is: function(obj)
 		{
-			return obj && (obj instanceof Array || Object.prototype.toString.call(obj) === '[object Array]');
+			return obj && (Array.isArray(obj) || obj instanceof Array || Object.prototype.toString.call(obj) === '[object Array]');
 		}
 	};
 	var object = {
