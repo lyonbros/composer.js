@@ -324,6 +324,12 @@ In the above, `DashboardController` will automatically clean its
 `UserListController` sub-controller each time it renders (or when it's released)
 so you can focus on building your app and not a bunch of boilerplate cleanup BS.
 
+### get_subcontroller :: function(name)
+
+Recently used [track_subcontroller](#track-subcontroller)? Use
+`get_subcontroller` to retrieve the tracked sub-controller by the name given in
+the call to `track_subcontroller`.
+
 ### release :: function(options)
 
 Remove the controller from the DOM (removes [el](#el)) and perform any cleanup
