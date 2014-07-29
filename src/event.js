@@ -67,7 +67,7 @@
 		 */
 		bind: function(event_name, fn, bind_name)
 		{
-			if(event_name instanceof Array)
+			if(Composer.array.is(event_name))
 			{
 				event_name.forEach(function(ev) {
 					this.bind(ev, fn, bind_name);
@@ -113,7 +113,7 @@
 		unbind: function(event_name, function_or_name)
 		{
 			if(!event_name) return this.wipe();
-			if(event_name instanceof Array)
+			if(Composer.array.is(event_name))
 			{
 				event_name.forEach(function(ev) {
 					this.unbind(ev, function_or_name);

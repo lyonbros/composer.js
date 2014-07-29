@@ -55,7 +55,7 @@ describe('Composer.RelationalModel', function() {
 		var col = new Band(banddata);
 		var obj = col.toJSON();
 		expect(obj.name).toBe('the way');
-		expect(obj.members instanceof Array).toBe(true);
+		expect(Composer.array.is(obj.members)).toBe(true);
 		expect(obj.members[1].pet.name).toBe('lucy');
 	});
 

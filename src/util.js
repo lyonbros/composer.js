@@ -75,7 +75,7 @@
 		if((a && a.constructor) && !b || !b.constructor) return false;
 		if((b && b.constructor) && !a || !a.constructor) return false;
 		if(a && b && a.constructor != b.constructor) return false;
-		if(a instanceof Array)
+		if(a instanceof Array || Object.prototype.toString.call(a) === '[object Array]')
 		{
 			if(a.length != b.length) return false;
 			// TODO: check if array indexes are always sequential
@@ -133,8 +133,13 @@
 		{
 			for(var i = arr.length - 1; i >= 0; i--)
 			{
-				if(arr[i] == item) arr.splice(i, 1);
+				if(arr[i] === item) arr.splice(i, 1);
 			}
+		},
+
+		is: function(obj)
+		{
+			return obj && (obj instanceof Array || Object.prototype.toString.call(obj) === '[object Array]');
 		}
 	};
 	var object = {
