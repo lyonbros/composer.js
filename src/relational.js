@@ -287,7 +287,7 @@
 				{
 					obj[path] = {};
 				}
-				else if(typeof(obj) != 'object' || obj instanceof Array)
+				else if(typeof(obj) != 'object' || Composer.array.is(obj))
 				{
 					obj[path] = {};
 				}

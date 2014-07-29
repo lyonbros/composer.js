@@ -75,7 +75,7 @@
 		if((a && a.constructor) && !b || !b.constructor) return false;
 		if((b && b.constructor) && !a || !a.constructor) return false;
 		if(a && b && a.constructor != b.constructor) return false;
-		if(a instanceof Array)
+		if(a instanceof Array || Object.prototype.toString.call(a) === '[object Array]')
 		{
 			if(a.length != b.length) return false;
 			// TODO: check if array indexes are always sequential
@@ -133,8 +133,13 @@
 		{
 			for(var i = arr.length - 1; i >= 0; i--)
 			{
-				if(arr[i] == item) arr.splice(i, 1);
+				if(arr[i] === item) arr.splice(i, 1);
 			}
+		},
+
+		is: function(obj)
+		{
+			return obj && (obj instanceof Array || Object.prototype.toString.call(obj) === '[object Array]');
 		}
 	};
 	var object = {
@@ -647,7 +652,7 @@
 		 */
 		bind: function(event_name, fn, bind_name)
 		{
-			if(event_name instanceof Array)
+			if(Composer.array.is(event_name))
 			{
 				event_name.forEach(function(ev) {
 					this.bind(ev, fn, bind_name);
@@ -693,7 +698,7 @@
 		unbind: function(event_name, function_or_name)
 		{
 			if(!event_name) return this.wipe();
-			if(event_name instanceof Array)
+			if(Composer.array.is(event_name))
 			{
 				event_name.forEach(function(ev) {
 					this.unbind(ev, function_or_name);
@@ -1424,7 +1429,7 @@
 		 */
 		add: function(data, options)
 		{
-			if (data instanceof Array)
+			if (Composer.array.is(data))
 			{
 				return Composer.object.each(data, function(model) { this.add(model, options); }, this);
 			}
@@ -1469,7 +1474,7 @@
 		 */
 		remove: function(model, options)
 		{
-			if(model instanceof Array)
+			if(Composer.array.is(model))
 			{
 				return Composer.object.each(model, function(m) { this.remove(m); }, this);
 			}
@@ -1582,7 +1587,7 @@
 			options || (options = {});
 
 			if(data == undefined) return;
-			if(!(data instanceof Array)) data = [data];
+			if(!Composer.array.is(data)) data = [data];
 
 			data = data.slice(0);
 
@@ -3090,7 +3095,7 @@
 				{
 					obj[path] = {};
 				}
-				else if(typeof(obj) != 'object' || obj instanceof Array)
+				else if(typeof(obj) != 'object' || Composer.array.is(obj))
 				{
 					obj[path] = {};
 				}
@@ -3383,7 +3388,7 @@
 		 */
 		add: function(data, options)
 		{
-			if (data instanceof Array)
+			if (Composer.array.is(data))
 			{
 				return Composer.object.each(data, function(model) { this.add(model, options); }, this);
 			}
@@ -3470,7 +3475,7 @@
 		 */
 		remove: function(model, options)
 		{
-			if (model instanceof Array)
+			if (Composer.array.is(model))
 			{
 				return Composer.object.each(model, function(m) { this.remove(m); }, this);
 			}

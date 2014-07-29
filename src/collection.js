@@ -124,7 +124,7 @@
 		 */
 		add: function(data, options)
 		{
-			if (data instanceof Array)
+			if (Composer.array.is(data))
 			{
 				return Composer.object.each(data, function(model) { this.add(model, options); }, this);
 			}
@@ -169,7 +169,7 @@
 		 */
 		remove: function(model, options)
 		{
-			if(model instanceof Array)
+			if(Composer.array.is(model))
 			{
 				return Composer.object.each(model, function(m) { this.remove(m); }, this);
 			}
@@ -282,7 +282,7 @@
 			options || (options = {});
 
 			if(data == undefined) return;
-			if(!(data instanceof Array)) data = [data];
+			if(!Composer.array.is(data)) data = [data];
 
 			data = data.slice(0);
 
