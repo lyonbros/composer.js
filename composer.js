@@ -137,10 +137,13 @@
 			}
 		},
 
-		is: function(obj)
-		{
-			return obj && (obj instanceof Array || Object.prototype.toString.call(obj) === '[object Array]');
-		}
+		is: (function() {
+			return ('isArray' in Array) ? 
+				Array.isArray :
+				function(obj) {
+					return obj instanceof Array || Object.prototype.toString.call(obj) === '[object Array]'
+				}
+		})()
 	};
 	var object = {
 		each: function(obj, fn, bind)
