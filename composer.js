@@ -137,10 +137,13 @@
 			}
 		},
 
-		is: function(obj)
-		{
-			return obj && (obj instanceof Array || Object.prototype.toString.call(obj) === '[object Array]');
-		}
+		is: (function() {
+			return ('isArray' in Array) ? 
+				Array.isArray :
+				function(obj) {
+					return obj instanceof Array || Object.prototype.toString.call(obj) === '[object Array]'
+				}
+		})()
 	};
 	var object = {
 		each: function(obj, fn, bind)
@@ -2317,6 +2320,14 @@
 			var instance = create_fn();
 			this._subcontrollers[name] = instance;
 			return instance;
+		},
+
+		/**
+		 * get a tracked subcontroller by name
+		 */
+		get_subcontroller: function(name)
+		{
+			return this._subcontrollers[name] || false;
 		},
 
 		/**
