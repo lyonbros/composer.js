@@ -156,11 +156,18 @@ var tail = dog.get('tail').get('name');
 alert('Legs / tail name: '+ legs + ' / ' + tail);
 {% endhighlight %}
 
-### toJSON :: function()
+### toJSON :: function(options)
 
 Like [Model.toJSON](/composer.js/docs/model#tojson), this function serializes
 the data contained in the model into objects/arrays. However, this function also
 aggregates the serialized results from all its sub-objects:
+
+`options` can contain the following items:
+
+- `skip_relational` - if true, will *not* return relational data in the toJSON
+serialization (the keys of the relations will be deleted from the resulting
+object). This can be useful for serializing a relational object without grabbing
+the entire tree.
 
 {% highlight js %}
 var MyModel = Composer.RelationalModel.extend({
