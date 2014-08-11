@@ -331,7 +331,7 @@
 					return;
 				}
 
-				if(e) e.stop();
+				if(e) e.preventDefault();
 
 				var href = a.href.replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
 				if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
