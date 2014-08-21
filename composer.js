@@ -1940,7 +1940,21 @@
 	var has_moo = !!global.MooTools;
 
 	var find = (function() {
-		if(has_sizzle)
+		if(has_moo)
+		{
+			return function(context, selector) {
+				context || (context = document);
+				return document.id(context).getElement(selector);
+			};
+		}
+		else if(has_jquery)
+		{
+			return function(context, selector) {
+				context || (context = document);
+				return jQuery(context).find(selector)[0];
+			};
+		}
+		else if(has_sizzle)
 		{
 			return function(context, selector) {
 				context || (context = document);
@@ -1952,20 +1966,6 @@
 			return function(context, selector) {
 				context || (context = document);
 				return Slick.find(context, selector);
-			};
-		}
-		else if(has_jquery)
-		{
-			return function(context, selector) {
-				context || (context = document);
-				return jQuery(context).find(selector)[0];
-			};
-		}
-		else if(has_moo)
-		{
-			return function(context, selector) {
-				context || (context = document);
-				return document.id(context).getElement(selector);
 			};
 		}
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer.');
@@ -2779,7 +2779,7 @@
 					return;
 				}
 
-				if(e) e.stop();
+				if(e) e.preventDefault();
 
 				var href = a.href.replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
 				if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
@@ -2906,19 +2906,20 @@
 		 * extension of Model.toJSON() that also serializes the child
 		 * (relational) objects
 		 */
-		toJSON: function()
+		toJSON: function(options)
 		{
-			// modify the underlying data to match the data of the relational models
-			if(!this.skip_relational_serialize)
+			options || (options = {});
+
+			var data = this.parent();
+
+			if(this.skip_relational_serialize || options.skip_relational)
 			{
-				Composer.object.each(this.relations, function(relation, k) {
-					var obj = this._get_key(this.relation_data, k);
-					if(obj) this._set_key(this.data, k, obj.toJSON());
-				}, this);
+				Object.keys(this.relations).forEach(function(key) {
+					delete data[key];
+				});
 			}
 
-			// call Model.toJSON()
-			return this.parent();
+			return data;
 		},
 
 		/**

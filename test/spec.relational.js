@@ -99,5 +99,12 @@ describe('Composer.RelationalModel', function() {
 		band.clear();
 		expect(members.models().length).toBe(0);
 	});
+
+	it('will use skip_relational properly', function() {
+		var col = new Band(banddata);
+		var data = col.toJSON({skip_relational: true});
+		expect(Composer.eq(data, {name: 'the way'})).toBe(true);
+	});
+
 });
 
