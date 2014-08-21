@@ -1947,6 +1947,13 @@
 				return document.id(context).getElement(selector);
 			};
 		}
+		else if(has_jquery)
+		{
+			return function(context, selector) {
+				context || (context = document);
+				return jQuery(context).find(selector)[0];
+			};
+		}
 		else if(has_sizzle)
 		{
 			return function(context, selector) {
@@ -1959,13 +1966,6 @@
 			return function(context, selector) {
 				context || (context = document);
 				return Slick.find(context, selector);
-			};
-		}
-		else if(has_jquery)
-		{
-			return function(context, selector) {
-				context || (context = document);
-				return jQuery(context).find(selector)[0];
 			};
 		}
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer.');
