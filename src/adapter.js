@@ -27,7 +27,14 @@
 	var has_moo = !!global.MooTools;
 
 	var find = (function() {
-		if(has_sizzle)
+		if(has_moo)
+		{
+			return function(context, selector) {
+				context || (context = document);
+				return document.id(context).getElement(selector);
+			};
+		}
+		else if(has_sizzle)
 		{
 			return function(context, selector) {
 				context || (context = document);
@@ -46,13 +53,6 @@
 			return function(context, selector) {
 				context || (context = document);
 				return jQuery(context).find(selector)[0];
-			};
-		}
-		else if(has_moo)
-		{
-			return function(context, selector) {
-				context || (context = document);
-				return document.id(context).getElement(selector);
 			};
 		}
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer.');
