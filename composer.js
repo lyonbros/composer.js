@@ -2345,6 +2345,17 @@
 		},
 
 		/**
+		 * bind a event that the controller tracks and unbinds on release or
+		 * that unbinds itself once it fires once
+		 */
+		with_bind_once: function(object, ev, fn, name)
+		{
+			name || (name = false);
+			object.bind_once(ev, fn, name);
+			this._bound_events.push([object, ev, fn]);
+		},
+
+		/**
 		 * keep track of a sub controller that will release when this controller
 		 * does
 		 */
