@@ -151,3 +151,53 @@ Composer.object.merge(obj, {name: 'fisty'}, {age: 69});
 alert('Obj: ' + JSON.stringify(obj));
 {% endhighlight %}
 
+## Composer.promisify :: function()
+
+New in version 1.0.6, this function replaces the following methods with
+promise-ready versions:
+
+- [Model.fetch](/composer.js/docs/model#fetch)
+- [Model.save](/composer.js/docs/model#save)
+- [Model.destroy](/composer.js/docs/model#destroy)
+- [Collection.fetch](/composer.js/docs/collection#fetch)
+- [Collection.reset\_async](/composer.js/docs/collection#reset-async)
+
+Instead of accepting `options.success` and `options.error`, these functions will
+now return promises (assuming you have included a promise library in the page).
+
+This changes the interface for these functions a bit, but once you get the hang
+of it, you can use the same technique for all of them. Here's an example:
+
+<div class="noeval">
+{% highlight js %}
+var dog = new Composer.Model({id: 17});
+dog.fetch({
+    success: function(model) {
+        console.log('success! ', model.get('name'));
+    },
+    error: function(model, err) {
+        console.error('oh no: ', err);
+    }
+});
+{% endhighlight %}
+</div>
+
+...and now *after* calling `promisify`:
+
+<div class="noeval">
+{% highlight js %}
+var dog = new Composer.Model({id: 17});
+dog.fetch()
+    .then(function(model) {
+        console.log('success! ', model.get('name'));
+    })
+    .catch(function(err) {
+        console.error('oh no: ', err);
+    });
+{% endhighlight %}
+</div>
+
+The syntax difference is negligable, however promises offer a lot of power when
+it comes to stringing together async operations and *especially* handling
+errors.
+
