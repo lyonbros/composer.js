@@ -259,6 +259,17 @@ var MyController = Composer.Controller.extend({
 {% endhighlight %}
 </div>
 
+### with_bind_once :: function(object, ev, fn, name)
+
+This function is *exactly* like [with_bind](#with-bind), except that instead of
+calling `object.bind`, it calls `object.bind_once`. This lets you add one-time
+events on any object that extends [Composer.Event](/composer.js/docs/event#composer-event)
+without worrying about cleaning them up if your controller is released.
+
+See [with_bind](#with-bind) for full usage examples.
+
+__Note:__ `object`s passed to `with_bind_once` *must* extend [Composer.Event](/composer.js/docs/event#composer-event).
+
 ### track_subcontroller :: function(name, create_fn)
 
 A common pattern is for a controller to have one or more sub-controllers. So you
