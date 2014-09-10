@@ -201,7 +201,7 @@
 					if(options.promisified) return _old.apply(_self, args);
 					return new Promise(function(resolve, reject) {
 						if(names[0]) options[names[0]] = resolve;
-						if(names[1]) options[names[1]] = reject;
+						if(names[1]) options[names[1]] = function(_, err) { reject(err); };
 						options.promisified = true;
 						_old.apply(_self, args);
 					});

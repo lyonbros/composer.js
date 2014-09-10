@@ -4,7 +4,10 @@ describe('Promises', function() {
 		Composer.sync = function(method, model, options)
 		{
 			setTimeout(function() {
-				if(options.throw) throw new Error('You asked for it...');
+				if(options.do_error)
+				{
+					return options.error('you asked for it...');
+				}
 				var data = {
 					id: 10,
 					name: 'Obama',
@@ -70,5 +73,23 @@ describe('Promises', function() {
 	['reset_async'].forEach(make_resolver_test('Collection', [{id: 5}, {id: 69}, {id: 42}], function(col) {
 		expect(col.at(1).id()).toBe(69);
 	}));
+
+	it('will handle errors properly', function(done) {
+		var res = null;
+		var err = null;
+		var model = new Composer.Model();
+		model.fetch({do_error: true})
+			.then(function() {
+				res = model.id();
+			})
+			.catch(function(error) {
+				err = error;
+			})
+			.finally(function() {
+				expect(res).toBeNull();
+				expect(err).toBe('you asked for it...');
+				done();
+			})
+	});
 });
 
