@@ -175,6 +175,45 @@
 		}
 	};
 
+	var promisify = function()
+	{
+		var create_converter = function(type)
+		{
+			return function(key)
+			{
+				var options = arguments[1] || {};
+				var options_idx = options.options_idx || 0;
+				var names = options.names || ['success', 'error'];
+
+				var _old = Composer[type].prototype[key];
+				Composer[type].prototype[key] = function()
+				{
+					var args = Array.prototype.slice.call(arguments, 0);
+					if(args.length < options_idx)
+					{
+						var _tmp = new Array(options_idx);
+						args.forEach(function(item, i) { _tmp[i] = item; });
+						args = _tmp;
+					}
+					if(!args[options_idx]) args[options_idx] = {};
+					var _self = this;
+					var options = args[options_idx];
+					if(options.promisified) return _old.apply(_self, args);
+					return new Promise(function(resolve, reject) {
+						if(names[0]) options[names[0]] = resolve;
+						if(names[1]) options[names[1]] = reject;
+						options.promisified = true;
+						_old.apply(_self, args);
+					});
+				};
+			};
+		}
+		var convert_collection_fn = create_converter('Collection');
+		['fetch', 'save', 'destroy'].forEach(create_converter('Model'));
+		['fetch'].forEach(convert_collection_fn);
+		convert_collection_fn('reset_async', {options_idx: 1, names: ['complete']});
+	};
+
 	Composer.exp0rt({
 		sync: sync,
 		cid: cid,
@@ -182,7 +221,8 @@
 		eq: eq,
 		merge_extend: merge_extend,
 		array: array,
-		object: object
+		object: object,
+		promisify: promisify
 	});
 }).apply((typeof exports != 'undefined') ? exports : this);
 

@@ -1,10 +1,11 @@
 describe('Composer', function() {
 	it('has known exported objects', function() {
 		// Composer.*
-		var main_exports	=	[
+		var main_exports = [
 			'sync',
 			'cid',
 			'eq',
+			'promisify',
 			'merge_extend',
 			'Base',
 			'Event',
