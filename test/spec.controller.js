@@ -159,6 +159,7 @@ describe('Composer.Controller', function() {
 		var model = new Composer.Model();
 		var rendered = 0;
 		var clicked = 0;
+		var omgomg = 0;
 		var Manager = Composer.Controller.extend({
 			model: false,
 
@@ -167,6 +168,7 @@ describe('Composer.Controller', function() {
 				if(!this.model) return false;
 				this.with_bind(this.model, 'click', this.click.bind(this));
 				this.with_bind(this.model, 'change', this.render.bind(this));
+				this.with_bind_once(this.model, 'omg', this.omg.bind(this));
 			},
 
 			render: function()
@@ -177,6 +179,11 @@ describe('Composer.Controller', function() {
 			click: function()
 			{
 				clicked++;
+			},
+
+			omg: function()
+			{
+				omgomg++;
 			}
 		});
 		var con = new Manager({model: model});
@@ -184,17 +191,25 @@ describe('Composer.Controller', function() {
 		model.set({name: 'jello'});
 		model.set({age: 27});
 		model.trigger('click');
+		model.trigger('omg');
+		model.trigger('omg');
+		model.trigger('omg');
+		model.trigger('omg');
+		model.trigger('omg');
 
 		expect(rendered).toBe(2);
 		expect(clicked).toBe(1);
+		expect(omgomg).toBe(1);
 
 		con.release();
 
 		model.set({ignoreme: 'yes'});
 		model.trigger('click');
+		model.trigger('omg');
 
 		expect(rendered).toBe(2);
 		expect(clicked).toBe(1);
+		expect(omgomg).toBe(1);
 	});
 
 	it('will properly manage sub-controllers', function() {
