@@ -5,7 +5,7 @@ layout: home
 
 <div class="intro">
     <h1>Composer.js</h1>
-    <strong>Composer is an MVC framework for building complex single-page javascript applications.</strong>
+    <strong>Composer is a library for building complex single-page applications.</strong>
 
     <div class="button-row">
         <div class="button download min">
