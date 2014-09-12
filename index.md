@@ -21,7 +21,7 @@ layout: home
     </div>
 </div>
 
-Composer is a javascript MVC librar that provides a means to organize and scale
+Composer is a javascript MVC library that provides a means to organize and scale
 complex single-page applications. Composer was built specifically as a [Backbone.js](http://backbonejs.com)
 replacement to handle more complex setups. Read [more on the differences between
 Composer and other frameworks](/composer.js/pages/comparison).
