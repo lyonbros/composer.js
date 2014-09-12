@@ -46,7 +46,7 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Supports promises for async operations</td>
-        <td><a href="/composer.js/docs/util#composer-promisify">Yes, works with Bluebird et al</a></td>
+        <td><a href="/composer.js/docs/util#composer-promisify">Yes, via Bluebird et al</a></td>
         <td>Yes (via jQuery promises)</td>
     </tr>
     <tr>
