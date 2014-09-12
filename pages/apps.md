@@ -11,7 +11,7 @@ layout: default
             <img src="/composer.js/images/apps/kikojas.jpg" width="232" height="174" alt="Kikojas">
         </a>
         <h3><a target="_blank" href="http://kikojas.com">Kikojas</a></h3>
-        <p>Kikojas is a location-based service, focusing on local businesses in Iran</p>
+        <p>Kikojas is a location-based service focusing on local businesses in Iran</p>
     </li>
     <li>
         <a target="_blank" href="https://turtl.it">
