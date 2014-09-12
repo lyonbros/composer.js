@@ -5,7 +5,7 @@ layout: default
 
 # Apps using Composer
 
-<ul class="apps">
+<ul class="apps clear">
     <li>
         <img src="/composer.js/images/apps/kikojas.jpg" width="232" height="174" alt="Kikojas">
         <h3>Kikojas</h3>
