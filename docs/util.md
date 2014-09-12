@@ -170,13 +170,16 @@ of it, you can use the same technique for all of them. Here's an example:
 
 <div class="noeval">
 {% highlight js %}
+my_app.show_loading();
 var dog = new Composer.Model({id: 17});
 dog.fetch({
     success: function(model) {
         console.log('success! ', model.get('name'));
+        my_app.hide_loading();
     },
     error: function(model, err) {
         console.error('oh no: ', err);
+        my_app.hide_loading();
     }
 });
 {% endhighlight %}
@@ -186,6 +189,7 @@ dog.fetch({
 
 <div class="noeval">
 {% highlight js %}
+my_app.show_loading();
 var dog = new Composer.Model({id: 17});
 dog.fetch()
     .then(function(model) {
@@ -193,6 +197,9 @@ dog.fetch()
     })
     .catch(function(err) {
         console.error('oh no: ', err);
+    })
+    .finally(function() {
+        my_app.hide_loading();
     });
 {% endhighlight %}
 </div>
@@ -200,4 +207,8 @@ dog.fetch()
 The syntax difference is negligable, however promises offer a lot of power when
 it comes to stringing together async operations and *especially* handling
 errors.
+
+Note that your [Composer.sync](#composer-sync) function will not need to change
+once you call `promisify`: it still makes use of the `options.success` and
+`options.error` callbacks in the same way.
 
