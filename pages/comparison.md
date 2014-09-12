@@ -30,7 +30,7 @@ Composer and a few other projects.
         <td>No</td>
     </tr>
     <tr>
-        <td>Ships with relational data handline</td>
+        <td>Supports hierarchical data relationships</td>
         <td><a href="/composer.js/docs/relational">Yes</a></td>
         <td>No, but has an easy module</td>
     </tr>
