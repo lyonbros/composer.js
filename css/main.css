@@ -83,7 +83,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .button-row .button a h2 {margin: 0; font-size: 1.3em; font-weight: normal; color: #fff;}
 
 /* tables */
-table {width: 100%; margin: 16px 0; text-align: left;}
+table {width: 100%; margin: 16px 0 32px 0; text-align: left;}
 table th {padding: 2px 3px 2px 6px; color: #ddd; background: #222;}
 table td {padding: 2px 3px 2px 6px;}
 
