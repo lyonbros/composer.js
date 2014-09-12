@@ -10,7 +10,7 @@ Composer and a few other projects.
 
 <table>
     <tr>
-        <th></th>
+        <th>Feature</th>
         <th>Composer.js</th>
         <th>Backbone.js</th>
     </tr>
@@ -66,7 +66,7 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Comes with history management</td>
-        <td>No (requires <a href="https://github.com/browserstate/history.js/)">History.js</a></td>
+        <td>No (requires <a href="https://github.com/browserstate/history.js/">History.js</a>)</td>
         <td>Yes</td>
     </tr>
     <tr>
