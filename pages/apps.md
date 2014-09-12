@@ -9,7 +9,7 @@ layout: default
     <li>
         <img src="/composer.js/images/apps/kikojas.jpg" width="232" height="174" alt="Kikojas">
         <h3>Kikojas</h3>
-        <p>A secure Evernote alternative</p>
+        <p>Kikojas is a location-based service, focusing on local businesses of the whole country of Iran</p>
     </li>
     <li>
         <img src="/composer.js/images/apps/turtl.jpg" width="232" height="174" alt="Turtl">
