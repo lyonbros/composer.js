@@ -5,7 +5,7 @@ layout: home
 
 <div class="intro">
     <h1>Composer.js</h1>
-    <strong>Composer is an MVC framework for building powerful javascript applications.</strong>
+    <strong>Composer is an MVC framework for building complex single-page javascript applications.</strong>
 
     <div class="button-row">
         <div class="button download min">
@@ -21,17 +21,15 @@ layout: home
     </div>
 </div>
 
-Composer is designed to allow more complicated setups than can be achieved easily
-with frameworks like the excellent Backbone.js. Composer makes no assumptions
-about the structure of your data or your architecture; it provides a set of
-tools to help you build your app then politely bows out of your way.
+Composer is a javascript framework that provides a means to organize and scale
+complex single-page applications. Composer was built specifically as a [Backbone.js](http://backbonejs.com)
+replacement to handle more complex setups. Read [more on the differences between
+Composer and other frameworks](/composer.js/pages/comparison).
 
-Composer.js is currently being used as the driving force of
-[Turtl](https://turtl.it) and [Musio](http://musio.com). Both are data-driven
-apps that run completely in the client.
+Composer is also framework-agnostic: it can run on top of jQuery or MooTools,
+allowing you to use it for a range of different projects and setups.
 
-Composer used to only run on top of Mootools, but as of version 1.0 is now
-framework agnostic (jQuery/Mootools can be used interchangeably with Composer).
+[Composer is being used in production](/composer.js/pages/apps)
 
 ## Dependencies
 
