@@ -82,6 +82,10 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .button-row .button a:hover {text-decoration: none;}
 .button-row .button a h2 {margin: 0; font-size: 1.3em; font-weight: normal; color: #fff;}
 
+/* tables */
+table {width: 100%; text-align: left;}
+table th {color: #ddd; background: #222;}
+
 /* filter collection example */
 #filter-example {margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
 #filter-example .full {float: left; width: 45%;}
