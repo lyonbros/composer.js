@@ -84,8 +84,8 @@ em code, strong code {font-style: normal; font-weight: normal;}
 
 /* tables */
 table {width: 100%; margin: 16px 0; text-align: left;}
-table th {padding: 3px; color: #ddd; background: #222;}
-table td {padding: 3px;}
+table th {padding: 2px 3px 2px 6px; color: #ddd; background: #222;}
+table td {padding: 2px 3px 2px 6px;}
 
 /* filter collection example */
 #filter-example {margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
