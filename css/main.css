@@ -89,7 +89,7 @@ table td {padding: 2px 3px 2px 6px;}
 
 /* apps */
 ul.apps {list-style: none; margin: 0 0 16px 0; padding: 0;}
-ul.apps li {display: block; float: left; width: 232px; height: 264px; margin: 0 10px 10px 0; padding: 4px; line-height: 1.3em; border: 1px solid #f0f0f0;}
+ul.apps li {display: block; float: left; width: 232px; height: 264px; margin: 0 6px 10px 0; padding: 4px; line-height: 1.3em; border: 1px solid #f0f0f0;}
 ul.apps li:nth-child(3n) {margin-right: 0;}
 ul.apps li h3,
 ul.apps li p {padding: 0 6px;}
