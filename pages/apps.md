@@ -25,7 +25,7 @@ layout: default
             <img src="/composer.js/images/apps/musio.jpg" width="232" height="174" alt="Musio">
         </a>
         <h3><a href="https://musio.com">Musio</a></h3>
-        <p>Online tools for independent musicians to publish and promote themselves</p>
+        <p>An app that provides online tools for independent musicians</p>
     </li>
 </ul>
 
