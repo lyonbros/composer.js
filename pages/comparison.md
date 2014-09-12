@@ -84,7 +84,3 @@ the other doesn't.
 
 The best way to get a good feeling for Composer's abilities is to <a href="/composer.js/docs">read the docs</a>.
 
-Keep in mind also that Backbone is highly capable and can be extended in many
-ways to make it do what you want, but Composer makes a lot of these things
-easier right off the bat and is also just as extendable.
-
