@@ -32,7 +32,7 @@ Composer and a few other projects.
     <tr>
         <td>Supports hierarchical data relationships</td>
         <td><a href="/composer.js/docs/relational">Yes</a></td>
-        <td>No, but has an easy module</td>
+        <td><a href="http://backbonerelational.org/">As a module</a></td>
     </tr>
     <tr>
         <td>Supports AJAX API syncing out of the box</td>
