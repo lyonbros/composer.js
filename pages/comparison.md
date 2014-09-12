@@ -70,6 +70,11 @@ Composer and a few other projects.
         <td>Yes</td>
     </tr>
     <tr>
+        <td>Supports event binding contexts</td>
+        <td><a href="http://lyonbros.github.io/composer.js/docs/event#bind">Yes, string-based</a></td>
+        <td>Yes, object-based</td>
+    </tr>
+    <tr>
         <td>Supports out-of-the-box Controller event inheritance</td>
         <td><a href="/composer.js/docs/class#composer-merge-extend">Yes</a></td>
         <td>No</td>
