@@ -13,6 +13,6 @@ of it all.
 test framework. To load the tests, navigate to `/composer.js/test/index.html` in a
 browser.
 
-You can also run the tests [on the doc site itself](/composer.js/test) to see
-if we stupidly pushed changes to composer without testing.
+You can also run the tests <a href="/composer.js/test"target="_blank">on the doc site itself</a>
+to see if we stupidly pushed changes to composer without testing.
 
