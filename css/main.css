@@ -9,22 +9,16 @@ body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #222; ba
 /* */
 
 @font-face {
-	font-family: 'Open Sans';
+	font-family: 'Roboto';
 	font-style: normal;
 	font-weight: 400;
-	src: local('Open Sans'), local('OpenSans'), url(http://fonts.gstatic.com/s/opensans/v10/uYKcPVoh6c5R0NpdEY5A-Q.woff) format('woff');
+	src: local('Roboto Regular'), local('Roboto-Regular'), url(http://fonts.gstatic.com/s/roboto/v13/2UX7WLTfW3W8TclTUvlFyQ.woff) format('woff');
 }
 @font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 600;
-  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(http://fonts.gstatic.com/s/opensans/v10/MTP_ySUJH_bn48VBG8sNShsxEYwM7FgeyaSgU71cLG0.woff) format('woff');
-}
-@font-face {
-	font-family: 'Open Sans';
+	font-family: 'Roboto';
 	font-style: normal;
 	font-weight: 700;
-	src: local('Open Sans Bold'), local('OpenSans-Bold'), url(http://fonts.gstatic.com/s/opensans/v10/k3k702ZOKiLJc3WVjuplzBsxEYwM7FgeyaSgU71cLG0.woff) format('woff');
+	src: local('Roboto Bold'), local('Roboto-Bold'), url(http://fonts.gstatic.com/s/roboto/v13/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
 }
 
 #main {width: 1024px; margin: 0 auto;}
@@ -44,7 +38,7 @@ footer p {float: right;}
 /* content styles */
 a {color: #3173C4; text-decoration: none;}
 a:hover {text-decoration: underline;}
-h1, h2, h3 {font-family: 'open sans'; margin: .1em 0 .6em 0; font-weight: 600; color: #444;}
+h1, h2, h3 {font-family: 'roboto'; margin: .1em 0 .6em 0; font-weight: 600; color: #444;}
 h1, h2 {margin-left: -4px;}
 h1 code, h2 code, h3 code {margin-left: 8px; font-size: 12px;}
 h1 {font-size: 2.0em;}
@@ -75,8 +69,8 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade.enabled {background: #cfc;}
 
 .home .intro {margin: 0 0 42px 0; padding: 24px; text-align: center; background: #f0f0f0; border-radius: 6px;}
-.home .intro h1 {font-family: 'open sans'; font-size: 2.6em; font-weight: normal; color: #555;}
-.home .intro strong {font-family: 'open sans'; font-size: 1.4em; font-weight: normal; color: #555;}
+.home .intro h1 {font-family: 'roboto'; font-size: 2.6em; font-weight: normal; color: #555;}
+.home .intro strong {font-family: 'roboto'; font-size: 1.4em; font-weight: normal; color: #555;}
 .home .button.dev a {
 	background: #888; /* Old browsers */
 	background: -moz-linear-gradient(top, #aaa 1%, #888 100%); /* FF3.6+ */
