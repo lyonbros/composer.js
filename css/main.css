@@ -8,6 +8,7 @@ body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #222; ba
 .clear {display: block;}
 /* */
 
+/*
 @font-face {
 	font-family: 'Roboto';
 	font-style: normal;
@@ -20,6 +21,7 @@ body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #222; ba
 	font-weight: 700;
 	src: local('Roboto Bold'), local('Roboto-Bold'), url(http://fonts.gstatic.com/s/roboto/v13/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
 }
+*/
 
 #main {width: 1024px; margin: 0 auto;}
 
@@ -38,7 +40,7 @@ footer p {float: right;}
 /* content styles */
 a {color: #3173C4; text-decoration: none;}
 a:hover {text-decoration: underline;}
-h1, h2, h3 {font-family: 'roboto'; margin: .1em 0 .6em 0; font-weight: 600; color: #444;}
+h1, h2, h3 {/*font-family: 'roboto';*/ margin: .1em 0 .6em 0; font-weight: 600; color: #444;}
 h1, h2 {margin-left: -4px;}
 h1 code, h2 code, h3 code {margin-left: 8px; font-size: 12px;}
 h1 {font-size: 2.0em;}
@@ -69,8 +71,8 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade.enabled {background: #cfc;}
 
 .home .intro {margin: 0 0 42px 0; padding: 24px; text-align: center; background: #f0f0f0; border-radius: 6px;}
-.home .intro h1 {font-family: 'roboto'; font-size: 2.6em; font-weight: normal; color: #555;}
-.home .intro strong {font-family: 'roboto'; font-size: 1.4em; font-weight: normal; color: #555;}
+.home .intro h1 {font-size: 2.6em; font-weight: normal; color: #555;}
+.home .intro strong {/*font-family: 'roboto';*/ font-size: 1.4em; font-weight: normal; color: #555;}
 .home .button.dev a {
 	background: #888; /* Old browsers */
 	background: -moz-linear-gradient(top, #aaa 1%, #888 100%); /* FF3.6+ */
