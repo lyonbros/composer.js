@@ -14,6 +14,6 @@ test framework. To load the tests, navigate to `/composer.js/test/index.html` in
 browser.
 
 <div>
-<strong><a href="/composer.js/test"target="_blank">Run the tests in your browser!</a></strong>
+    <strong><a href="/composer.js/test"target="_blank">Run the tests in your browser!</a></strong>
 </div>
 
