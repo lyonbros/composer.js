@@ -12,7 +12,8 @@ body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #222; ba
 
 header {width: 254px; float: left; margin: 0 32px 0 0;}
 header h1 {margin-left: 0;}
-header ul {list-style: none;}
+header ul {list-style: none; margin: 0; padding: 0;}
+header ul ul {margin-left: 24px;}
 
 content {width: 738px; float: right; padding: 64px 0 0 0;}
 
