@@ -79,6 +79,11 @@ Composer and a few other projects.
         <td><a href="/composer.js/docs/class#composer-merge-extend">Yes</a></td>
         <td>No</td>
     </tr>
+    <tr>
+        <td>Supports on IE6</td>
+        <td>Yes (for now)</td>
+        <td>No</td>
+    </tr>
 </table>
 
 This list is not exhaustive. For instance, the relational models that Composer

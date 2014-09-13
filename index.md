@@ -42,3 +42,12 @@ If you plan on using [Composer's Router](/composer.js/docs/router) (which
 provides an easy way to run code when certain URLs are encountered), you need
 [History.js](https://github.com/browserstate/history.js/).
 
+## Browser support
+
+Composer is tested on recent versions of Firefox, Chrome, Safari, and IE >= 6.
+Note that IE6 support is somewhat accidental (it was within reach so we did it)
+and will not necessarily be supported in the future. For now, all tests pass in
+all major browsers.
+
+<a href="/composer.js/test"target="_blank">Run the test suite now!</a>
+
