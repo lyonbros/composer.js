@@ -55,7 +55,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade {transition: background 1s;}
 .fade.enabled {background: #cfc;}
 
-.home .intro {margin: 24px 0 64px 0; text-align: center;}
+.home .intro {margin: 24px 0 42px 0; padding: 24px; text-align: center; background: #f0f0f0; border-radius: 6px;}
 .home .intro h1 {font-size: 2.6em; font-weight: normal; color: #555;}
 .home .intro strong {font-size: 1.4em; font-weight: normal; color: #555;}
 .home .button.dev a {
@@ -68,6 +68,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 	background: linear-gradient(to bottom, #aaa 1%,#888 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aaa', endColorstr='#888',GradientType=0 ); /* IE6-9 */
 }
+.home .button-row {margin: 32px 0 0 0;}
 .button-row {margin: 32px 0;}
 .button-row .button {display: inline-block; margin: 0 8px;}
 .button-row .button a {display: inline-block; margin: 0; padding: 8px 16px; text-align: center; border-radius: 3px;}
