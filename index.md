@@ -49,5 +49,7 @@ Note that IE6 support is somewhat accidental (it was within reach so we did it)
 and will not necessarily be supported in the future. For now, all tests pass in
 all major browsers.
 
+<div>
 <a href="/composer.js/test"target="_blank">Run the test suite now!</a>
+</div>
 
