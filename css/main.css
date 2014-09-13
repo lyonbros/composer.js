@@ -70,7 +70,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 
 .home .intro {margin: 0 0 42px 0; padding: 24px; text-align: center; background: #f0f0f0; border-radius: 6px;}
 .home .intro h1 {font-family: 'open sans'; font-size: 2.6em; font-weight: normal; color: #555;}
-.home .intro strong {font-size: 1.4em; font-weight: normal; color: #555;}
+.home .intro strong {font-family: 'open sans'; font-size: 1.4em; font-weight: normal; color: #555;}
 .home .button.dev a {
 	background: #888; /* Old browsers */
 	background: -moz-linear-gradient(top, #aaa 1%, #888 100%); /* FF3.6+ */
