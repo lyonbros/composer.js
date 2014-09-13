@@ -1,3 +1,4 @@
 markdown: kramdown
-    - html_to_native: true
+kramdown:
+  html_to_native: true
 version: 1.0.6.1
