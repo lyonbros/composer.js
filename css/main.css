@@ -8,6 +8,19 @@ body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #222; ba
 .clear {display: block;}
 /* */
 
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Open Sans'), local('OpenSans'), url(http://fonts.gstatic.com/s/opensans/v10/uYKcPVoh6c5R0NpdEY5A-Q.woff) format('woff');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 700;
+	src: local('Open Sans Bold'), local('OpenSans-Bold'), url(http://fonts.gstatic.com/s/opensans/v10/k3k702ZOKiLJc3WVjuplzBsxEYwM7FgeyaSgU71cLG0.woff) format('woff');
+}
+
 #main {width: 1024px; margin: 0 auto;}
 
 header {width: 254px; float: left; margin: 0 32px 0 0;}
@@ -56,7 +69,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade.enabled {background: #cfc;}
 
 .home .intro {margin: 0 0 42px 0; padding: 24px; text-align: center; background: #f0f0f0; border-radius: 6px;}
-.home .intro h1 {font-size: 2.6em; font-weight: normal; color: #555;}
+.home .intro h1 {font-family: 'open sans'; font-size: 2.6em; font-weight: normal; color: #555;}
 .home .intro strong {font-size: 1.4em; font-weight: normal; color: #555;}
 .home .button.dev a {
 	background: #888; /* Old browsers */
