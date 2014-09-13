@@ -15,7 +15,7 @@ browser.
 
 <div>
     <strong>
-        <a href="/composer.js/test"target="_blank">Run the tests in your browser!</a>
+        \<a href="/composer.js/test"target="_blank"\>Run the tests in your browser!</a>
     </strong>
 </div>
 
