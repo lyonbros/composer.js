@@ -70,7 +70,7 @@ em code, strong code {font-style: normal; font-weight: normal;}
 .fade {transition: background 1s;}
 .fade.enabled {background: #cfc;}
 
-.home .intro {margin: 0 0 42px 0; padding: 24px; text-align: center; background: #f0f0f0; border-radius: 6px;}
+.home .intro {margin: 0 0 42px 0; padding: 24px; text-align: center; background: #f0f0f0; border-radius: 6px; border: 1px solid #e3e3e3;}
 .home .intro h1 {font-size: 2.6em; font-weight: normal; color: #555;}
 .home .intro strong {/*font-family: 'roboto';*/ font-size: 1.4em; font-weight: normal; color: #555;}
 .home .button.dev a {
