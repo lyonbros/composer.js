@@ -2799,6 +2799,19 @@
 		{
 			options || (options = {});
 
+			// bind all <a>'s
+			var selector = 'a';
+			if(options.selector)
+			{
+				// use specified selector
+				selector = options.selector;
+			}
+			else if(options.exclude_class)
+			{
+				// exclude <a> tags with given classname
+				selector = 'a:not([class~="'+options.exclude_class+'"])';
+			}
+
 			// bind our heroic pushState to the <a> tags we specified. this
 			// hopefully be that LAST event called for any <a> tag because it's
 			// so high up the DOM chain. this means if a composer event wants to
@@ -2807,28 +2820,27 @@
 			{
 				if(e.control || e.shift || e.alt) return;
 
-				var a = Composer.find_parent('a', e.target);
+				var a = Composer.find_parent(selector, e.target);
 				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
-
-				if(a.href.match(/^javascript:/)) return false;
-				if(History.emulated.pushState && a.href.replace(/^.*?#/, '') == '')
-				{
-					return false;
-				}
 
 				// don't trap links that are meant to open new windows, and don't
 				// trap middle mouse clicks (or anything more than left click)
 				if(a.target == '_blank' || button > 0) return;
 
-				var curhost = new String(global.location).replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1');
+				// don't run JS links
+				if(a.href.match(/^javascript:/)) return;
+
+				// this is an <a href="#"> link, ignore it
+				if(History.emulated.pushState && a.href.replace(/^.*?#/, '') == '') return;
+
+				var curhost = global.location.host;
 				var linkhost = a.href.match(/^[a-z]+:\/\//) ? a.href.replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1') : curhost;
-				if(
-					curhost != linkhost ||
-					(typeof(options.do_state_change) == 'function' && !options.do_state_change(a))
-				)
-				{
-					return;
-				}
+
+				// if we're routing to a different domain/host, don't trap the click
+				if(curhost != linkhost) return;
+
+				// if our do_state_change exists and returns false, bail
+				if(options.do_state_change && !options.do_state_change(a)) return;
 
 				if(e) e.preventDefault();
 
@@ -2837,30 +2849,9 @@
 				href = '/'+href;
 
 				this.route(href, {state: options.global_state});
-				return false;
+				return;
 			}.bind(this);
 
-			// build a selector that works for YOU.
-			if(options.selector)
-			{
-				// specific selector......specified. use it.
-				var selector = options.selector;
-			}
-			else
-			{
-				// create a CUSTOM selector tailored to your INDIVIDUAL needs.
-				if(options.exclude_class)
-				{
-					// exclusion classname exists, make sure to not listen to <a>
-					// tags with that class
-					var selector = 'a:not([class~="'+options.exclude_class+'"])';
-				}
-				else
-				{
-					// bind all <a>'s
-					var selector = 'a';
-				}
-			}
 			Composer.add_event(document.body, 'click', route_link, selector);
 		}
 	});
