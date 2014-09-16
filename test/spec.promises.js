@@ -18,7 +18,6 @@ describe('Promises', function() {
 				options.success(data);
 			}, 10);
 		};
-
 	};
 
 	it('will convert the async functions properly', function() {
@@ -51,10 +50,10 @@ describe('Promises', function() {
 						if(!data) result = res;
 						else result = obj;
 					})
-					.catch(function(err) {
+					['catch'](function(err) {
 						error = err;
 					})
-					.finally(function() {
+					['finally'](function() {
 						expect(error).toBeNull();
 						expect(result == obj).toBe(true);
 						if(datatest) datatest(obj);
@@ -82,10 +81,10 @@ describe('Promises', function() {
 			.then(function() {
 				res = model.id();
 			})
-			.catch(function(error) {
+			['catch'](function(error) {
 				err = error;
 			})
-			.finally(function() {
+			['finally'](function() {
 				expect(res).toBeNull();
 				expect(err).toBe('you asked for it...');
 				done();
