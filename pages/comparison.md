@@ -86,7 +86,7 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Supports IE6</td>
-        <td>Yes (for now)</td>
+        <td>Yes (when using Mootools)</td>
         <td>No</td>
     </tr>
 </table>

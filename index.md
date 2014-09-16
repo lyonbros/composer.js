@@ -45,7 +45,7 @@ provides application routing over pushState URL changes), you need to include
 ## Browser support
 
 Composer is tested on recent versions of Firefox, Chrome, Safari, and IE >= 6.
-Note that IE6 support is somewhat accidental (it was within reach so we did it)
+Note that IE6 support is somewhat accidental (and only works on top of Mootools)
 and will not necessarily be supported in the future. For now, all tests pass in
 all major browsers.
 
