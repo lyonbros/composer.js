@@ -39,7 +39,7 @@ skipped if you are only using the data-driven portion of Composer (so, anything
 but Controllers).
 
 If you plan on using [Composer's Router](/composer.js/docs/router) (which
-provides an easy way to run code when certain URLs are encountered), you need
+provides application routing over pushState URL changes), you need to include
 [History.js](https://github.com/browserstate/history.js/).
 
 ## Browser support

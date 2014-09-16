@@ -20,6 +20,11 @@ Composer and a few other projects.
         <td>Yes</td>
     </tr>
     <tr>
+        <td>Dependencies</td>
+        <td>jQuery or Mootools, History.js</td>
+        <td>jQuery or Zepto, underscore.js</td>
+    <tr>
+    <tr>
         <td>Models can exist in multiple collections</td>
         <td>Yes</td>
         <td>No</td>
@@ -66,8 +71,8 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Comes with history management</td>
-        <td>No (requires <a href="https://github.com/browserstate/history.js/">History.js</a>)</td>
-        <td>Yes</td>
+        <td>Requires <a href="https://github.com/browserstate/history.js/">History.js</a></td>
+        <td>Requires jQuery</td>
     </tr>
     <tr>
         <td>Supports event binding contexts</td>
@@ -80,7 +85,7 @@ Composer and a few other projects.
         <td>No</td>
     </tr>
     <tr>
-        <td>Supports on IE6</td>
+        <td>Supports IE6</td>
         <td>Yes (for now)</td>
         <td>No</td>
     </tr>
@@ -92,5 +97,6 @@ favors one-instance-many-locations, Composer favors many-instances). There are
 also utility functions in models/collections that one framework provides that
 the other doesn't.
 
-The best way to get a good feeling for Composer's abilities is to <a href="/composer.js/docs">read the docs</a>.
+The best way to get a good feeling for Composer's abilities is to
+<a href="/composer.js/docs">read the docs</a>.
 
