@@ -334,10 +334,7 @@
 
 			for(var i = 0; i < this._models.length; i++)
 			{
-				if(this.sortfn(this._models[i], model) > 0)
-				{
-					return i;
-				}
+				if(this.sortfn(this._models[i], model) > 0) return i;
 			}
 			var index = this._models.indexOf(model);
 			if(index == this._models.length - 1) return index;
@@ -377,14 +374,8 @@
 		 */
 		find: function(callback, sortfn)
 		{
-			if(sortfn)
-			{
-				var models = this.models().slice(0).sort(sortfn);
-			}
-			else
-			{
-				var models = this.models();
-			}
+			var models = this.models();
+			if(sortfn) models = models.slice(0).sort(sortfn);
 
 			for(var i = 0; i < models.length; i++)
 			{
@@ -515,8 +506,7 @@
 		{
 			var result = this.select(selector);
 
-			if (result.length)
-				return result[0];
+			if(result.length) return result[0];
 
 			return null;
 		},
