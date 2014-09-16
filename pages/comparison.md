@@ -23,7 +23,7 @@ Composer and a few other projects.
         <td>Dependencies</td>
         <td>jQuery or Mootools, History.js</td>
         <td>jQuery or Zepto, underscore.js</td>
-    <tr>
+    </tr>
     <tr>
         <td>Models can exist in multiple collections</td>
         <td>Yes</td>
@@ -85,7 +85,7 @@ Composer and a few other projects.
         <td>No</td>
     </tr>
     <tr>
-        <td>Supports IE 6\+</td>
+        <td>Supports IE 6+</td>
         <td>Yes (when using Mootools)</td>
         <td>No</td>
     </tr>
