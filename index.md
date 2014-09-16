@@ -31,6 +31,8 @@ allowing you to use it for a range of different projects and setups.
 
 See [apps using Composer in production &raquo;](/composer.js/pages/apps)
 
+Composer.js is ~12K when minified/gzipped.
+
 ## Dependencies
 
 Composer needs a selector library from jQuery or Mootools (Sizzle or Slick).
@@ -45,9 +47,9 @@ provides application routing over pushState URL changes), you need to include
 ## Browser support
 
 Composer is tested on recent versions of Firefox, Chrome, Safari, and IE >= 6.
-Note that IE6 support is somewhat accidental (and only works on top of Mootools)
-and will not necessarily be supported in the future. For now, all tests pass in
-all major browsers.
+Note that IE 6-9 support *is dependent on using Mootools* (and will not
+necessarily be supported in the future). For now, all tests pass in all major
+browsers.
 
 <a href="/composer.js/test" target="_blank">Run the test suite now!</a>
 
