@@ -93,9 +93,9 @@ Composer and a few other projects.
 
 This list is not exhaustive. For instance, the relational models that Composer
 and Backbone use are fairly different in the way they handle data (Backbone
-favors one-instance-many-locations, Composer favors many-instances). There are
+forces one-instance-many-locations, Composer favors many-instances). There are
 also utility functions in models/collections that one framework provides that
-the other doesn't.
+the other doesn't and vice versa.
 
 The best way to get a good feeling for Composer's abilities is to
 <a href="/composer.js/docs">read the docs</a>.
