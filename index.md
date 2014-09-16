@@ -28,10 +28,9 @@ Composer and other frameworks](/composer.js/pages/comparison).
 
 Composer is also framework-agnostic: it can run on top of jQuery or MooTools,
 allowing you to use it for a range of different projects and setups.
+Composer.js is only ~12K when minified/gzipped.
 
 See [apps using Composer in production &raquo;](/composer.js/pages/apps)
-
-Composer.js is ~12K when minified/gzipped.
 
 ## Dependencies
 
