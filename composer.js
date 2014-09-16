@@ -61,12 +61,9 @@
 		};
 	};
 
-	// Composer equality function. It replaces _.eq, which wasn't able to tell
-	// non-equality between {key1: 3} and {key1: 3, key2: 5} (said they were
-	// equal). This was causing some events to not fire in Composer, prompting
-	// me to write our own equality function. It might have just been the release
-	// we were using, but I'm too lazy to go in and re-update _.eq to not have
-	// other _ dependencies. Writing our own is a bit easier.
+	// Composer equality function. Does deep-inpection and is able to tell the
+	// difference between {key: 3} and {key: 3, key2: 4} (_.eq had problems with
+	// this back in the day).
 	var eq = function(a, b)
 	{
 		if ( a === b ) return true;
