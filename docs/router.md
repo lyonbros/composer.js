@@ -305,9 +305,9 @@ route/`History.pushState`:
 
 - Control/Shift/Alt keys must *not* be pressed, otherwise the browser is allowed
 to do its default action (open a new tab, for instance).
-- The &gt;a&lt; tag must *not* have a `target="_blank"` attribute, otherwise the
+- The &lt;a&gt; tag must *not* have a `target="_blank"` attribute, otherwise the
 browser default is allowed (new tab/window opened).
-- The &gt;a&lt; tag must have an `href` must either be a relative URL, or must
+- The &lt;a&gt; tag must have an `href` must either be a relative URL, or must
 have a host that matches the current host the app is on. In other words, if your
 app is hosted on "http://myapp.com" and you click a link in the app to
 "http://slizzard.com", `bind_links` will detect this and treat it like a normal
