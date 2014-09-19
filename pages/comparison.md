@@ -27,7 +27,7 @@ Composer and a few other projects.
     <tr>
         <td>Models can exist in multiple collections</td>
         <td>Yes</td>
-        <td>No</td>
+        <td>Sort of</td>
     </tr>
     <tr>
         <td>Ships with a generic class system</td>
