@@ -18,7 +18,7 @@ filter collection as you see fit.
 
 This gives you a very powerful tool to show specific slices of data without
 having to worry about keeping that slice up to date. It all just works. You can
-event attach a filter collection to *another* filter collection to narrow down
+even attach a filter collection to *another* filter collection to narrow down
 your data even more.
 
 ## Events

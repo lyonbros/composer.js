@@ -35,12 +35,17 @@ Composer and a few other projects.
         <td>No</td>
     </tr>
     <tr>
-        <td>Supports hierarchical data relationships</td>
+        <td>Provides hierarchical data relationships</td>
         <td><a href="/composer.js/docs/relational">Yes</a></td>
         <td><a href="http://backbonerelational.org/">As a module</a></td>
     </tr>
     <tr>
-        <td>Supports AJAX API syncing out of the box</td>
+        <td>Provides filtered collections</td>
+        <td><a href="/composer.js/docs/filtercollection">Yes</a></td>
+        <td>No</td>
+    </tr>
+    <tr>
+        <td>Provides AJAX API syncing out of the box</td>
         <td><a href="/composer.js/docs/util#composer-sync">Sort of</a></td>
         <td>Yes</td>
     </tr>
@@ -50,7 +55,7 @@ Composer and a few other projects.
         <td>No</td>
     </tr>
     <tr>
-        <td>Supports promises for async operations</td>
+        <td>Supports using promises for async operations</td>
         <td><a href="/composer.js/docs/util#composer-promisify">Yes, via Bluebird et al</a></td>
         <td>Yes (via jQuery promises)</td>
     </tr>
@@ -80,7 +85,7 @@ Composer and a few other projects.
         <td>Yes, object-based</td>
     </tr>
     <tr>
-        <td>Supports out-of-the-box Controller event inheritance</td>
+        <td>Provides Controller event inheritance</td>
         <td><a href="/composer.js/docs/class#composer-merge-extend">Yes</a></td>
         <td>No</td>
     </tr>
