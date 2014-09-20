@@ -2113,6 +2113,7 @@
 
 	var find_parent = function(selector, element)
 	{
+		if(!element) return false;
 		if(match(element, selector)) return element;
 		var par = element.parentNode;
 		return find_parent(selector, par);
