@@ -40,7 +40,6 @@
 	var merge = function(into, from, options)
 	{
 		options || (options = {});
-
 		for(var k in from)
 		{
 			if(!from.hasOwnProperty(k)) continue;
