@@ -22,7 +22,7 @@
 	var global = this;
 
 	/**
-	 * like typeof, but returns if it's an array or not
+	 * like typeof, but returns if it's an array or null
 	 */
 	var typeOf = function(obj)
 	{
@@ -70,7 +70,7 @@
 	/**
 	 * Takes care of "parentizing" overridden methods when merging prototypes
 	 */
-	var do_extend = function(to_prototype, from_prototype, options)
+	var do_extend = function(to_prototype, from_prototype)
 	{
 		return merge(to_prototype, from_prototype, {
 			transform: function(into, from, k) {
