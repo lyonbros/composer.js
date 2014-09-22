@@ -14,7 +14,7 @@ but modified slightly (non-function members are not shared across classes).
 This is the main export of the class system:
 
 {% highlight js %}
-var Dog = Composer.Class({
+var Dog = Composer.Class.extend({
     options: {
         loud: false,
         bites: false
@@ -30,13 +30,15 @@ var larry = new Dog(true);
 alert(larry.options.bites);  // true
 {% endhighlight %}
 
+_NOTE_: `Composer.Class(...)` and `Composer.Class.extend(...)` are the same.
+
 ## Extending
 
 Classes can be extended two ways. The vanilla, simple way is `MyClass.extend`.
 
 ### Class.extend :: function(definition)
 {% highlight js %}
-var Dog = Composer.Class({
+var Dog = Composer.Class.extend({
     bark: function() { return 'woof'; }
 });
 var Shiba = Dog.extend({ });
@@ -51,7 +53,7 @@ extension method. It allows a class to additively extend certain static
 properties of the parent class. This sounds a bit esoteric, so let's dive in:
 
 {% highlight js %}
-var Animal = Composer.Class({
+var Animal = Composer.Class.extend({
     bites: {}
 });
 
@@ -81,7 +83,7 @@ and `elements` properties) as well as the [Relational Model](/composer.js/docs/r
 A class contructor is specified by its `initialize` function:
 
 {% highlight js %}
-var Class = Composer.Class({
+var Class = Composer.Class.extend({
     initialize: function()
     {
         alert('hello!');
@@ -95,7 +97,7 @@ new Class();
 The class system allows calling parent methods using `this.parent()`:
 
 {% highlight js %}
-var Base = Composer.Class({
+var Base = Composer.Class.extend({
     actions: [],
 
     initialize: function()
