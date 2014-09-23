@@ -323,8 +323,11 @@ var DashboardController = Composer.Controller.extend({
         // track our UserListController. if DashboardController renders again,
         // the sub-controller will be released and recreated. if the Dashboard
         // is released, so is the sub-controller.
-        this.track_subcontroller('Users', function() {
-            return new UserListController();
+        this.track_subcontroller('users', function() {
+            return new UserListController({
+                // put the subcontroller into our <div class="users"> element
+                inject: this.user_list
+            }.bind(this));
         });
     }
 });
