@@ -2523,7 +2523,7 @@
 			// override this action, it can just call event.stop().
 			var route_link = function(e)
 			{
-				if(e.control || e.shift || e.alt) return;
+				if(e.ctrlKey || e.shiftKey || e.altKey) return;
 
 				var a = Composer.find_parent(selector, e.target);
 				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
