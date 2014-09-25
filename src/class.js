@@ -163,7 +163,7 @@
 	function Class(obj) { return Base.extend(obj); };
 	Class.extend = Class;
 
-	if(global.Composer) global.Composer.exp0rt({ Class: Class });
-	global.Class = Class;
+	Composer.exp0rt({ Class: Class });
+
 }).apply((typeof exports != 'undefined') ? exports : this);
 
