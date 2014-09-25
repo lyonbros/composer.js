@@ -141,7 +141,7 @@
 		do_extend(cls.prototype, obj);
 		cls.extend = Base.extend;
 
-		cls.prototype.get_parent = function()
+		cls.prototype.$get_parent = function()
 		{
 			var key = this.$state.fn[0];
 			if(!key) return false;
@@ -151,7 +151,7 @@
 		};
 		cls.prototype.parent = function()
 		{
-			var fn = this.get_parent();
+			var fn = this.$get_parent();
 			if(fn) return fn.apply(this, arguments);
 			throw 'Class.js: Bad parent method: '+ this.$state.fn[0];
 		};
