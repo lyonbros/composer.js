@@ -195,5 +195,10 @@ describe('Composer.Event', function() {
 		dog.trigger('bite');
 		expect(actions).toBe(2);
 	});
+
+	it('will not error when unbinding unbound events', function() {
+		var ev = new Composer.Event();
+		ev.unbind('test');
+	});
 });
 
