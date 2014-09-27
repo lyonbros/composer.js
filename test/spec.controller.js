@@ -168,6 +168,7 @@ describe('Composer.Controller', function() {
 				if(!this.model) return false;
 				this.with_bind(this.model, 'click', this.click.bind(this));
 				this.with_bind(this.model, 'change', this.render.bind(this));
+				this.with_bind(this.model, ['my', 'dog'], this.render.bind(this));
 				this.with_bind_once(this.model, 'omg', this.omg.bind(this));
 			},
 
