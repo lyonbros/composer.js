@@ -327,8 +327,8 @@ var DashboardController = Composer.Controller.extend({
             return new UserListController({
                 // put the subcontroller into our <div class="users"> element
                 inject: this.user_list
-            }.bind(this));
-        });
+            });
+        }.bnd(this));
     }
 });
 {% endhighlight %}
