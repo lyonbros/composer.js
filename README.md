@@ -11,7 +11,5 @@ either reporting bugs or helping to write code!
 
 ## License
 
-Composer is licensed MIT. Note that the (slightly modified) class system
-Composer uses under the hood ([class.js](https://github.com/kilhage/class.js))
-is also licensed MIT.
+Composer is licensed MIT.
 
