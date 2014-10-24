@@ -332,13 +332,7 @@
 
 			if(this._models.length == 0) return 0;
 
-			for(var i = 0; i < this._models.length; i++)
-			{
-				if(this.sortfn(this._models[i], model) > 0) return i;
-			}
-			var index = this._models.indexOf(model);
-			if(index == this._models.length - 1) return index;
-			return this._models.length;
+			return this._models.slice(0).sort(this.sortfn).indexOf(model);
 		},
 
 		/**
