@@ -45,7 +45,7 @@
 
 		// function used for sorting. override to sort on a criteria besides order of
 		// addition to collection
-		sortfn: function(a, b) { return 0; },
+		sortfn: null,
 
 		// the base url for this collection. if you update a model, the default url
 		// sent to the sync function would be PUT /[collection url]/[model id].
@@ -332,7 +332,14 @@
 
 			if(this._models.length == 0) return 0;
 
-			return this._models.slice(0).sort(this.sortfn).indexOf(model);
+			var sorted = this._models.slice(0).sort(this.sortfn);
+			for(var i = 0; i < sorted.length; i++)
+			{
+				if(this.sortfn(sorted[i], model) > 0) return i;
+			}
+			var index = sorted.indexOf(model);
+			if(index == sorted.length - 1) return index;
+			return sorted.length;
 		},
 
 		/**
