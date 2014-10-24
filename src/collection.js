@@ -45,7 +45,7 @@
 
 		// function used for sorting. override to sort on a criteria besides order of
 		// addition to collection
-		sortfn: null,
+		sortfn: function(a, b) { return 0; },
 
 		// the base url for this collection. if you update a model, the default url
 		// sent to the sync function would be PUT /[collection url]/[model id].
@@ -323,8 +323,8 @@
 		},
 
 		/**
-		 * given the current for function and a model passecd in, determine the index
-		 * the model should exist at in the colleciton's model list.
+		 * given the current sort function and a model passecd in, determine the
+		 * index the model should exist at in the collection's model list.
 		 */
 		sort_index: function(model)
 		{
@@ -539,6 +539,17 @@
 		{
 			var model = this._models[n];
 			return (model || false);
+		},
+
+		/**
+		 * given the current sort function, find the model at the given position
+		 */
+		sort_at: function(n)
+		{
+			if(!this.sortfn) return false;
+
+			var sorted = this._models.slice(0).sort(this.sortfn);
+			return sorted[n];
 		},
 
 		/**
