@@ -51,33 +51,75 @@
 			this.set_options(options);
 			this._collection = collection;
 
+			this.with_bind(collection, 'reset', function() {
+				this.reset_subcontrollers(create_fn);
+			}.bind(this));
 			this.with_bind(collection, 'add', function(model) {
 				this.add_subcontroller(model, create_fn);
 			}.bind(this));
 			this.with_bind(collection, 'remove', function(model) {
 				this.remove_subcontroller(model);
 			}.bind(this));
+			this.reset_subcontrollers();
 		},
 
 		release: function()
 		{
+			this.clear_subcontrollers();
 			return this.parent.apply(this, arguments);
+		},
+
+		clear_subcontrollers: function()
+		{
+			this._subcontroller_list.forEach(function(con) {
+				con.release();
+			});
+			this._subcontroller_list = [];
+			this._subcontroller_idx = {};
+		},
+
+		reset_subcontrollers: function(create_fn)
+		{
+			this.clear_subcontrollers();
+			this._collection.each(function(model) {
+				this.add_subcontroller(model, create_fn);
+			}, this);
 		},
 
 		add_subcontroller: function(model, create_fn)
 		{
 			var con = create_fn(model);
 			this._subcontroller_idx[model] = con;
+			this._subcontroller_list.push(con);
+
+			// inject the controller at the correct position, according to the
+			// collection's sortfn
 			var sort_idx = this._collection.sort_index(model);
 			var before_model = this._collection.sort_at(sort_idx - 1);
-			var before_con = this._subcontroller_idx[before_model];
+			var before_con = this._subcontroller_idx[before_model || false];
+
+			var parent = con.el.parentNode;
+			if(before_con)
+			{
+				parent.insertBefore(con.el, before_con.el.nextSibling);
+			}
+			else
+			{
+				parent.appendChild(con.el);
+			}
 		},
 
 		remove_subcontroller: function(model)
 		{
+			var con = this._subcontroller_idx[model];
+			if(!con) return false;
+			con.release();
+			this._subcontroller_list = this._subcontroller_list.filter(function(c) {
+				return c != con;
+			});
+			delete this._subcontroller_idx[model];
 		}
 	});
-	Composer.exp0rt({ Controller: Controller });
+	Composer.exp0rt({ ListController: ListController });
 })();
-
 
