@@ -335,6 +335,7 @@
 			var sorted = this._models.slice(0).sort(this.sortfn);
 			for(var i = 0; i < sorted.length; i++)
 			{
+				if(model == sorted[i]) return i;
 				if(this.sortfn(sorted[i], model) > 0) return i;
 			}
 			var index = sorted.indexOf(model);
