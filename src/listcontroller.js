@@ -118,7 +118,6 @@
 			var sort_idx = this._collection.sort_index(model);
 			var before_model = this._collection.sort_at(sort_idx - 1) || false;
 			var before_con = this.lookup_controller(before_model);
-			console.log('sort info: ', sort_idx, before_model && before_model.cid(), before_con && before_con.cid());
 
 			var parent = con.el.parentNode;
 			if(sort_idx == 0)
