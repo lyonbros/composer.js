@@ -5,16 +5,16 @@
  * sub-controllers. Especially useful with rendering based off of a collection.
  * -----------------------------------------------------------------------------
  *
- * Composer.js is an MVC framework for creating and organizing javascript 
+ * Composer.js is an MVC framework for creating and organizing javascript
  * applications. For documentation, please visit:
  *
  *     http://lyonbros.github.com/composer.js/
- * 
+ *
  * -----------------------------------------------------------------------------
  *
  * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
- * 
- * Licensed under The MIT License. 
+ *
+ * Licensed under The MIT License.
  * Redistributions of files must retain the above copyright notice.
  */
 (function() {
@@ -69,6 +69,9 @@
 			return this.parent.apply(this, arguments);
 		},
 
+		/**
+		 * Index a controller so it can be looked up by the model is wraps
+		 */
 		index_controller: function(model, controller)
 		{
 			if(!model) return false;
@@ -76,6 +79,9 @@
 			this._subcontroller_list.push(controller);
 		},
 
+		/**
+		 * Unindex a model -> controller lookup
+		 */
 		unindex_controller: function(model, controller)
 		{
 			if(!model) return false;
@@ -85,12 +91,18 @@
 			});
 		},
 
+		/**
+		 * Lookup a controller by its model
+		 */
 		lookup_controller: function(model)
 		{
 			if(!model) return false;
 			return this._subcontroller_idx[model.cid()];
 		},
 
+		/**
+		 * Untrack all subcontrollers, releasing each one
+		 */
 		clear_subcontrollers: function()
 		{
 			this._subcontroller_list.forEach(function(con) {
@@ -100,6 +112,10 @@
 			this._subcontroller_idx = {};
 		},
 
+		/**
+		 * Sync the tracked subcontrollers with the items in the wrapped
+		 * collection
+		 */
 		reset_subcontrollers: function(create_fn)
 		{
 			this.clear_subcontrollers();
@@ -108,6 +124,11 @@
 			}, this);
 		},
 
+		/**
+		 * Given a model, create a subcontroller that wraps it and inject the
+		 * subcontroller at the correct spot in the DOM (based on the model's
+		 * sort order).
+		 */
 		add_subcontroller: function(model, create_fn)
 		{
 			var con = create_fn(model);
@@ -134,6 +155,10 @@
 			}
 		},
 
+		/**
+		 * Given a model, lookup the subcontroller that wraps it and release it,
+		 * also untracking that subcontroller.
+		 */
 		remove_subcontroller: function(model)
 		{
 			var con = this.lookup_controller(model);
