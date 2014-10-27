@@ -72,7 +72,8 @@ When displaying a list of items, you generally have two options:
 collection holding the rendered list and *re-renders everything on every event*.
 1. Have a main controller that listens to `add` events on the rendered
 collection, and for each new added model, creates a sub-controller that tracks
-that specific model. This requires a list template and an item template.
+that specific model. This requires a list template and an item template. This
+pattern is now made a lot easier by the [list controller](/composer.js/docs/listcontroller).
 
 The first way is quick and dirty. It is great for small lists of data or for
 large lists of data that *rarely change*. You will be re-rendering the entire

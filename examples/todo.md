@@ -33,7 +33,7 @@ var TodosList = Composer.Collection.extend({
 
 // The controller responsible for displaying a todo. It also handles editing and
 // marking a todo as complete.
-var TodoDisplay = Composer.Controller.extend({
+var TodoItemController = Composer.Controller.extend({
 	tag: 'li',
 	className: 'clear',
 
@@ -147,7 +147,7 @@ var TodoDisplay = Composer.Controller.extend({
 // the top-level object most likely won't need to be a Controller, but in this
 // specific case it makes sense because the app fits nicely into the mold of
 // needing a controller.
-var TodoApp = Composer.Controller.extend({
+var TodoAppController = Composer.ListController.extend({
 	el: '#todo-container .app',
 
 	events: {
@@ -169,7 +169,12 @@ var TodoApp = Composer.Controller.extend({
 	{
 		// instantiate our list of todos and bind our needed events to it
 		this.todos	=	new TodosList();
-		this.todos.bind('add', this.do_add.bind(this));
+        this.track(this.todos, function(model) {
+            return new TodoItemController({
+                inject: this.todo_list,
+                model: model
+            });
+        }.bind(this));
 		this.todos.bind('all', this.update_info.bind(this));	// call update_info whenever anything happens in the collection
 
 		// render the app
@@ -208,22 +213,11 @@ var TodoApp = Composer.Controller.extend({
 		var todo	=	new Todo({name: todotxt});
 
 		// add the Todo model to our Todo collection (which will in turn display the
-		// todo item...see TodoApp.init() when it binds the collection's "add" event)
+		// todo item...see TodoAppController.init() when it binds the collection's "add" event)
 		this.todos.add(new Todo({name: todotxt}));
 
 		this.inp_name.value	=	'';
 		this.inp_name.focus();
-	},
-
-	do_add: function(todo)
-	{
-		// create a new TodoDisplay Controller to show the todo we just created.
-		// it will insert itself into the <ul> list automatically when it's 
-		// instantiated.
-		var displayTodo	=	new TodoDisplay({
-            inject: this.todo_list,
-            model: todo
-        });
 	},
 
 	clear_complete: function(e)
@@ -258,5 +252,5 @@ var TodoApp = Composer.Controller.extend({
 Composer.find(document, '#todo-container').style.display = 'block';
 
 // load it!
-new TodoApp();
+new TodoAppController();
 {% endhighlight %}
