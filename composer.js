@@ -2223,16 +2223,16 @@
  * sub-controllers. Especially useful with rendering based off of a collection.
  * -----------------------------------------------------------------------------
  *
- * Composer.js is an MVC framework for creating and organizing javascript 
+ * Composer.js is an MVC framework for creating and organizing javascript
  * applications. For documentation, please visit:
  *
  *     http://lyonbros.github.com/composer.js/
- * 
+ *
  * -----------------------------------------------------------------------------
  *
  * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
- * 
- * Licensed under The MIT License. 
+ *
+ * Licensed under The MIT License.
  * Redistributions of files must retain the above copyright notice.
  */
 (function() {
