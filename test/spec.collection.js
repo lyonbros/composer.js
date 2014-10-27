@@ -190,6 +190,13 @@ describe('Composer.Collection', function() {
 
 		var test = new Composer.Model({id: 5, sort: 77});
 		expect(col.sort_index(test)).toBe(3);
+
+		var col = new MyCol();
+		col.add(data);
+		expect(col.models()[0].id()).toBe(3);
+		expect(col.models()[1].id()).toBe(4);
+		expect(col.models()[2].id()).toBe(2);
+		expect(col.models()[3].id()).toBe(1);
 	});
 
 	it('supports iteration constructs', function() {

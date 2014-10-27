@@ -18,36 +18,15 @@
 		<script src="../src/collection.js"></script>
 		<script src="../src/adapter.js"></script>
 		<script src="../src/controller.js"></script>
+		<script src="../src/listcontroller.js"></script>
 		<script src="../src/router.js"></script>
 		<script src="../src/relational.js"></script>
 		<script src="../src/filtercollection.js"></script>
-		<script>
-			var pages = {
-				home: function()
-				{
-					console.log('Home!');
-				},
-
-				users: function()
-				{
-					console.log('Users!');
-				}
-			};
-			var router;
-			function init_router()
-			{
-				router = new Composer.Router({
-					'/': ['pages', 'home'],
-					'/users': ['pages', 'users']
-				});
-				router.bind_links();
-			}
-		</script>
+		<script src="playground.js"></script>
 	</head>
 	<body>
 		Ready to PLAY??? Open the console.<br>
-		<a href="/">Home</a> |
-		<a href="/users">Users</a> |
-		<a href="#">Blank link</a>
+
+		<div id="app"></div>
 	</body>
 </html>

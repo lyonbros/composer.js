@@ -323,8 +323,8 @@
 		},
 
 		/**
-		 * given the current for function and a model passecd in, determine the index
-		 * the model should exist at in the colleciton's model list.
+		 * given the current sort function and a model passecd in, determine the
+		 * index the model should exist at in the collection's model list.
 		 */
 		sort_index: function(model)
 		{
@@ -332,13 +332,15 @@
 
 			if(this._models.length == 0) return 0;
 
-			for(var i = 0; i < this._models.length; i++)
+			var sorted = this._models.slice(0).sort(this.sortfn);
+			for(var i = 0; i < sorted.length; i++)
 			{
-				if(this.sortfn(this._models[i], model) > 0) return i;
+				if(model == sorted[i]) return i;
+				if(this.sortfn(sorted[i], model) > 0) return i;
 			}
-			var index = this._models.indexOf(model);
-			if(index == this._models.length - 1) return index;
-			return this._models.length;
+			var index = sorted.indexOf(model);
+			if(index == sorted.length - 1) return index;
+			return sorted.length;
 		},
 
 		/**
@@ -539,6 +541,17 @@
 		{
 			var model = this._models[n];
 			return (model || false);
+		},
+
+		/**
+		 * given the current sort function, find the model at the given position
+		 */
+		sort_at: function(n)
+		{
+			if(!this.sortfn) return false;
+
+			var sorted = this._models.slice(0).sort(this.sortfn);
+			return sorted[n];
 		},
 
 		/**
