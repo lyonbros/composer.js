@@ -91,19 +91,6 @@ new UserListController({
 
 ### release :: function(options)
 
-Remove the controller from the DOM (removes [el](#el)) and perform any cleanup
-needed (such as unbinding events bound using [with_bind](#with-bind)).
-
-Fires the [release event](#release).
-
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
-
-See the [events section](#events-1) for a release example.
-
-### replace :: function(element)
-
-Replace the controller's [el](#el) with another DOM element. Once the replace is
-complete, the [elements](#elements) and [events](#events-1) are refreshed for
-the controller.
-
+Exactly like [Controller.release](/composer.js/docs/controller#release-1) but on
+top of releasing the current controller, releases all sub-controllers as well.
 
