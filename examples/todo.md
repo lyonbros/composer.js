@@ -55,11 +55,11 @@ var TodoItemController = Composer.Controller.extend({
     init: function()
     {
         // on model change, re-display
-        this.model.bind('change', this.render.bind(this));
+        this.with_bind(this.model, 'change', this.render.bind(this));
 
         // when model is destroyed (aka deleted) release this controller (pull its
         // "this.el" out of the DOM)
-        this.model.bind('destroy', this.release.bind(this));
+        this.with_bind(this.model, 'destroy', this.release.bind(this));
 
         // initial display
         this.render();
@@ -169,13 +169,19 @@ var TodoAppController = Composer.ListController.extend({
     {
         // instantiate our list of todos and bind our needed events to it
         this.todos    =    new TodosList();
+
+        // track the todo list. whenever a model is added, we'll create
+        // a new subcontroller (TodoItemController) that renders the model for
+        // us. if a model is removed, the controller wrapping it is released.
         this.track(this.todos, function(model) {
             return new TodoItemController({
                 inject: this.todo_list,
                 model: model
             });
         }.bind(this));
-        this.todos.bind('all', this.update_info.bind(this));    // call update_info whenever anything happens in the collection
+
+        // call update_info whenever anything happens in the collection
+        this.with_bind(this.todos, 'all', this.update_info.bind(this));
 
         // render the app
         this.render();
@@ -213,7 +219,7 @@ var TodoAppController = Composer.ListController.extend({
         var todo    =    new Todo({name: todotxt});
 
         // add the Todo model to our Todo collection (which will in turn display the
-        // todo item...see TodoAppController.init() when it binds the collection's "add" event)
+        // todo item since the collection is "tracked"
         this.todos.add(new Todo({name: todotxt}));
 
         this.inp_name.value    =    '';
