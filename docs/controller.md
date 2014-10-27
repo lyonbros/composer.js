@@ -86,6 +86,7 @@ alert('Text: '+ con.the_text.innerHTML);
 An object that provides event monitoring for elements within [el](#el). It sets
 up events in '<event> [selector]' -> 'function_name' mapping:
 
+<div id="event-test"></div>
 {% highlight js %}
 var MyController = Composer.Controller.extend({
     events: {
@@ -113,7 +114,6 @@ var MyController = Composer.Controller.extend({
 });
 new MyController({ inject: '#event-test' });
 {% endhighlight %}
-<div id="event-test"></div>
 
 ### initialize :: function(params, options)
 
