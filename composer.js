@@ -1286,7 +1286,7 @@
 		{
 			if(Composer.array.is(model))
 			{
-				return Composer.object.each(model, function(m) { this.remove(m); }, this);
+				return Composer.object.each(model, function(m) { this.remove(m, options); }, this);
 			}
 			if(!model) return;
 
@@ -1710,11 +1710,7 @@
 		 */
 		_model_event: function(ev, model, collections, options)
 		{
-			if((ev == 'add' || ev == 'remove') && !(collections.indexOf(this) >= 0)) return;
-			if(ev == 'destroy')
-			{
-				this.remove(model, options);
-			}
+			if(ev == 'destroy') this.remove(model, options);
 			this.trigger.apply(this, arguments);
 		}
 	});
@@ -2080,14 +2076,21 @@
 		 */
 		track_subcontroller: function(name, create_fn)
 		{
+			var remove_subcontroller = function(name, skip_release)
+			{
+				if(!this._subcontrollers[name]) return
+				if(!skip_release) this._subcontrollers[name].release();
+				delete this._subcontrollers[name];
+			}.bind(this);
+
 			// if we have an existing controller with the same name, release and
 			// remove it.
-			if(this._subcontrollers[name])
-			{
-				this._subcontrollers[name].release();
-				delete this._subcontrollers[name];
-			}
+			remove_subcontroller(name);
+
+			// create the new controller, track it, and make sure if it's
+			// released we untrack it
 			var instance = create_fn();
+			instance.bind('release', function() { remove_subcontroller(name, true); });
 			this._subcontrollers[name] = instance;
 			return instance;
 		},
@@ -2223,16 +2226,16 @@
  * sub-controllers. Especially useful with rendering based off of a collection.
  * -----------------------------------------------------------------------------
  *
- * Composer.js is an MVC framework for creating and organizing javascript 
+ * Composer.js is an MVC framework for creating and organizing javascript
  * applications. For documentation, please visit:
  *
  *     http://lyonbros.github.com/composer.js/
- * 
+ *
  * -----------------------------------------------------------------------------
  *
  * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
- * 
- * Licensed under The MIT License. 
+ *
+ * Licensed under The MIT License.
  * Redistributions of files must retain the above copyright notice.
  */
 (function() {

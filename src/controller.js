@@ -166,14 +166,21 @@
 		 */
 		track_subcontroller: function(name, create_fn)
 		{
+			var remove_subcontroller = function(name, skip_release)
+			{
+				if(!this._subcontrollers[name]) return
+				if(!skip_release) this._subcontrollers[name].release();
+				delete this._subcontrollers[name];
+			}.bind(this);
+
 			// if we have an existing controller with the same name, release and
 			// remove it.
-			if(this._subcontrollers[name])
-			{
-				this._subcontrollers[name].release();
-				delete this._subcontrollers[name];
-			}
+			remove_subcontroller(name);
+
+			// create the new controller, track it, and make sure if it's
+			// released we untrack it
 			var instance = create_fn();
+			instance.bind('release', function() { remove_subcontroller(name, true); });
 			this._subcontrollers[name] = instance;
 			return instance;
 		},
