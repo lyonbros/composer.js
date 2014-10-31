@@ -171,7 +171,7 @@
 				if(!this._subcontrollers[name]) return
 				if(!skip_release) this._subcontrollers[name].release();
 				delete this._subcontrollers[name];
-			}
+			}.bind(this);
 
 			// if we have an existing controller with the same name, release and
 			// remove it.
