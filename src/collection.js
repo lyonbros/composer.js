@@ -171,7 +171,7 @@
 		{
 			if(Composer.array.is(model))
 			{
-				return Composer.object.each(model, function(m) { this.remove(m); }, this);
+				return Composer.object.each(model, function(m) { this.remove(m, options); }, this);
 			}
 			if(!model) return;
 
@@ -595,11 +595,7 @@
 		 */
 		_model_event: function(ev, model, collections, options)
 		{
-			if((ev == 'add' || ev == 'remove') && !(collections.indexOf(this) >= 0)) return;
-			if(ev == 'destroy')
-			{
-				this.remove(model, options);
-			}
+			if(ev == 'destroy') this.remove(model, options);
 			this.trigger.apply(this, arguments);
 		}
 	});
