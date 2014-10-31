@@ -2355,6 +2355,12 @@
 			var con = create_fn(model);
 			this.index_controller(model, con);
 
+			// if the subcontroller releases itself, be sure to remove it from
+			// tracking
+			con.bind('release', function() {
+				this.unindex_controller(model, con);
+			}.bind(this));
+
 			// inject the controller at the correct position, according to the
 			// collection's sortfn
 			var sort_idx = this._collection.sort_index(model);
