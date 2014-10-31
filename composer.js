@@ -1239,9 +1239,9 @@
 		 */
 		add: function(data, options)
 		{
-			if (Composer.array.is(data))
+			if(Composer.array.is(data))
 			{
-				return Composer.object.each(data, function(model) { this.add(model, options); }, this);
+				return data.forEach(function(model) { this.add(model, options); }.bind(this));
 			}
 
 			options || (options = {});
@@ -1286,7 +1286,7 @@
 		{
 			if(Composer.array.is(model))
 			{
-				return Composer.object.each(model, function(m) { this.remove(m, options); }, this);
+				return model.slice(0).forEach(function(m) { this.remove(m, options); }.bind(this));
 			}
 			if(!model) return;
 

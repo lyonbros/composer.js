@@ -123,5 +123,23 @@ describe('Composer.ListController', function() {
 
 		expect(released).toBe(2);
 	});
+
+	it('will remove all subcontrollers on clear', function() {
+		var released = 0;
+
+		var MySub = Sub.extend({
+			release: function()
+			{
+				released++;
+				return this.parent.apply(this, arguments);
+			}
+		});
+
+		var con = new List({sub: MySub});
+		con.collection.add([{name: 'bob'}, {name: 'cornelius'}, {name: 'rupert'}]);
+		con.collection.clear();
+
+		expect(released).toBe(3);
+	});
 });
 
