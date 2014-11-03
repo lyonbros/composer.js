@@ -48,6 +48,9 @@
 		// if this.el is empty, create a new element of this type as the container
 		tag: 'div',
 
+		// the initial className to assign to the controller's element (this.el)
+		class_name: false,
+
 		// elements to assign to this controller
 		elements: {},
 
@@ -78,9 +81,11 @@
 				this.attach(options);
 			}
 
-			if(this.className)
+			// backwards compat
+			if(this.className) this.class_name = this.className;
+			if(this.class_name)
 			{
-				this.el.className += ' ' + this.className;
+				this.el.className += ' ' + this.class_name;
 			}
 
 			this.refresh_elements();

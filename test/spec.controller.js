@@ -267,5 +267,23 @@ describe('Composer.Controller', function() {
 		expect(good.play()).toBe('...');
 		expect(cover.play()).toBe('let the music be your master');
 	});
+
+	it('will set className properly', function() {
+		var Item1 = Composer.Controller.extend({
+			// deprecated, but we want to support it
+			className: 'myclass'
+		});
+		var Item2 = Composer.Controller.extend({
+			class_name: 'top doge'
+		});
+
+		var con1 = new Item1();
+		var con2 = new Item2();
+
+		expect(con1.el.className).toContain('myclass');
+		expect(con2.el.className).toContain('top doge');
+		con1.release();
+		con2.release();
+	});
 });
 
