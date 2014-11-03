@@ -69,6 +69,9 @@ Composer.cid = (function() {
         return 'z'+x;
     }
 })();
+{% endhighlight %}
+{% highlight js %}
+// test our wonderful new CID generator
 alert('CID: '+ new Composer.Model().cid());
 {% endhighlight %}
 
@@ -84,6 +87,12 @@ alert('eq? ' + Composer.eq(
 ));
 {% endhighlight %}
 
+{% highlight js %}
+alert('eq? ' + Composer.eq(
+    {name: 'andrew', friends: ['larry', 'curly', 'moezzz']},
+    {name: 'andrew', friends: ['larry', 'curly', 'moe']}
+));
+{% endhighlight %}
 ## Composer.merge_extend :: function(class, array_of_property_names)
 
 See [Composer.merge_extend in the class docs](/composer.js/docs/class#composer-merge-extend).
