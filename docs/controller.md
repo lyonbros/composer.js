@@ -54,6 +54,11 @@ The type of tag that [el](#el) will be created as. For
 instance, if the controller was to describe an item in a list, you might set
 `tag` to be "li".
 
+### class_name :: attribute(false)
+
+If present, sets `this.el.className` on initialization, providing an easy way to
+give a CSS classname to the controller's main element.
+
 ### elements :: attribute({})
 
 An object that provides selector -> attribute mapping. Note that
