@@ -2277,8 +2277,8 @@
 			this.set_options(options);
 			this._collection = collection;
 
-			this.with_bind(collection, 'reset', function() {
-				this.reset_subcontrollers(create_fn);
+			this.with_bind(collection, 'reset', function(options) {
+				this.reset_subcontrollers(create_fn, options);
 			}.bind(this));
 			this.with_bind(collection, 'add', function(model, _, options) {
 				this.add_subcontroller(model, create_fn, options);
@@ -2342,11 +2342,11 @@
 		 * Sync the tracked subcontrollers with the items in the wrapped
 		 * collection
 		 */
-		reset_subcontrollers: function(create_fn)
+		reset_subcontrollers: function(create_fn, options)
 		{
 			this.clear_subcontrollers();
 			this._collection.each(function(model) {
-				this.add_subcontroller(model, create_fn);
+				this.add_subcontroller(model, create_fn, options);
 			}, this);
 		},
 
