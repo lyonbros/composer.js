@@ -2280,8 +2280,8 @@
 			this.with_bind(collection, 'reset', function() {
 				this.reset_subcontrollers(create_fn);
 			}.bind(this));
-			this.with_bind(collection, 'add', function(model) {
-				this.add_subcontroller(model, create_fn);
+			this.with_bind(collection, 'add', function(model, _, options) {
+				this.add_subcontroller(model, create_fn, options);
 			}.bind(this));
 			this.with_bind(collection, 'remove', function(model) {
 				this.remove_subcontroller(model);
@@ -2355,9 +2355,9 @@
 		 * subcontroller at the correct spot in the DOM (based on the model's
 		 * sort order).
 		 */
-		add_subcontroller: function(model, create_fn)
+		add_subcontroller: function(model, create_fn, options)
 		{
-			var con = create_fn(model);
+			var con = create_fn(model, options);
 			this.index_controller(model, con);
 
 			// if the subcontroller releases itself, be sure to remove it from
