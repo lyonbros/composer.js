@@ -31,10 +31,11 @@ describe('Composer.ListController', function() {
 			this.render()
 
 			// call *after* render()
-			this.track(this.collection, function(model) {
+			this.track(this.collection, function(model, options) {
 				return new this.sub({
 					inject: this.list_el,
-					model: model
+					model: model,
+					options: options
 				});
 			}.bind(this));
 		},
@@ -140,6 +141,20 @@ describe('Composer.ListController', function() {
 		con.collection.clear();
 
 		expect(released).toBe(3);
+	});
+
+	it('will pass options to create_fn', function() {
+		var options = null;
+		var MySub = Sub.extend({
+			init: function()
+			{
+				options = this.options;
+				this.parent.apply(this, arguments);
+			}
+		});
+		var con = new List({sub: MySub});
+		con.collection.add([{name: 'ovaltine'}], {get_a_job: 69});
+		expect(options.get_a_job).toBe(69);
 	});
 });
 
