@@ -32,7 +32,9 @@ giving it all the Controller's abilities.
 
 This method starts tracking a `collection`, syncing the subcontrollers with the
 models in that collection. Subcontrollers are created using the `create_fn`,
-which takes one argument (the `model` being tracked) and returns an instance of
+which takes two arguments (the `model` being tracked, and the `options` that
+were passed to the collection's [add](/composer.js/docs/collection#add-1) or
+[reset](/composer.js/docs/collection#reset-1) call) and returns an instance of
 `Controller` or any class that extends it.
 
 `options` is currently unused.
@@ -66,7 +68,7 @@ var UserListController = Composer.ListController.extend({
         this.render();
 
         // set up tracking to inject subcontrollers into our <ul>
-        this.track(this.collection, function(model) {
+        this.track(this.collection, function(model, options) {
             return new UserItemController({
                 inject: this.el_list,
                 model: model
