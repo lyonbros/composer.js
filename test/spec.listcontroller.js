@@ -144,17 +144,18 @@ describe('Composer.ListController', function() {
 	});
 
 	it('will pass options to create_fn', function() {
-		var options = null;
+		var options = [];
 		var MySub = Sub.extend({
 			init: function()
 			{
-				options = this.options;
-				this.parent.apply(this, arguments);
+				options.push(this.options.get_a_job);
 			}
 		});
 		var con = new List({sub: MySub});
 		con.collection.add([{name: 'ovaltine'}], {get_a_job: 69});
-		expect(options.get_a_job).toBe(69);
+		con.collection.reset([{name: 'bangarang'}], {get_a_job: 42});
+		expect(options[0]).toBe(69);
+		expect(options[1]).toBe(42);
 	});
 });
 
