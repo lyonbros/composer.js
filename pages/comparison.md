@@ -45,6 +45,11 @@ Composer and a few other projects.
         <td>No</td>
     </tr>
     <tr>
+        <td>Provides controller &lt;-&gt; collection tracking</td>
+        <td><a href="/composer.js/docs/listcontroller">Yes</a></td>
+        <td>No</td>
+    </tr>
+    <tr>
         <td>Provides AJAX API syncing out of the box</td>
         <td><a href="/composer.js/docs/util#composer-sync">Sort of</a></td>
         <td>Yes</td>
