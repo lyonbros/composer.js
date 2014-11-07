@@ -7,7 +7,8 @@ layout: documentation
 
 The list controller is a wrapper around the [controller](/composer.js/docs/controller)
 that allows you to easily create subcontrollers that track a
-[collection](/composer.js/docs/collection) (or filtercollection).
+[collection](/composer.js/docs/collection) (or
+[filtercollection](/composer.js/docs/filtercollection)).
 
 The idea is that when a new model is added to the tracked collection, a new
 sub-controller is created and injected into the correct position in the DOM
