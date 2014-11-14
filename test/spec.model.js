@@ -100,6 +100,23 @@ describe('Composer.Model', function() {
 		expect(json.friends[1]).toBe('moe');
 	});
 
+	it('can be cloned', function() {
+		var num_barks = 0;
+		var Dog = Composer.Model.extend({
+			bark: function()
+			{
+				num_barks++;
+			}
+		});
+
+		var model = new Dog({name: 'dillard'});
+		var clone = model.clone();
+		expect(model == clone).toBe(false);
+		expect(clone.get('name')).toBe('dillard');
+		clone.bark();
+		expect(num_barks).toBe(1);
+	});
+
 	it('will build its own URL properly', function() {
 		var Model = Composer.Model.extend({ base_url: '/users' });
 		var model = new Model();
