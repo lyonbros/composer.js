@@ -151,8 +151,11 @@
 				(fn.bind(bind))(obj[key], key)
 			});
 		},
-		clone: function(obj)
+		clone: function(obj, options)
 		{
+			options || (options = {});
+			if(options.deep) return JSON.parse(JSON.stringify(obj));
+
 			var clone = {};
 			Object.keys(obj).forEach(function(key) {
 				clone[key] = obj[key];
