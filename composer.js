@@ -1034,7 +1034,7 @@
 		 */
 		clone: function()
 		{
-			return new this.constructor(this.toJSON());
+			return new this.$constructor(this.toJSON());
 		},
 
 		/**
