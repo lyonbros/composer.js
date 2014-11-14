@@ -139,13 +139,18 @@ Composer.object.each({name: 'andrew', age: 27}, function(val, key) {
 {% endhighlight %}
 </div>
 
-### clone :: function(obj)
+### clone :: function(obj, options)
 
-Clone an object.
+Returns a clone of the given object `obj` (shallow by default)`.
+
+`options` can contain the following items:
+
+- `deep` - if true, performs a deep clone
 
 <div class="noeval">
 {% highlight js %}
 var clone = Composer.object.clone({horses: 'goodbye'});
+var clone2 = Composer.object.clone({name: 'buffalow bill', listens: {horses: 'goodbye'}}, {deep: true});
 {% endhighlight %}
 </div>
 
