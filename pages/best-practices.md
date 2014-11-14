@@ -92,9 +92,9 @@ option 1 and later move to option 2 as things get more complicated.
 
 ### Divide and conquer?
 
-As your app grows, it will have a lot different interfaces. For your interfaces,
-you can have one controller that does many things, or you can have many
-controllers that do a few things.
+As your app grows, it will have a lot of different interfaces. For your
+interfaces, you can have one controller that does many things, or you can have
+many controllers that do a few things.
 
 It's up to you how to structure things, but the most useful patterns seem to be
 lumping things logically. Does your controller display a list of users? Maybe it

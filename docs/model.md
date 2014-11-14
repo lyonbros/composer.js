@@ -162,6 +162,71 @@ model.bind('change:dogs', function(model, dogs) {
 model.set({dogs: ['larry', 'curly', 'moe']});
 {% endhighlight %}
 
+#### get / set (a warning)
+
+A common pattern is to grab an object from a model, set a key in it, and set the
+object back into the model:
+
+<div class="noeval">
+{% highlight js %}
+var MyModel = Composer.Model.extend({
+    set_meta: function(key, value)
+    {
+        var meta = this.get('meta', {});
+        meta[key] = value;
+        this.set({meta: meta});
+    }
+});
+{% endhighlight %}
+</div>
+
+The above *seems fine* but there's a problem. Try this:
+
+{% highlight js %}
+var MyModel = Composer.Model.extend({
+    set_meta: function(key, value)
+    {
+        var meta = this.get('meta', {});
+        meta[key] = value;
+        this.set({meta: meta});
+    }
+});
+var model = new MyModel({meta: {}});
+
+// let us know when the meta changes
+model.bind('change:meta', function() { alert('meta changed!'); });
+
+// this should fire our alert!! right?
+model.set_meta('updated', true);
+{% endhighlight %}
+
+Our alert should fire, but for some reason it doesn't. The reason is because we
+grab the meta object via `Model.get()`, which returns an actual reference to the
+object in the model's data. When we update that object, we're actually updating
+the model's internal data as well. When we set the object back in via
+`Model.set()`, the model checks the data being set against its internal data to
+look for changes and finds none *because the two objects are the same*.
+
+To solve this, we need to clone our object we grab from `Model.get()`:
+
+{% highlight js %}
+var MyModel = Composer.Model.extend({
+    set_meta: function(key, value)
+    {
+        var meta = Composer.object.clone(this.get('meta', {}));
+        meta[key] = value;
+        this.set({meta: meta});
+    }
+});
+var model = new MyModel({meta: {}});
+
+// let us know when the meta changes
+model.bind('change:meta', function() { alert('meta changed!'); });
+
+// this should fire our alert!!
+model.set_meta('updated', true);
+{% endhighlight %}
+
 ### unset :: function(key, options)
 
 Unset an item in a model. `key` is the key to unset in the model's data.
