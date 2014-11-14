@@ -17,6 +17,7 @@ by using the following load order:
 - __collection.js__ - Collection. Represents a list of models (table).
 - __adapter.js__ - The DOM abstraction used by Controllers
 - __controller.js__ - Controller. Ties models/collections to the DOM.
+- __listcontroller.js__ - ListController. Provides easy collection tracking.
 - __router.js__ - The Router allows easy tracking of pushState.
 - __relational.js__ - Relational model. Allows setting up hierarchies in data.
 - __filtercollection.js__ - Filter collection. Allows setting up materialized views.
@@ -37,5 +38,6 @@ format):
 - `Filter collection: [Collection]`
 - `Adapter: [Util]`
 - `Controller: [Base, Adapter]`
+- `ListController: [Controller]`
 - `Router: [Base]`
 
