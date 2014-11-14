@@ -264,7 +264,7 @@ var routes = {
     '/users/([0-9]+)': ['users', 'display'],
     '.*': ['pages', 'not_found']
 };
-var router = new Composer.Router(routes);
+var router = new Composer.Router(routes, {suppress_initial_route: true});
 alert('Route: '+ JSON.stringify(router.find_matching_route('/users/10', routes)));
 {% endhighlight %}
 
