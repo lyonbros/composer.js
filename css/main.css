@@ -46,7 +46,7 @@ h1 code, h2 code, h3 code {margin-left: 8px; font-size: 12px;}
 h1 {font-size: 2.0em;}
 h2 {font-size: 1.5em;}
 h3 {margin-top: .8em; font-size: 1.2em;}
-h4 {margin-top: .6em; font-size: 1em; font-weight: bole;
+h4 {margin-top: .6em; font-size: 1em;}
 ol, ul {margin: 0 0 16px 32px;}
 ul ul, ol ol, ol ul, ul ol {margin-bottom: 0;}
 p {padding: 0 0 16px 0;}
