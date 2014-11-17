@@ -23,7 +23,7 @@ describe('Composer.FilterCollection', function() {
 			// odd ages are locs, brah
 			master.add(new Composer.Model({ id: i+1, age: age, loc: (age % 2) == 1 }));
 		});
-		expect(col.models().length).toBe(6);
+		expect(col.size()).toBe(6);
 		expect(col.models()[0].id()).toBe(5);
 		expect(col.models()[1].id()).toBe(11);
 		expect(col.models()[2].id()).toBe(4);
@@ -35,7 +35,7 @@ describe('Composer.FilterCollection', function() {
 
 	it('will limit/sort models properly', function() {
 		var col = new Filter(master, {limit: 4});
-		expect(col.models().length).toBe(4);
+		expect(col.size()).toBe(4);
 		expect(col.models()[0].id()).toBe(5);
 		expect(col.models()[1].id()).toBe(11);
 		expect(col.models()[2].id()).toBe(4);
@@ -72,7 +72,7 @@ describe('Composer.FilterCollection', function() {
 			}
 		});
 
-		expect(daisy.models().length).toBe(5);
+		expect(daisy.size()).toBe(5);
 		expect(daisy.models()[0].id()).toBe(42);
 		expect(daisy.models()[1].id()).toBe(5);
 		expect(daisy.models()[2].id()).toBe(11);

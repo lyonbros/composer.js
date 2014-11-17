@@ -1514,7 +1514,7 @@
 		 */
 		exists: function(callback)
 		{
-			for(var i = 0; i < this.models().length; i++)
+			for(var i = 0; i < this.size(); i++)
 			{
 				if(callback(this.models()[i])) return true;
 			}

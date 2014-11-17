@@ -1,7 +1,7 @@
 describe('Composer.Collection', function() {
 	it('can be instantiated properly', function() {
 		var col = new Composer.Collection();
-		expect(col.models().length).toBe(0);
+		expect(col.size()).toBe(0);
 		expect(col.cid().match(/^c[0-9]+/)).toBeTruthy();
 
 		var col = new Composer.Collection([
@@ -9,7 +9,7 @@ describe('Composer.Collection', function() {
 			{name: 'larry', says: 'alex, remember what we talked about'},
 			{name: 'larry', says: 'nobody thinks you\'re funny'}
 		]);
-		expect(col.models().length).toBe(3);
+		expect(col.size()).toBe(3);
 		col.models().forEach(function(model) {
 			expect(model instanceof Composer.Model).toBe(true);
 		});
@@ -66,13 +66,13 @@ describe('Composer.Collection', function() {
 		col.remove(model1);
 		col.remove(model1);
 		col.remove(model1);
-		expect(col.models().length).toBe(1);
+		expect(col.size()).toBe(1);
 		expect(col.size()).toBe(1);
 		expect(remove).toBe(2);
 		var next = col.first();
 		col.remove(next);
 		col.remove(next);
-		expect(col.models().length).toBe(0);
+		expect(col.size()).toBe(0);
 		expect(col.size()).toBe(0);
 		expect(remove).toBe(3);
 	});
@@ -88,14 +88,14 @@ describe('Composer.Collection', function() {
 		col.bind('add', function() { add++; });
 		model.bind('change:name', function() { name_changed = true; });
 
-		expect(col.models().length).toBe(1);
+		expect(col.size()).toBe(1);
 		expect(col.size()).toBe(1);
 		expect(name_changed).toBe(false);
 
 		var model2 = new Composer.Model({id: 1234, name: 'philip'});
 		col.upsert(model2);
 
-		expect(col.models().length).toBe(1);
+		expect(col.size()).toBe(1);
 		expect(col.size()).toBe(1);
 		expect(name_changed).toBe(false);	// upserts are silent
 		expect(upsert).toBe(1);
@@ -105,7 +105,7 @@ describe('Composer.Collection', function() {
 		expect(col.first().get('name')).toBe('philip');
 
 		col.upsert(new Composer.Model({id: 1233, name: 'gertrude'}));
-		expect(col.models().length).toBe(2);
+		expect(col.size()).toBe(2);
 		expect(col.size()).toBe(2);
 		expect(upsert).toBe(1);
 		expect(add).toBe(1);
@@ -114,11 +114,11 @@ describe('Composer.Collection', function() {
 	it('will clear properly', function() {
 		var col = new Composer.Collection([{},{},{}]);
 		var cleared = 0;
-		expect(col.models().length).toBe(3);
+		expect(col.size()).toBe(3);
 		expect(col.size()).toBe(3);
 		col.bind('clear', function() { cleared++; });
 		col.clear();
-		expect(col.models().length).toBe(0);
+		expect(col.size()).toBe(0);
 		expect(col.size()).toBe(0);
 		expect(cleared).toBe(1);
 		col.clear();
@@ -136,12 +136,12 @@ describe('Composer.Collection', function() {
 		col.bind('reset', function() { reset++; });
 
 		col.reset([{}, {}]);
-		expect(col.models().length).toBe(2);
+		expect(col.size()).toBe(2);
 		expect(cleared).toBe(1);
 		expect(reset).toBe(1);
 
 		col.reset([{}, {}, {}], {append: true});
-		expect(col.models().length).toBe(5);
+		expect(col.size()).toBe(5);
 		expect(cleared).toBe(1);
 		expect(reset).toBe(2);
 	});
@@ -157,7 +157,7 @@ describe('Composer.Collection', function() {
 		col.bind('reset', function() { reset++; });
 		col.reset_async(data, {
 			complete: function() {
-				expect(col.models().length).toBe(3);
+				expect(col.size()).toBe(3);
 				expect(reset).toBe(1);
 				done();
 			}
@@ -299,7 +299,7 @@ describe('Composer.Collection', function() {
 		expect(hello).toBe(1);
 
 		model.destroy();
-		expect(col.models().length).toBe(0);
+		expect(col.size()).toBe(0);
 		expect(model.collections.length).toBe(0);
 	});
 });
