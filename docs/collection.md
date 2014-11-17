@@ -202,7 +202,7 @@ Note that `options` can contain [silencing directives](/composer.js/docs/event#s
 {% highlight js %}
 var collection = new Composer.Collection({name: 'shemp'});
 collection.reset([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}]);
-alert('Have '+ collection.models().length +' models!');
+alert('Have '+ collection.size() +' models!');
 {% endhighlight %}
 
 ### reset_async :: function(data, options)
@@ -221,7 +221,7 @@ Note that `options` can contain [silencing directives](/composer.js/docs/event#s
 var collection = new Composer.Collection();
 collection.reset_async([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}], {
     complete: function() {
-        alert('Done, have '+ collection.models().length +' models!');
+        alert('Done, have '+ collection.size() +' models!');
     }
 });
 {% endhighlight %}
