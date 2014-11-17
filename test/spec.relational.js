@@ -97,7 +97,7 @@ describe('Composer.RelationalModel', function() {
 		var band = new Band(banddata);
 		var members = band.get('members');
 		band.clear();
-		expect(members.models().length).toBe(0);
+		expect(members.size()).toBe(0);
 	});
 
 	it('will use skip_relational properly', function() {
