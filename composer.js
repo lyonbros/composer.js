@@ -1042,7 +1042,7 @@
 		 */
 		toJSON: function()
 		{
-			return Composer.object.clone(this.data);
+			return Composer.object.clone(this.data, {deep: true});
 		},
 
 		/**
