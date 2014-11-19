@@ -1318,9 +1318,17 @@
 		 * given a model, check if its ID is already in this collection. if so,
 		 * replace is with the given model, otherwise add the model to the collection.
 		 */
-		upsert: function(model, options)
+		upsert: function(data, options)
 		{
+			if(Composer.array.is(data))
+			{
+				return data.forEach(function(model) { this.upsert(model, options); }.bind(this));
+			}
+
 			options || (options = {});
+
+			// if we are passing raw data, create a new model from data
+			var model = data instanceof Composer.Model ? data : new this.model(data, options);
 
 			var existing = this.find_by_id(model.id(), options);
 			if(existing)
@@ -1376,8 +1384,15 @@
 		{
 			options || (options = {});
 
-			if(!options.append) this.clear(options);
-			this.add(data, options);
+			if(!options.append && !options.upsert) this.clear(options);
+			if(options.upsert)
+			{
+				this.upsert(data, options);
+			}
+			else
+			{
+				this.add(data, options);
+			}
 
 			this.fire_event('reset', options, options);
 		},
@@ -1404,11 +1419,19 @@
 
 			data = data.slice(0);
 
-			if(!options.append) this.clear();
+			if(!options.append && !options.upsert) this.clear();
 			if(data.length > 0)
 			{
 				var batch = options.batch || 1;
-				this.add(data.splice(0, batch), options);
+				var slice = data.splice(0, batch);
+				if(options.upsert)
+				{
+					this.upsert(slice, options);
+				}
+				else
+				{
+					this.add(slice, options);
+				}
 			}
 			if(data.length == 0)
 			{
