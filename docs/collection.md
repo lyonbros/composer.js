@@ -157,10 +157,11 @@ a model is passed that isn't in the current collection, no changes are made.
 
 Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
 
-### upsert :: function(model, options)
+### upsert :: function(data, options)
 
 Upsert a model (insert if it doesn't exist, otherwise update the existing model
-with the given data). The model passed to `upsert` doesn't need to be the same
+with the given data). `data` can be a javascript hash object, a Composer model,
+or an array of either. The model passed to `upsert` doesn't need to be the same
 reference as the existing model, only the IDs ([model.id()](/composer.js/docs/model#id))
 need to match.
 
@@ -196,6 +197,8 @@ Fires the [reset](#reset) event.
 
 - `append` - boolean indicating of the given data should be appended to the
 current data (as opposed to the current data being wiped first)
+- `upsert` - boolean indicating that the given data should be [upserted](#upsert-1)
+(updated if existing, added otherwise). Implies `{append: true}`.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
@@ -207,11 +210,15 @@ alert('Have '+ collection.size() +' models!');
 
 ### reset_async :: function(data, options)
 
-List [reset](#reset-1), except that data is added incrementally once per event
-cycle, triggering a [reset](#reset) event when complete.
+Like [reset](#reset-1), except that data is added incrementally per event cycle,
+triggering a [reset](#reset) event when complete.
 
 `options` can contain the following items:
 
+- `append` - boolean indicating of the given data should be appended to the
+current data (as opposed to the current data being wiped first)
+- `upsert` - boolean indicating that the given data should be [upserted](#upsert-1)
+(updated if existing, added otherwise). Implies `{append: true}`.
 - `complete` - a function of 0 arguments that gets called when the operation
 completes
 - `batch` - an integer telling `reset_async` how many items of our given `data`
