@@ -24,9 +24,11 @@ by using the following load order:
 
 ## Dependencies
 
-Some components require others, so be mindful of this if loading your Composer
-components manually. Here are the dependencies (in `Component: [Dep1, Dep2, ...]`
-format):
+The full build of Composer requires either [jQuery](http://jquery.com/)
+or [Mootools](http://mootools.net) as well as [History.js](https://github.com/browserstate/history.js/).
+
+Here is the breakdown of which components rely on which (in
+`Component: [Dep1, Dep2, ...]` format):
 
 - `Util: []`
 - `Class: [Util]`
@@ -36,8 +38,8 @@ format):
 - `Relational model: [Model]`
 - `Collection: [Base, Model]`
 - `Filter collection: [Collection]`
-- `Adapter: [Util]`
+- `Adapter: [Util, jQuery|Mootools]`
 - `Controller: [Base, Adapter]`
 - `ListController: [Controller]`
-- `Router: [Base]`
+- `Router: [Base, History.js]`
 
