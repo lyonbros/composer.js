@@ -146,6 +146,31 @@ describe('Composer.Collection', function() {
 		expect(reset).toBe(2);
 	});
 
+	it('will reset upsertions', function() {
+		var col = new Composer.Collection();
+
+		col.add({id: 42});
+		col.add({id: 69});
+
+		var get = function(id) { return col.find_by_id(id); };
+
+		var model1 = get(42);
+		var model2 = get(69);
+
+		col.reset([
+			{id: 42, name: 'barry'},
+			{id: 69, name: 'harry'},
+			{id: 11, name: 'larry sko sko outdoor outdoor outdoor shutup parker'}
+		], {upsert: true});
+
+		expect(col.size()).toBe(3);
+		expect(model1 == get(42)).toBe(true);
+		expect(model2 == get(69)).toBe(true);
+		expect(get(42).get('name')).toBe('barry');
+		expect(get(69).get('name')).toBe('harry');
+		expect(get(11).get('name')).toBe('larry sko sko outdoor outdoor outdoor shutup parker');
+	});
+
 	it('will reset_async properly', function(done) {
 		var data = [
 			{name: 'larry'},
@@ -187,6 +212,35 @@ describe('Composer.Collection', function() {
 		expect(reset).toBe(0);
 		expect(col.size()).toBe(2);
 		setTimeout(function() { expect(col.size()).toBe(4); });
+	});
+
+	it('will reset_async upsertions', function(done) {
+		var col = new Composer.Collection();
+
+		col.add({id: 42});
+		col.add({id: 69});
+
+		var get = function(id) { return col.find_by_id(id); };
+
+		var model1 = get(42);
+		var model2 = get(69);
+
+		var finalize = function()
+		{
+			expect(col.size()).toBe(3);
+			expect(model1 == get(42)).toBe(true);
+			expect(model2 == get(69)).toBe(true);
+			expect(get(42).get('name')).toBe('barry');
+			expect(get(69).get('name')).toBe('harry');
+			expect(get(11).get('name')).toBe('larry sko sko outdoor outdoor outdoor shutup parker');
+			done();
+		};
+		col.reset_async([
+			{id: 42, name: 'barry'},
+			{id: 69, name: 'harry'},
+			{id: 11, name: 'larry sko sko outdoor outdoor outdoor shutup parker'}
+		], {upsert: true, complete: finalize});
+
 	});
 
 	it('sorts models properly', function() {
