@@ -214,6 +214,9 @@ cycle, triggering a [reset](#reset) event when complete.
 
 - `complete` - a function of 0 arguments that gets called when the operation
 completes
+- `batch` - an integer telling `reset_async` how many items of our given `data`
+to add to the collection at once (defaults to `1`). Useful for tunning your
+latency-to-loop-blocking ratio.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
