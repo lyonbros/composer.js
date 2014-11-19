@@ -198,7 +198,9 @@ Fires the [reset](#reset) event.
 - `append` - boolean indicating of the given data should be appended to the
 current data (as opposed to the current data being wiped first)
 - `upsert` - boolean indicating that the given data should be [upserted](#upsert-1)
-(updated if existing, added otherwise). Implies `{append: true}`.
+(updated if existing, added otherwise). Forces `{append: true}`. This is useful
+for updating a large number of items in the collection with new data without
+removing/re-adding everything.
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
@@ -218,7 +220,9 @@ triggering a [reset](#reset) event when complete.
 - `append` - boolean indicating of the given data should be appended to the
 current data (as opposed to the current data being wiped first)
 - `upsert` - boolean indicating that the given data should be [upserted](#upsert-1)
-(updated if existing, added otherwise). Implies `{append: true}`.
+(updated if existing, added otherwise). Forces `{append: true}`. This is useful
+for updating a large number of items in the collection with new data without
+removing/re-adding everything.
 - `complete` - a function of 0 arguments that gets called when the operation
 completes
 - `batch` - an integer telling `reset_async` how many items of our given `data`
