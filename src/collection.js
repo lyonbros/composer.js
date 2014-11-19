@@ -289,8 +289,8 @@
 			if(!options.append) this.clear();
 			if(data.length > 0)
 			{
-				this.add(data[0], options);
-				data.shift();
+				var batch = options.batch || 1;
+				this.add(data.splice(0, batch), options);
 			}
 			if(data.length == 0)
 			{

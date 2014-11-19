@@ -165,6 +165,30 @@ describe('Composer.Collection', function() {
 		expect(reset).toBe(0);
 	});
 
+	it('will batch reset_async properly', function(done) {
+		var data = [
+			{name: 'larry'},
+			{name: 'sandra'},
+			{name: 'barthalomew'},
+			{name: 'bitey'},
+			{name: 'fisty'}
+		];
+		var col = new Composer.Collection();
+		var reset = 0;
+		col.bind('reset', function() { reset++; });
+		col.reset_async(data, {
+			batch: 2,
+			complete: function() {
+				expect(col.size()).toBe(5);
+				expect(reset).toBe(1);
+				done();
+			}
+		});
+		expect(reset).toBe(0);
+		expect(col.size()).toBe(2);
+		setTimeout(function() { expect(col.size()).toBe(4); });
+	});
+
 	it('sorts models properly', function() {
 		var data = [
 			{id: 1, sort: 99},
