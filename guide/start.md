@@ -1,6 +1,6 @@
 ---
 title: Guide to getting started
-layout: default
+layout: guide
 ---
 
 # Guide to getting started
@@ -105,7 +105,7 @@ var GettingStartedController = Composer.Controller.extend({
 
     render: function()
     {
-        var html = '<h3>My name is '+ this.model.get('name', '<blank>') +'</h3>';
+        var html = '<h3>My name is '+ this.model.get('name', '[blank]') +'</h3>';
         html += '<input type="button" value="Pick a random name">';
 
         this.html(html);
@@ -161,7 +161,7 @@ garbage collected until the model is collected as well. This has the potential
 to create memory leaks in your app, especially when rendering more complex
 interfaces.
 
-What's happening is that we [bind](/composer.js/docs/model#bind) the `change`
+What's happening is that we [bind](/composer.js/docs/event#bind) the `change`
 event to `render()`. This means that as long as that model exists, the reference
 to `render()` (and all the state it requires, including the entire controller)
 is kept alive.
@@ -237,7 +237,7 @@ var BetterController = Composer.Controller.extend({
 
     render: function()
     {
-        var html = '<h3>My name is '+ this.model.get('name', '<blank>') +'</h3>';
+        var html = '<h3>My name is '+ this.model.get('name', '[blank]') +'</h3>';
         html += '<input type="button" rel="name" value="Pick a random name">';
         // add a release button
         html += '<input type="button" rel="release" value="Release">';
