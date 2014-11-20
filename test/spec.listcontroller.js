@@ -82,7 +82,7 @@ describe('Composer.ListController', function() {
 		};
 
 		con.collection.add([{name: 'zoey'}, {name: 'barnes'}, {name: 'harry'}]);
-		expect(ul.innerHTML).toBe(
+		expect(ul.innerHTML.toLowerCase()).toBe(
 			'<li>{"name":"barnes"}</li>'+
 			'<li>{"name":"harry"}</li>'+
 			'<li>{"name":"zoey"}</li>'
