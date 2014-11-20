@@ -46,6 +46,11 @@ describe('Composer.ListController', function() {
 		}
 	});
 
+	var tame_html = function(html)
+	{
+		return html.toLowerCase().replace(/[\r\n]/g, '');
+	};
+
 	it('can be instantiated properly', function() {
 		var con = new List();
 		expect(con instanceof Composer.ListController).toBe(true);
@@ -82,7 +87,7 @@ describe('Composer.ListController', function() {
 		};
 
 		con.collection.add([{name: 'zoey'}, {name: 'barnes'}, {name: 'harry'}]);
-		expect(ul.innerHTML.toLowerCase()).toBe(
+		expect(tame_html(ul.innerHTML)).toBe(
 			'<li>{"name":"barnes"}</li>'+
 			'<li>{"name":"harry"}</li>'+
 			'<li>{"name":"zoey"}</li>'
@@ -92,13 +97,13 @@ describe('Composer.ListController', function() {
 		expect(model.get('name')).toBe('harry');
 		model.destroy();
 
-		expect(ul.innerHTML).toBe(
+		expect(tame_html(ul.innerHTML)).toBe(
 			'<li>{"name":"barnes"}</li>'+
 			'<li>{"name":"zoey"}</li>'
 		);
 
 		con.collection.add([{name: 'chickadee-ee the chickadee'}, {name: 'argoyle the brave'}])
-		expect(ul.innerHTML).toBe(
+		expect(tame_html(ul.innerHTML)).toBe(
 			'<li>{"name":"argoyle the brave"}</li>'+
 			'<li>{"name":"barnes"}</li>'+
 			'<li>{"name":"chickadee-ee the chickadee"}</li>'+
