@@ -106,5 +106,27 @@ describe('Composer.RelationalModel', function() {
 		expect(Composer.eq(data, {name: 'the way'})).toBe(true);
 	});
 
+	it('will serialize properly', function() {
+		var Dog = Composer.RelationalModel.extend({
+			relations: {
+				toys: {
+					collection: Composer.Collection
+				}
+			}
+		});
+		var Person = Composer.RelationalModel.extend({
+			relations: {
+				'pet.dog': {
+					model: Dog
+				}
+			}
+		});
+
+		var person = new Person();
+		person.set({name: 'ruth', pet: {dog: {name: 'timmy', toys: [{id: 1, name: 'ropey'}, {id: 2, name: 'bally'}]}}});
+		expect(person.toJSON().pet.dog.toys[1].name).toBe('bally');
+		person.set({pet: {dog: {toys: [{id: 2, name: 'sticky'}]}}}, {upsert: true});
+		expect(person.toJSON().pet.dog.toys[1].name).toBe('sticky');
+	});
 });
 
