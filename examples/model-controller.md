@@ -1,6 +1,6 @@
 ---
 title: Examples | A simple model/controller setup
-layout: documentation
+layout: page
 ---
 
 # A simple model/controller setup

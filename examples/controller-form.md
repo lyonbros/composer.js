@@ -1,6 +1,6 @@
 ---
 title: Examples | A form in a controller
-layout: documentation
+layout: page
 ---
 
 # A form in a controller
