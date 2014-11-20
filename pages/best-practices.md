@@ -1,6 +1,6 @@
 ---
 title: Best practices
-layout: page
+layout: toc-page
 ---
 
 # Best practices
