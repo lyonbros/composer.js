@@ -87,7 +87,7 @@ var app = {
 
 	init_highlight: function()
 	{
-		var doc = document.getElement('.documentation');
+		var doc = document.getElement('.documentation, .guide');
 		if(!doc) return false;
 
 		doc.getElements('.highlight pre code').each(function(el) {
