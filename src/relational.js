@@ -92,12 +92,21 @@
 			options || (options = {});
 
 			var data = this.parent();
+			if(options.raw) return data;
 
 			if(this.skip_relational_serialize || options.skip_relational)
 			{
 				Object.keys(this.relations).forEach(function(key) {
 					delete data[key];
 				});
+			}
+			else
+			{
+				Object.keys(this.relations).forEach(function(k) {
+					var obj = this._get_key(this.relation_data, k);
+					if(!obj) return;
+					this._set_key(data, k, obj.toJSON());
+				}.bind(this));
 			}
 
 			return data;
@@ -234,7 +243,7 @@
 				case 'model':
 					obj || (obj = new relation.model());
 					if(options.set_parent) this.set_parent(this, obj);	// NOTE: happens BEFORE setting data
-					if(_data) obj.set(_data);
+					if(_data) obj.set(_data, options);
 					break;
 				case 'collection':
 					if(!obj)
