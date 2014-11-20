@@ -5,15 +5,15 @@ Slick.definePseudo('docheader', function() {
 var app = {
 	init_toc: function()
 	{
-		var doc = document.getElement('.documentation');
-		if(!doc) return false;
+		var el = document.getElement('.show-toc');
+		if(!el) return false;
 
-		var toc = doc.getElement('> .toc');
+		var toc = el.getElement('> .toc');
 		if(!toc) return false;
 
 		var used_ids = {};
 
-		var headers = doc.getElements(':docheader()');
+		var headers = el.getElements(':docheader()');
 		var ul = new Element('ul').inject(toc);
 		var last = [];
 		var level = 2;
@@ -65,10 +65,10 @@ var app = {
 
 	init_eval: function()
 	{
-		var doc = document.getElement('.documentation, .guide');
-		if(!doc) return false;
+		var el = document.getElement('.show-eval');
+		if(!el) return false;
 
-		var code = doc.getElements('.highlight > pre > code');
+		var code = el.getElements('.highlight > pre > code');
 		code.forEach(function(el) {
 			var entity_unescape = function(input)
 			{
@@ -87,10 +87,10 @@ var app = {
 
 	init_highlight: function()
 	{
-		var doc = document.getElement('.documentation, .guide');
-		if(!doc) return false;
+		var el = document.getElement('.do-highlight');
+		if(!el) return false;
 
-		doc.getElements('.highlight pre code').each(function(el) {
+		el.getElements('.highlight pre code').each(function(el) {
 			hljs.highlightBlock(el);
 		});
 	}
