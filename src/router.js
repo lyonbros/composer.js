@@ -121,7 +121,7 @@
 			{
 				var path = global.location.pathname+global.location.search;
 			}
-			return this.debasify(path);
+			return this.debasify(unescape(path));
 		},
 
 		/**
