@@ -1,6 +1,6 @@
 ---
 title: Best practices
-layout: documentation
+layout: toc
 ---
 
 # Best practices

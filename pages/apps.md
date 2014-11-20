@@ -1,6 +1,6 @@
 ---
 title: Apps using Composer
-layout: default
+layout: page
 ---
 
 # Apps using Composer

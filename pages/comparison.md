@@ -1,6 +1,6 @@
 ---
 title: Framework comparison
-layout: default
+layout: page
 ---
 
 # Framework comparison
