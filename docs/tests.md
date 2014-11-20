@@ -1,6 +1,6 @@
 ---
 title: Tests
-layout: page
+layout: documentation
 ---
 
 # Tests

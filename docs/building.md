@@ -1,6 +1,6 @@
 ---
 title: Building/load order
-layout: page
+layout: documentation
 ---
 
 # Building / load order
