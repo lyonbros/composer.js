@@ -234,7 +234,7 @@
 				case 'model':
 					obj || (obj = new relation.model());
 					if(options.set_parent) this.set_parent(this, obj);	// NOTE: happens BEFORE setting data
-					if(_data) obj.set(_data);
+					if(_data) obj.set(_data, options);
 					break;
 				case 'collection':
 					if(!obj)
