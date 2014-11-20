@@ -1,6 +1,6 @@
 ---
 title: Examples | Using the router
-layout: page
+layout: examples
 ---
 
 # Using the router

@@ -1,6 +1,6 @@
 ---
 title: Examples
-layout: page
+layout: examples
 ---
 
 # Examples

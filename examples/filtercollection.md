@@ -1,6 +1,6 @@
 ---
 title: Example | Filter collection usage
-layout: page
+layout: examples
 ---
 
 # Filter collection usage

@@ -1,6 +1,6 @@
 ---
 title: Examples | A simple model/controller setup
-layout: page
+layout: examples
 ---
 
 # A simple model/controller setup
@@ -84,11 +84,5 @@ var controller = new DisplayCounterController({
     // be sure to pass in the model!
     model: counter
 });
-
-// add the "enabled" class to our example container to get a cheesy CSS fade-in
-// effect. Note that although undocumented, Composer.find is the abstraction
-// around the included selector engine (note that it always returns raw DOM
-// elements instead of jQuery-esque wrapped objects).
-Composer.find(document, '#simple').className += ' enabled';
 {% endhighlight %}
 
