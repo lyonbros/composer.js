@@ -1,6 +1,6 @@
 ---
 title: Guide to getting started
-layout: default
+layout: guide
 ---
 
 # Guide to getting started

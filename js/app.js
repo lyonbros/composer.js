@@ -65,7 +65,7 @@ var app = {
 
 	init_eval: function()
 	{
-		var doc = document.getElement('.documentation');
+		var doc = document.getElement('.documentation, .guide');
 		if(!doc) return false;
 
 		var code = doc.getElements('.highlight > pre > code');
