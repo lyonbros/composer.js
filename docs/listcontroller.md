@@ -38,7 +38,14 @@ were passed to the collection's [add](/composer.js/docs/collection#add-1) or
 [reset](/composer.js/docs/collection#reset-1) call) and returns an instance of
 `Controller` or any class that extends it.
 
-`options` is currently unused.
+`options` can contain the following items:
+
+- `bind_reset` - If true, will bind to the collection's [reset](/composer.js/docs/collection/#reset)
+event. Because the ListController already binds to `add`, `remove`, and `clear`,
+binding to reset isn't really needed and doing so may hinder performance.
+However if you need to be able to refresh the list in its entirety, pass `true`
+to `bind_reset` and any `reset` event on the collection will refresh all the
+subcontrollers.
 
 <div id="listtrack"></div>
 {% highlight js %}
