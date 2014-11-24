@@ -1372,7 +1372,7 @@
 			// if the number actually change, trigger our change event
 			if(this._models.length != num_rec)
 			{
-				this.fire_event('clear', options);
+				this.fire_event('clear', options, options);
 			}
 		},
 
@@ -2303,15 +2303,21 @@
 			this.set_options(options);
 			this._collection = collection;
 
-			this.with_bind(collection, 'reset', function(options) {
-				this.reset_subcontrollers(create_fn, options);
-			}.bind(this));
+			this.with_bind(collection, 'clear', function(options) {
+				this.clear_subcontrollers();
+			});
 			this.with_bind(collection, 'add', function(model, _, options) {
 				this.add_subcontroller(model, create_fn, options);
 			}.bind(this));
 			this.with_bind(collection, 'remove', function(model) {
 				this.remove_subcontroller(model);
 			}.bind(this));
+			if(options.bind_reset)
+			{
+				this.with_bind(collection, 'reset', function(options) {
+					this.reset_subcontrollers(create_fn, options);
+				}.bind(this));
+			}
 			this.reset_subcontrollers(create_fn);
 		},
 

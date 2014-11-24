@@ -254,7 +254,7 @@
 			// if the number actually change, trigger our change event
 			if(this._models.length != num_rec)
 			{
-				this.fire_event('clear', options);
+				this.fire_event('clear', options, options);
 			}
 		},
 
