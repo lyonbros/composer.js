@@ -53,7 +53,7 @@
 
 			this.with_bind(collection, 'clear', function(options) {
 				this.clear_subcontrollers();
-			});
+			}.bind(this));
 			this.with_bind(collection, 'add', function(model, _, options) {
 				this.add_subcontroller(model, create_fn, options);
 			}.bind(this));
