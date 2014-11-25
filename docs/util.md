@@ -23,7 +23,11 @@ Note that `options` also has two functions in it: `success` and `error`.
 being the data returned from the API. `error` should be called if any errors
 happen (first arg is the error, second is the XHR object).
 
-Example:
+Note that you can also provide syncing functions on a per-model or
+per-collection basis by setting the `.sync` parameter in that object (ie
+`mymodel.sync = my_sync_function;`.
+
+Sync function example:
 
 <div class="noeval">
 {% highlight js %}
