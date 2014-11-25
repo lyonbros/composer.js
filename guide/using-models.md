@@ -73,7 +73,9 @@ var Users = Composer.Collection.extend({
 // now create our collection and grab some data!
 var users = new Users();
 users.bind('reset', function() {
-    alert('Got '+ this.size() + ' users: '+ JSON.stringify(this.toJSON()));
+    var str = 'Got '+ this.size() + 'users:\n';
+    str += this.map(function(u) { return u.get('name'); }).join(', ');
+    alert(str);
 }.bind(users));
 // fetch() calls Composer.sync in the background, which grabs our results and
 // resets them into the collection

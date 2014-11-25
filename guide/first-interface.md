@@ -181,6 +181,8 @@ var Namer = Composer.Model.extend({
 {% endhighlight %}
 </div>
 
+### Putting it together
+
 Great. Let's put it all together.
 
 <div id="guide-2"></div>
