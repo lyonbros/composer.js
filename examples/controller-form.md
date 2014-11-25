@@ -11,13 +11,8 @@ our heroic model.
 <div id="form-example" class="example fade"></div>
 
 {% highlight js %}
-// create a simple dog model with a bark action
-var Dog = Composer.Model.extend({
-    bark: function()
-    {
-        alert(this.get('name') + ' says "woof"');
-    }
-});
+// create a simple dog model
+var Dog = Composer.Model.extend({});
 
 // create a controller to show a dog in our view
 var ShowDogController = Composer.Controller.extend({
@@ -33,7 +28,7 @@ var ShowDogController = Composer.Controller.extend({
 
     init: function()
     {
-        if(!this.model) return false;
+        if(!this.model) return this.release();
         this.with_bind(this.model, 'change', this.render.bind(this));
         this.render();
     },
@@ -58,11 +53,7 @@ var ShowDogController = Composer.Controller.extend({
 
     submit: function(e)
     {
-        if(e)
-        {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+        if(e) e.preventDefault();
         var name = this.inp_name.value;
 
         // save the name back into the dog. this fires our "change" event, which
@@ -78,5 +69,4 @@ var controller = new ShowDogController({
 });
 Composer.find(document, '#form-example').className += ' enabled';
 {% endhighlight %}
-
 

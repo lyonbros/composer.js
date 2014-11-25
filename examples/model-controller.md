@@ -65,24 +65,17 @@ var DisplayCounterController = Composer.Controller.extend({
     // this will be called by out event mapping when the button is clicked
     increase_count: function(e)
     {
-        if(e)
-        {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
         // this will change the `num` field in the model which triggers a
         // "change" event, which in turn re-renders the view =]
         this.model.count();
     }
 });
 
-var counter = new Counter();
 var controller = new DisplayCounterController({
+    // put the controller into the <div id="simple"/> container
     inject: '#simple',
-
-    // be sure to pass in the model!
-    model: counter
+    // create a new Counter and hand it to our controller
+    model: new Counter()
 });
 {% endhighlight %}
 
