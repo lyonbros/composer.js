@@ -242,7 +242,7 @@ Siiiick. We created our own model type (`Namer`) and also updated the controller
 to be smarter about how it binds to our model. These changes go great with the
 new `[release]` button we put in. Give it a try.
 
-# Next up: models
+## Next up: models
 
 We've created some basic interfaces, and even seen how to use eventing to
 refresh interfaces based on model data. Next up, we're going to take a look at
