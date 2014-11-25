@@ -51,7 +51,7 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Provides AJAX API syncing out of the box</td>
-        <td><a href="/composer.js/docs/util#composer-sync">Sort of</a></td>
+        <td><a href="/composer.js/docs/util#composer-sync">DIY</a></td>
         <td>Yes</td>
     </tr>
     <tr>
@@ -61,7 +61,7 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Supports using promises for async operations</td>
-        <td><a href="/composer.js/docs/util#composer-promisify">Yes, via Bluebird et al</a></td>
+        <td><a href="/composer.js/docs/util#composer-promisify">Yes, via Bluebird</a></td>
         <td>Yes (via jQuery promises)</td>
     </tr>
     <tr>
@@ -75,7 +75,7 @@ Composer and a few other projects.
         <td>Yes</td>
     </tr>
     <tr>
-        <td>Router supports automatic link binding</td>
+        <td>Router provides automatic link binding</td>
         <td><a href="/composer.js/docs/router#bind-links">Yes</a></td>
         <td>No</td>
     </tr>
