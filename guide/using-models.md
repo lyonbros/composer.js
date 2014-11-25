@@ -67,13 +67,14 @@ Composer.sync = function(method, model, options)
 var User = Composer.Model.extend({});
 var Users = Composer.Collection.extend({
     model: User,
+    // sets the URL that this collection will pull data from
     url: '/composer.js/data/users.json'
 });
 
 // now create our collection and grab some data!
 var users = new Users();
 users.bind('reset', function() {
-    var str = 'Got '+ this.size() + 'users:\n';
+    var str = 'Got '+ this.size() + ' users:\n';
     str += this.map(function(u) { return u.get('name'); }).join(', ');
     alert(str);
 }.bind(users));
@@ -82,4 +83,51 @@ users.bind('reset', function() {
 users.fetch();
 {% endhighlight %}
 
+Let's go over what's happening. First, we set the `Composer.sync` function to
+interpret what operation we're performing and turn it into an HTTP verb (GET,
+POST, etc). Then it calls our ajax function to grab our remote data. This all
+happens asynchronously. Once the data is returned from the server, it is
+JSON parsed and sent into `Composer.sync`'s `options.success` function, which
+processes the data and then passed it into the collection via [reset](/composer.js/docs/collection#reset-1),
+firing a `reset` event once complete.
+
+We bind to the `reset` event, showing an alert with lots of juicy information
+once called.
+
+### Notes on Composer.sync
+
+`Composer.sync`, as we saw above, is a place in your app you can call out to
+exgternaxternal data sources. It can use the browser's local storage, indexedDB,
+external APIs, etc.
+
+Although `Composer.sync` ties well into models and collections, it will not
+cover every use-case. Feel free to write custom queries or API calls in your
+models/collections as needed. Don't try to force everything into the `.sync()`
+paradigm.
+
+Note that not only can you set `Composer.sync` globally, you can set it on a
+per-model or per-collection basis by changing that object's `.sync` property.
+
+<div class="noeval">
+{% highlight js %}
+// you can set .sync in the class itself ...
+var Dog = Composer.Model.extend({
+    sync: function(method, model, options) { ... }
+});
+
+// ...or on a per-object basis:
+var dog = new Dog();
+dog.sync = function(method, model, options) { ... };
+{% endhighlight %}
+</div>
+
+This lets you have per-class or per-object custom sync functionality, and even
+lets you easily switch out one datastore for another if desired.
+
+## Saving data
+
+At some point, you'll probably want to take data from a user interface and save
+it to a database. Models are well-equipped for this, providing a very nice
+[save](/composer.js/docs/model#save) function which uses `Composer.sync` to send
+data to where it needs to go.
 
