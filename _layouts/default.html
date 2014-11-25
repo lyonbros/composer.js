@@ -13,34 +13,16 @@
 		<script src="/composer.js/js/app.js"></script>
 		<script src="/composer.js/js/highlight.pack.js"></script>
 	</head>
-	<body class="{{ page.title | slugify }}">
+	<body class="body-{{ page.title | slugify }}">
 		<div id="main">
-			<header>
-				<a href="/composer.js"><img src="/composer.js/images/composer.png" width="219" height="260" alt="composer"></a>
-				<h1><a href="/composer.js/">Composer.js</a></h1>
+			<header class="clear">
+				<h1><a href="/composer.js/"><span>Composer.js</span></a></h1>
+
 				<ul>
+					<!--<li><a href="/composer.js/guide/start">Getting started</a></li>-->
+					<li><a href="/composer.js/docs/">Documentation</a></li>
 					<li><a href="/composer.js/examples/">Examples</a></li>
-					<li>
-						<a href="/composer.js/docs/">Documentation</a>
-						<ul>
-							<li><a href="/composer.js/docs/class">Class system</a></li>
-							<li><a href="/composer.js/docs/event">Eventing</a></li>
-							<li><a href="/composer.js/docs/util">Utilities</a></li>
-							<li><a href="/composer.js/docs/base">Base</a></li>
-							<li><a href="/composer.js/docs/model">Model</a></li>
-							<li><a href="/composer.js/docs/relational">Relational model</a></li>
-							<li><a href="/composer.js/docs/collection">Collection</a></li>
-							<li><a href="/composer.js/docs/filtercollection">Filter collection</a></li>
-							<li><a href="/composer.js/docs/controller">Controller</a></li>
-							<li><a href="/composer.js/docs/listcontroller">ListController</a></li>
-							<li><a href="/composer.js/docs/router">Router</a></li>
-						</ul>
-					</li>
-					<li><a href="/composer.js/pages/best-practices">Best practices</a></li>
-					<li><a href="/composer.js/pages/comparison">Compared to Backbone.js</a></li>
-					<li><a href="/composer.js/pages/tests">Tests</a></li>
-					<li><a href="/composer.js/pages/building">Building/load order</a></li>
-					<li><a href="/composer.js/pages/apps">Apps using Composer</a></li>
+					<li><a href="https://github.com/lyonbros/composer.js">Github</a></li>
 				</ul>
 			</header>
 

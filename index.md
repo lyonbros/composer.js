@@ -4,7 +4,6 @@ layout: home
 ---
 
 <div class="intro">
-    <h1>Composer.js</h1>
     <strong>Composer is a library for building complex single-page applications.</strong>
 
     <div class="button-row">
@@ -23,25 +22,21 @@ layout: home
 
 Composer is a javascript MVC library that provides a means to organize and scale
 complex single-page applications. Composer was built specifically as a [Backbone.js](http://backbonejs.com)
-replacement to handle more complex setups. Read [more on the differences between
-Composer and other frameworks](/composer.js/pages/comparison).
+replacement to support Mootools and handle more complex setups. Read
+[more on the differences between Composer and Backbone](/composer.js/pages/comparison).
 
-Composer is also framework-agnostic: it can run on top of jQuery or MooTools,
-allowing you to use it for a range of different projects and setups.
-Composer.js is ~12K when minified/gzipped.
+Composer is framework-agnostic: it can run on top of jQuery or MooTools,
+allowing you to use it for a range of different projects and setups. Composer.js
+is ~12K when minified/gzipped.
 
 See [apps using Composer in production &raquo;](/composer.js/pages/apps)
 
 ## Dependencies
 
-Composer needs a selector library from jQuery or Mootools (Sizzle or Slick).
-jQuery or Mootools themselves can also be included. This dependency can be
-skipped if you are only using the data-driven portion of Composer (so, anything
-but Controllers).
-
-If you plan on using [Composer's Router](/composer.js/docs/router) (which
-provides application routing over pushState URL changes), you need to include
-[History.js](https://github.com/browserstate/history.js/).
+Composer requires either [jQuery](http://jquery.com/) or
+[Mootools](http://mootools.net) (needed by Composer's [Controller](/composer.js/docs/controller))
+as well as [History.js](https://github.com/browserstate/history.js/) (used by
+Composer's [Router](/composer.js/docs/router)).
 
 ## Browser support
 

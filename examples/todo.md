@@ -1,6 +1,6 @@
 ---
 title: Example | Simple TODO app
-layout: page
+layout: examples
 ---
 
 # Simple TODO app
