@@ -17,7 +17,7 @@ Before your app can display all the wonderful data you want to show (dog photos,
 user profiles, leaked government defense contract documents), it needs to get
 this data from somewhere.
 
-This is done using the [Composer.sync](/composer.js/docs/util#composer-sync)
+This is easy using the [Composer.sync](/composer.js/docs/util#composer-sync)
 function. This function is meant to be replaced by you, and is called whenever
 one of your models calls [fetch](/composer.js/docs/model#fetch),
 [save](/composer.js/docs/model#save), or [destroy](/composer.js/docs/model#destroy-1).
