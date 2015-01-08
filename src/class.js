@@ -163,7 +163,7 @@
 	function Class(obj) { return Base.extend(obj); };
 	Class.extend = Class;
 
-	Composer.exp0rt({ Class: Class });
+	this.Composer.exp0rt({ Class: Class });
 
 }).apply((typeof exports != 'undefined') ? exports : this);
 
