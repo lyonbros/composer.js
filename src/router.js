@@ -357,6 +357,6 @@
 		}
 	});
 
-	Composer.exp0rt({ Router: Router });
+	this.Composer.exp0rt({ Router: Router });
 }).apply((typeof exports != 'undefined') ? exports : this);
 

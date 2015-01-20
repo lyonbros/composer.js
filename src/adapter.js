@@ -179,7 +179,7 @@
 		return find_parent(selector, par);
 	};
 
-	Composer.exp0rt({
+	this.Composer.exp0rt({
 		find: find,
 		match: match,
 		add_event: add_event,

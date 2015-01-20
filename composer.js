@@ -214,7 +214,7 @@
 		convert_collection_fn('reset_async', {options_idx: 1, names: ['complete']});
 	};
 
-	Composer.exp0rt({
+	this.Composer.exp0rt({
 		sync: sync,
 		cid: cid,
 		wrap_error: wrap_error,
@@ -391,7 +391,7 @@
 	function Class(obj) { return Base.extend(obj); };
 	Class.extend = Class;
 
-	Composer.exp0rt({ Class: Class });
+	this.Composer.exp0rt({ Class: Class });
 
 }).apply((typeof exports != 'undefined') ? exports : this);
 
@@ -592,7 +592,7 @@
 	});
 
 	Event._make_lookup_name = make_lookup_name;
-	Composer.exp0rt({ Event: Event });
+	this.Composer.exp0rt({ Event: Event });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -1740,7 +1740,7 @@
 			this.trigger.apply(this, arguments);
 		}
 	});
-	Composer.exp0rt({ Collection: Collection });
+	this.Composer.exp0rt({ Collection: Collection });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -1924,7 +1924,7 @@
 		return find_parent(selector, par);
 	};
 
-	Composer.exp0rt({
+	this.Composer.exp0rt({
 		find: find,
 		match: match,
 		add_event: add_event,
@@ -2793,7 +2793,7 @@
 		}
 	});
 
-	Composer.exp0rt({ Router: Router });
+	this.Composer.exp0rt({ Router: Router });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -3128,7 +3128,7 @@
 
 	Composer.merge_extend(RelationalModel, ['relations']);
 
-	Composer.exp0rt({
+	this.Composer.exp0rt({
 		HasOne: -1,		// no longer used but needed for backwards compat
 		HasMany: -1,	// " "
 		RelationalModel: RelationalModel
