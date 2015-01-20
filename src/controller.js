@@ -309,8 +309,8 @@
 		}
 	});
 
-	Composer.merge_extend(Controller, ['events', 'elements']);
+	this.Composer.merge_extend(Controller, ['events', 'elements']);
 
-	Composer.exp0rt({ Controller: Controller });
-})();
+	this.Composer.exp0rt({ Controller: Controller });
+}).apply((typeof exports != 'undefined') ? exports : this);
 

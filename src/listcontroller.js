@@ -179,6 +179,6 @@
 			this.unindex_controller(model, con);
 		}
 	});
-	Composer.exp0rt({ ListController: ListController });
-})();
+	this.Composer.exp0rt({ ListController: ListController });
+}).apply((typeof exports != 'undefined') ? exports : this);
 

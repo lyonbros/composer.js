@@ -119,7 +119,7 @@
 			});
 
 			var cls = _extend.call(base, def);
-			Composer.merge_extend(cls, properties);
+			global.Composer.merge_extend(cls, properties);
 			return cls;
 		}
 	};
@@ -186,7 +186,7 @@
 				var names = options.names || ['success', 'error'];
 
 				var _old = Composer[type].prototype[key];
-				Composer[type].prototype[key] = function()
+				global.Composer[type].prototype[key] = function()
 				{
 					var args = Array.prototype.slice.call(arguments, 0);
 					if(args.length < options_idx)
