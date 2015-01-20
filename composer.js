@@ -119,7 +119,7 @@
 			});
 
 			var cls = _extend.call(base, def);
-			Composer.merge_extend(cls, properties);
+			global.Composer.merge_extend(cls, properties);
 			return cls;
 		}
 	};
@@ -186,7 +186,7 @@
 				var names = options.names || ['success', 'error'];
 
 				var _old = Composer[type].prototype[key];
-				Composer[type].prototype[key] = function()
+				global.Composer[type].prototype[key] = function()
 				{
 					var args = Array.prototype.slice.call(arguments, 0);
 					if(args.length < options_idx)
@@ -708,8 +708,8 @@
 		}
 	});
 
-	Composer.exp0rt({ Base: Base });
-})();
+	this.Composer.exp0rt({ Base: Base });
+}).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
  * model.js
@@ -1113,8 +1113,8 @@
 		}
 	});
 
-	Composer.exp0rt({ Model: Model });
-})();
+	this.Composer.exp0rt({ Model: Model });
+}).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
  * collection.js
@@ -2245,10 +2245,10 @@
 		}
 	});
 
-	Composer.merge_extend(Controller, ['events', 'elements']);
+	this.Composer.merge_extend(Controller, ['events', 'elements']);
 
-	Composer.exp0rt({ Controller: Controller });
-})();
+	this.Composer.exp0rt({ Controller: Controller });
+}).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
  * listcontroller.js
@@ -2431,8 +2431,8 @@
 			this.unindex_controller(model, con);
 		}
 	});
-	Composer.exp0rt({ ListController: ListController });
-})();
+	this.Composer.exp0rt({ ListController: ListController });
+}).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
  * router.js
@@ -3126,7 +3126,7 @@
 		}
 	});
 
-	Composer.merge_extend(RelationalModel, ['relations']);
+	this.Composer.merge_extend(RelationalModel, ['relations']);
 
 	this.Composer.exp0rt({
 		HasOne: -1,		// no longer used but needed for backwards compat
@@ -3529,5 +3529,6 @@
 		}
 	});
 
-	Composer.exp0rt({ FilterCollection: FilterCollection });
-})();
+	this.Composer.exp0rt({ FilterCollection: FilterCollection });
+}).apply((typeof exports != 'undefined') ? exports : this);
+

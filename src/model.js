@@ -400,6 +400,6 @@
 		}
 	});
 
-	Composer.exp0rt({ Model: Model });
-})();
+	this.Composer.exp0rt({ Model: Model });
+}).apply((typeof exports != 'undefined') ? exports : this);
 

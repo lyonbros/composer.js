@@ -392,5 +392,6 @@
 		}
 	});
 
-	Composer.exp0rt({ FilterCollection: FilterCollection });
-})();
+	this.Composer.exp0rt({ FilterCollection: FilterCollection });
+}).apply((typeof exports != 'undefined') ? exports : this);
+

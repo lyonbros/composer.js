@@ -328,7 +328,7 @@
 		}
 	});
 
-	Composer.merge_extend(RelationalModel, ['relations']);
+	this.Composer.merge_extend(RelationalModel, ['relations']);
 
 	this.Composer.exp0rt({
 		HasOne: -1,		// no longer used but needed for backwards compat
