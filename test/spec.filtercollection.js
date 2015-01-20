@@ -79,5 +79,24 @@ describe('Composer.FilterCollection', function() {
 		expect(daisy.models()[3].id()).toBe(4);
 		expect(daisy.models()[4].id()).toBe(6);
 	});
+
+	it('will properly filter removals', function() {
+		var col = new Composer.Collection();
+		col.add({id: 1, name: 'dog', groups: [1,2]});
+		col.add({id: 2, name: 'cat', groups: [2,3]});
+		col.add({id: 3, name: 'bird', groups: [1]});
+
+		var cat = col.find_by_id(2);
+
+		var filter = new Composer.FilterCollection(col, {
+			filter: function(m) {
+				return m.get('groups').indexOf(2) >= 0;
+			}
+		});
+
+		expect(filter.size()).toBe(2);
+		cat.set({groups: [3]});
+		expect(filter.size()).toBe(1);
+	});
 });
 
