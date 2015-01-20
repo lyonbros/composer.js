@@ -80,7 +80,7 @@ describe('Composer.FilterCollection', function() {
 		expect(daisy.models()[4].id()).toBe(6);
 	});
 
-	it('will properly filter removals', function() {
+	it('will properly filter changes', function() {
 		var col = new Composer.Collection();
 		col.add({id: 1, name: 'dog', groups: [1,2]});
 		col.add({id: 2, name: 'cat', groups: [2,3]});
@@ -97,6 +97,8 @@ describe('Composer.FilterCollection', function() {
 		expect(filter.size()).toBe(2);
 		cat.set({groups: [3]});
 		expect(filter.size()).toBe(1);
+		cat.set({groups: [2,3]});
+		expect(filter.size()).toBe(2);
 	});
 });
 
