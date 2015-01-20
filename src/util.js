@@ -214,7 +214,7 @@
 		convert_collection_fn('reset_async', {options_idx: 1, names: ['complete']});
 	};
 
-	Composer.exp0rt({
+	this.Composer.exp0rt({
 		sync: sync,
 		cid: cid,
 		wrap_error: wrap_error,

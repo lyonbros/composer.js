@@ -622,6 +622,6 @@
 			this.trigger.apply(this, arguments);
 		}
 	});
-	Composer.exp0rt({ Collection: Collection });
+	this.Composer.exp0rt({ Collection: Collection });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
