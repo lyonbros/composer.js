@@ -9,6 +9,11 @@ either reporting bugs or helping to write code!
 
 ### [__Check out the doc site to get started!__](http://lyonbros.github.io/composer.js)
 
+Download the latest Composer.js:
+
+- [Dev version](http://lyonbros.github.io/composer.js/composer.js)
+- [Minified](http://lyonbros.github.io/composer.js/composer.min.js)
+
 ## License
 
 Composer is licensed MIT.
