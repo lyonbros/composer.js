@@ -173,11 +173,6 @@
 			});
 			return to;
 		},
-
-		// allows recursively setting keys, ie:
-		//   Composer.object.set({}, 'user.name', 'andrew')
-		// yields
-		//   {user: {name: "andrew"}}
 		set: function(object, key, value)
 		{
 			object || (object = {});
@@ -204,11 +199,6 @@
 			}
 			return object;
 		},
-
-		// allows recursively getting keys, ie:
-		//   Composer.object.get({user: {name: "andrew"}}, 'user.name')
-		// yields
-		//   "andrew"
 		get: function(object, key)
 		{
 			object || (object = {});
