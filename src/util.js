@@ -172,6 +172,59 @@
 				});
 			});
 			return to;
+		},
+
+		// allows recursively setting keys, ie:
+		//   Composer.object.set({}, 'user.name', 'andrew')
+		// yields
+		//   {user: {name: "andrew"}}
+		set: function(object, key, value)
+		{
+			object || (object = {});
+			var paths = key.split('.');
+			var obj = object;
+			for(var i = 0, n = paths.length; i < n; i++)
+			{
+				var path = paths[i];
+				if(i == n - 1)
+				{
+					obj[path] = value;
+					break;
+				}
+
+				if(!obj[path])
+				{
+					obj[path] = {};
+				}
+				else if(typeof(obj) != 'object' || Composer.array.is(obj))
+				{
+					obj[path] = {};
+				}
+				obj = obj[path];
+			}
+			return object;
+		},
+
+		// allows recursively getting keys, ie:
+		//   Composer.object.get({user: {name: "andrew"}}, 'user.name')
+		// yields
+		//   "andrew"
+		get: function(object, key)
+		{
+			object || (object = {});
+			var paths = key.split('.');
+			var obj = object;
+			for(var i = 0, n = paths.length; i < n; i++)
+			{
+				var path = paths[i];
+				var type = typeof(obj[path]);
+				if(type == 'undefined')
+				{
+					return obj[path];
+				}
+				obj = obj[path];
+			}
+			return obj;
 		}
 	};
 
