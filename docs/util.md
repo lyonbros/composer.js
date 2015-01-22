@@ -169,6 +169,26 @@ Composer.object.merge(obj, {name: 'fisty'}, {age: 69});
 alert('Obj: ' + JSON.stringify(obj));
 {% endhighlight %}
 
+### set :: function(object, key, value)
+
+Recursively set a value into an object:
+
+{% highlight js %}
+var user = {};
+Composer.object.set(user, 'location.city', 'santa cruz');
+alert(JSON.stringify(user));
+{% endhighlight %}
+
+### get :: function(object, key)
+
+Recursively get a value from an object:
+
+{% highlight js %}
+var city = {location: {city: 'santa cruz'}};
+Composer.object.get(user, 'location.city');
+alert(city);
+{% endhighlight %}
+
 ## Composer.promisify :: function()
 
 New in version 1.0.6, this function replaces the following methods with
