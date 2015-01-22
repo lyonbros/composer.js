@@ -41,29 +41,29 @@
 					// objects they refer to.
 					if(relation.model && typeof(relation.model) == 'string')
 					{
-						relation.model = this._get_key(global, relation.model);
+						relation.model = Composer.object.get(global, relation.model);
 					}
 					else if(relation.collection && typeof(relation.collection) == 'string')
 					{
-						relation.collection = this._get_key(global, relation.collection);
+						relation.collection = Composer.object.get(global, relation.collection);
 					}
 					else if(relation.filter_collection && typeof(relation.filter_collection) == 'string')
 					{
 						// set up the filter collection. if one doesn't exist, create a function
 						// that looks within the keys of the relational data to pull a master
 						// collection out of.
-						relation.filter_collection = this._get_key(global, relation.filter_collection);
+						relation.filter_collection = Composer.object.get(global, relation.filter_collection);
 						var master = relation.master;
 						if(typeof(master) == 'string')
 						{
 							var master_key = relation.master;
 							relation.master = function()
 							{
-								var master = this._get_key(this.relation_data, master_key);
+								var master = Composer.object.get(this.relation_data, master_key);
 								if(!master)
 								{
 									master = new this.relations[master_key].collection();
-									this._set_key(this.relation_data, master_key);
+									Composer.object.set(this.relation_data, master_key);
 								}
 								return master;
 							}.bind(this);
@@ -103,9 +103,9 @@
 			else
 			{
 				Object.keys(this.relations).forEach(function(k) {
-					var obj = this._get_key(this.relation_data, k);
+					var obj = Composer.object.get(this.relation_data, k);
 					if(!obj) return;
-					this._set_key(data, k, obj.toJSON());
+					Composer.object.set(data, k, obj.toJSON());
 				}.bind(this));
 			}
 
@@ -123,7 +123,7 @@
 			if(this.relations && !options.skip_relational)
 			{
 				Composer.object.each(this.relations, function(relation, k) {
-					var d = this._get_key(data, k);
+					var d = Composer.object.get(data, k);
 					if(typeof(d) == 'undefined') return;
 
 					var options_copy = Composer.object.clone(options);
@@ -141,7 +141,7 @@
 		 */
 		get: function(key, def)
 		{
-			var obj = this._get_key(this.relation_data, key);
+			var obj = Composer.object.get(this.relation_data, key);
 			if(typeof(obj) != 'undefined') return obj;
 
 			// call Model.get()
@@ -158,7 +158,7 @@
 			if(this.relations && !options.skip_relational)
 			{
 				Composer.object.each(this.relations, function(relation, k) {
-					var obj = this._get_key(this.relation_data, k);
+					var obj = Composer.object.get(this.relation_data, k);
 					if(typeof(obj) == 'undefined') return;
 					if(obj.clear && typeof(obj.clear) == 'function') obj.clear();
 				}, this);
@@ -192,7 +192,7 @@
 			if(!relation) return false;
 
 			// grab the object and unbind the event
-			var obj = this._get_key(this.relation_data, key);
+			var obj = Composer.object.get(this.relation_data, key);
 			if(!obj) return false;
 			var args = Array.prototype.slice.call(arguments, 0);
 			obj.unbind.apply(obj, args.slice(1));
@@ -235,7 +235,7 @@
 			{
 				// data passed is just a plain old object (or, at least, not a
 				// Composer object). set the data into the relation object.
-				var obj = this._get_key(this.relation_data, obj_key);
+				var obj = Composer.object.get(this.relation_data, obj_key);
 				var collection_or_model = (relation.collection || relation.filter_collection) ?
 											'collection' : 'model';
 				switch(collection_or_model)
@@ -264,66 +264,9 @@
 			}
 
 			// set the object back into our relational data objects
-			this._set_key(this.relation_data, obj_key, obj);
+			Composer.object.set(this.relation_data, obj_key, obj);
 			this.trigger('relation', obj, obj_key);
 			this.trigger('relation:'+obj_key, obj);
-			return obj;
-		},
-
-
-		/**
-		 * wrapper around data[key] = value (equivelant:
-		 *   _set_key(data, key, value)
-		 * the VALUE ADD is that you can do things like:
-		 *   _set_key(data, 'key.subkey', value)
-		 * which yields:
-		 *   {key: {subkey: value}}
-		 */
-		_set_key: function(object, key, value)
-		{
-			object || (object = {});
-			var paths = key.split('.');
-			var obj = object;
-			for(var i = 0, n = paths.length; i < n; i++)
-			{
-				var path = paths[i];
-				if(i == n - 1)
-				{
-					obj[path] = value;
-					break;
-				}
-
-				if(!obj[path])
-				{
-					obj[path] = {};
-				}
-				else if(typeof(obj) != 'object' || Composer.array.is(obj))
-				{
-					obj[path] = {};
-				}
-				obj = obj[path];
-			}
-			return object;
-		},
-
-		/**
-		 * the getter version of _set_key
-		 */
-		_get_key: function(object, key)
-		{
-			object || (object = {});
-			var paths = key.split('.');
-			var obj = object;
-			for(var i = 0, n = paths.length; i < n; i++)
-			{
-				var path = paths[i];
-				var type = typeof(obj[path]);
-				if(type == 'undefined')
-				{
-					return obj[path];
-				}
-				obj = obj[path];
-			}
 			return obj;
 		}
 	});
