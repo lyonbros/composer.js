@@ -155,7 +155,7 @@ describe('Composer.Controller', function() {
 		expect(con.clicked_h1).toBe(true);
 	});
 
-	it('will properly manage bindings', function() {
+	it('will properly manage bindings (with_bind)', function() {
 		var model = new Composer.Model();
 		var rendered = 0;
 		var clicked = 0;
@@ -211,6 +211,24 @@ describe('Composer.Controller', function() {
 		expect(rendered).toBe(2);
 		expect(clicked).toBe(1);
 		expect(omgomg).toBe(1);
+	});
+
+	it('will not fire with_bind events on a released controller', function() {
+		var tsst = 0;
+
+		var dog = new Composer.Event();
+		var Walker = Composer.Controller.extend({
+			init: function()
+			{
+				this.with_bind(dog, 'bark', function() { tsst++; });
+			}
+		});
+
+		var walker;
+		dog.bind('bark', function() { walker.release(); });
+		walker = new Walker();
+		dog.trigger('bark');
+		expect(tsst).toBe(0);
 	});
 
 	it('will properly manage sub-controllers', function() {
