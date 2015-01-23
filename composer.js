@@ -467,38 +467,6 @@
 	var Event = Composer.Class({
 		_handlers: {},
 		_handler_names: {},
-		_forwards: [],
-
-		/**
-		 * Forward events from this dispatcher to another. If the second
-		 * dispatcher is given as a function, that function must return either
-		 * another dispatcher or false. This lets you forward specific events at
-		 * runtime based on data within the event.
-		 */
-		forward: function(to_or_function)
-		{
-			this._forwards.push(to_or_function);
-			return this;
-		},
-
-		/**
-		 * Determine if this dispatcher forwards to the given.
-		 */
-		forwards_to: function(to_or_function)
-		{
-			return this._forwards.indexOf(to_or_function) >= 0;
-		},
-
-		/**
-		 * Undo a forward created by forward.
-		 */
-		unforward: function(to_or_function)
-		{
-			var idx = this._forwards.indexOf(to_or_function);
-			if(idx < 0) return this;
-			this._forwards.splice(idx, 1);
-			return this;
-		},
 
 		/**
 		 * Bind a function to an event. Optionally allows naming the binding so
@@ -595,7 +563,6 @@
 			this._handlers = {};
 			this._handler_names = {};
 
-			if(!options.preserve_forwards) this._forwards = [];
 			return this;
 		},
 
@@ -613,23 +580,6 @@
 			catch_all.slice(0).forEach(function(handler) {
 				handler.apply(this, args.slice(0));
 			}.bind(this));
-			if(this._forwards.length > 0)
-			{
-				this._forwards.forEach(function(to) {
-					if(to instanceof Event)
-					{
-						to.trigger.apply(to, args);
-					}
-					else if(to instanceof Function)
-					{
-						var to = to.apply(to, args);
-						if(to instanceof Event)
-						{
-							to.trigger.apply(to, args);
-						}
-					}
-				});
-			}
 			return this;
 		}
 	});
