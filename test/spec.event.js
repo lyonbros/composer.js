@@ -176,5 +176,29 @@ describe('Composer.Event', function() {
 		var ev = new Composer.Event();
 		ev.unbind('test');
 	});
+
+	it('will not skip bindings when removing one during firing', function() {
+		var dog = new Animal();
+		var hello = 0;
+		var going = 0;
+		var goodbye = 0;
+		dog.bind('go', function() { hello++; }, 'hello');
+		dog.bind('go', function() { dog.unbind('go', 'hello'); });
+		dog.bind('go', function() { going++; });
+		dog.bind('go', function() { dog.unbind('go', 'bye'); });
+		dog.bind('go', function() { goodbye++; }, 'bye');
+
+		dog.trigger('go');
+
+		expect(hello).toBe(1);
+		expect(going).toBe(1);
+		expect(goodbye).toBe(1);
+
+		dog.trigger('go');
+
+		expect(hello).toBe(1);
+		expect(going).toBe(2);
+		expect(goodbye).toBe(1);
+	});
 });
 
