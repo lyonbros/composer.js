@@ -1959,6 +1959,9 @@
 		 */
 		__composer_type: 'controller',
 
+		// tracks if this controller has been released
+		_released: false,
+
 		// holds events bound with with_bind
 		_bound_events: [],
 
@@ -2074,13 +2077,26 @@
 		},
 
 		/**
+		 * legwork function what runs the actual bind
+		 */
+		_with_binder: function(bind_fn, object, ev, fn, name)
+		{
+			name || (name = false);
+			var wrapped = function()
+			{
+				if(this._released) return;
+				fn.apply(this, arguments);
+			}.bind(this);
+			bind_fn.call(object, ev, wrapped, name);
+			this._bound_events.push([object, ev, wrapped]);
+		},
+
+		/**
 		 * bind an event that the controller tracks and unbinds on release
 		 */
 		with_bind: function(object, ev, fn, name)
 		{
-			name || (name = false);
-			object.bind(ev, fn, name);
-			this._bound_events.push([object, ev, fn]);
+			return this._with_binder(object.bind, object, ev, fn, name);
 		},
 
 		/**
@@ -2089,9 +2105,7 @@
 		 */
 		with_bind_once: function(object, ev, fn, name)
 		{
-			name || (name = false);
-			object.bind_once(ev, fn, name);
-			this._bound_events.push([object, ev, fn]);
+			return this._with_binder(object.bind_once, object, ev, fn, name);
 		},
 
 		/**
@@ -2174,6 +2188,7 @@
 
 			// remove all events from controller
 			if(!options.keep_events) this.unbind();
+			this._released = true;
 		},
 
 		/**
