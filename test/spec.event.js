@@ -122,14 +122,14 @@ describe('Composer.Event', function() {
 		expect(num).toBe(18);
 	});
 
-	it('will forward events', function() {
+	it('can forward events', function() {
 		var dog = new Animal();
 		var cat = new Animal();
 		var clicks = 0;
 
 		dog.bind('click', function() { clicks++; });
 		cat.trigger('click');
-		cat.forward(dog);
+		cat.bind('all', dog.trigger.bind(dog));
 		cat.trigger('click');
 
 		expect(clicks).toBe(1);
@@ -140,8 +140,8 @@ describe('Composer.Event', function() {
 		var cat = new Animal();
 		var clicks = 0;
 
-		cat.forward(function(ev, arg1) {
-			if(arg1 < 4) return dog;
+		cat.bind('all', function(ev, arg1) {
+			if(arg1 < 4) dog.trigger.apply(dog, arguments);
 		});
 
 		dog.bind('click', function() { clicks++; });
@@ -154,30 +154,6 @@ describe('Composer.Event', function() {
 		cat.trigger('click', 9);
 
 		expect(clicks).toBe(3);
-	});
-
-	it('will detect a forward', function() {
-		var dog = new Animal();
-		var cat = new Animal();
-
-		expect(cat.forwards_to(dog)).toBe(false);
-		cat.forward(dog);
-		expect(cat.forwards_to(dog)).toBe(true);
-		cat.unforward(dog);
-		expect(cat.forwards_to(dog)).toBe(false);
-	});
-
-	it('can unforward', function() {
-		var dog = new Animal();
-		var cat = new Animal();
-		var clicks = 0;
-
-		dog.bind('click', function() { clicks++; });
-		cat.forward(dog);
-		cat.trigger('click');
-		cat.unforward(dog);
-		cat.trigger('click');
-		expect(clicks).toBe(1);
 	});
 
 	it('will bind to an array of events', function() {
