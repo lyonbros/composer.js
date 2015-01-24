@@ -19,8 +19,6 @@
 (function() {
 	"use strict";
 
-	var global = this;
-
 	/**
 	 * like typeof, but returns if it's an array or null
 	 */
