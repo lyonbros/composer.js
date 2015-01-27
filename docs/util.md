@@ -189,7 +189,7 @@ Composer.object.get(user, 'location.city');
 alert(city);
 {% endhighlight %}
 
-## Composer.promisify :: function()
+## Composer.promisify :: function(options)
 
 New in version 1.0.6, this function replaces the following methods with
 promise-ready versions:
@@ -204,7 +204,15 @@ Instead of accepting `options.success` and `options.error`, these functions will
 now return promises (assuming you have included a promise library in the page).
 
 This changes the interface for these functions a bit, but once you get the hang
-of it, you can use the same technique for all of them. Here's an example:
+of it, you can use the same technique for all of them.
+
+`options` can contain the following items:
+
+- `warn` - if true, will fire a warning when trying to use callbacks (ie
+`success` or `error`) with a promisified function. This helps to track down
+places where your app used callbacks previously but no longer uses them.
+
+Here's an example:
 
 <div class="noeval">
 {% highlight js %}
