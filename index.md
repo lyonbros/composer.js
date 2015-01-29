@@ -21,8 +21,8 @@ layout: home
 </div>
 
 Composer is a javascript MVC library that provides a means to organize and scale
-complex single-page applications. For the curious, read
-[more on the differences between Composer and Backbone](/composer.js/pages/comparison).
+complex single-page applications. For the curious, read about
+[the differences between Composer and Backbone](/composer.js/pages/comparison).
 
 Composer is framework-agnostic: it does not require jQuery, Mootools, or any other
 framework to function (however, to support older versions of IE, Mootools is
