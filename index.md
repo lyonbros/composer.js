@@ -4,7 +4,7 @@ layout: home
 ---
 
 <div class="intro">
-    <strong>Composer is a library for building complex single-page applications.</strong>
+    <strong>Composer is a framework for building complex single-page applications.</strong>
 
     <div class="button-row">
         <div class="button download min">
@@ -20,7 +20,7 @@ layout: home
     </div>
 </div>
 
-Composer is a javascript MVC library that provides a means to organize and scale
+Composer is a javascript MVC framework that provides a means to organize and scale
 complex single-page applications. For the curious, read about
 [the differences between Composer and Backbone](/composer.js/pages/comparison).
 
