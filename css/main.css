@@ -25,8 +25,8 @@ header ul li a {font-size: 0.85em; font-weight: bold; color: #dc291e; text-trans
 }
 
 body.body-get-composer header {margin-bottom: 42px;}
-body.body-get-composer header h1 {float: none; padding: 22px 0 12px 0; text-align: center;}
-body.body-get-composer header h1 a {width: 550px; height: 127px;}
+body.body-get-composer header h1 {float: none; padding: 22px 12px 12px 0; text-align: center;}
+body.body-get-composer header h1 a {width: 550px; max-width: 100%; height: 127px;}
 body.body-get-composer header ul {float: none; display: block; margin: 12px 0 32px 0; padding: 0; text-align: center; border: 0;}
 @media only screen and (max-device-width: 750px) {
 	body.body-get-composer header {margin-bottom: 16px;}
