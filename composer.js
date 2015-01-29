@@ -1771,8 +1771,13 @@
 	var find = (function() {
 		if('querySelector' in document)
 		{
+			var scope = false;
+			try { document.querySelector(':scope > h1'); scope = true; }
+			catch(e) {}
+
 			return function(context, selector) {
 				context || (context = document);
+				if(scope) selector = ':scope '+selector;
 				return context.querySelector(selector);
 			};
 		}
