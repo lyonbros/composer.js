@@ -103,7 +103,7 @@ See [Composer.merge_extend in the class docs](/composer.js/docs/class#composer-m
 
 ## Composer.array
 
-A collection of array utilities, mimicked after Mootools.
+A collection of array utilities.
 
 ### erase :: function(array, item)
 
@@ -128,7 +128,7 @@ alert('Is array: '+ Composer.array.is([1,2,3]) + ' / ' + Composer.array.is({name
 
 ## Composer.object
 
-A collection of object utilities, mimicked after Mootools.
+A collection of object utilities.
 
 ### each :: function(obj, fn, bind)
 

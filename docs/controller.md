@@ -39,7 +39,7 @@ A param holding the current DOM element the controller is
 attached to. This is the element the controller renders into and removes when
 it is [released](#release-1).
 
-If this param is a string, it is assumed to be a selector (Mootools/jQuery) and
+If this param is a string, it is assumed to be a selector and
 that element is used as the el. If not found, a new element of type [tag](#tag)
 is created.
 

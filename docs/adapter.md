@@ -6,7 +6,9 @@ layout: documentation
 # Adapter
 
 The Composer DOM adapter creates a common interface over a *minimal* set of
-features from various DOM libraries (currently jQuery and Mootools only). It
+features. These are, by default, provided by the browser natively. However, in
+the case of crappy browsers, the adapter also can use the facilities of various
+DOM libraries (currently jQuery and Mootools only). It
 mainly exists to assist the [Controller](/composer.js/docs/controller) in its
 work, but also exposes one or two useful functions you can use in your app that
 don't directly wrap DOM libraries.

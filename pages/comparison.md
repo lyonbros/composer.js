@@ -21,13 +21,8 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Dependencies</td>
-        <td>jQuery or Mootools, History.js</td>
+        <td>History.js</td>
         <td>jQuery or Zepto, underscore.js</td>
-    </tr>
-    <tr>
-        <td>Models can exist in multiple collections</td>
-        <td>Yes</td>
-        <td>Sort of</td>
     </tr>
     <tr>
         <td>Ships with a generic class system</td>
@@ -61,7 +56,7 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Supports using promises for async operations</td>
-        <td><a href="/composer.js/docs/util#composer-promisify">Yes, via Bluebird</a></td>
+        <td><a href="/composer.js/docs/util#composer-promisify">Yes, via ES6 (or compatible, like Bluebird)</a></td>
         <td>Yes (via jQuery promises)</td>
     </tr>
     <tr>
@@ -96,7 +91,7 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Supports IE 6+</td>
-        <td>Yes (when using Mootools)</td>
+        <td>When using Mootools</td>
         <td>No</td>
     </tr>
 </table>
