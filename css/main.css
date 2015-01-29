@@ -24,14 +24,14 @@ header ul li a {font-size: 0.85em; font-weight: bold; color: #dc291e; text-trans
 	header ul li {margin-left: 8px;}
 }
 
-body.body-get-composer header {margin-bottom: 42px;}
-body.body-get-composer header h1 {float: none; padding: 22px 0 12px 0; text-align: center;}
-body.body-get-composer header h1 a {width: 550px; height: 127px;}
-body.body-get-composer header ul {float: none; display: block; margin: 12px 0 32px 0; padding: 0; text-align: center; border: 0;}
+body.body-build-awesome-apps header {margin-bottom: 42px;}
+body.body-build-awesome-apps header h1 {float: none; padding: 22px 0 12px 0; text-align: center;}
+body.body-build-awesome-apps header h1 a {width: 550px; height: 127px;}
+body.body-build-awesome-apps header ul {float: none; display: block; margin: 12px 0 32px 0; padding: 0; text-align: center; border: 0;}
 @media only screen and (max-device-width: 750px) {
-	body.body-get-composer header {margin-bottom: 16px;}
-	body.body-get-composer header h1 {padding-top: 0;}
-	body.body-get-composer header h1 a {width: 224px; height: 52px;}
+	body.body-build-awesome-apps header {margin-bottom: 16px;}
+	body.body-build-awesome-apps header h1 {padding-top: 0;}
+	body.body-build-awesome-apps header h1 a {width: 224px; height: 52px;}
 }
 
 content {padding: 64px 0 0 0;}
