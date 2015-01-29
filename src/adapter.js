@@ -63,7 +63,9 @@
 		{
 			return function(element, selector) {
 				element || (element = document);
-				return element.matches(selector);
+				if('matches' in element) var domatch = element.matches;
+				if('msMatchesSelector' in element) var domatch = element.msMatchesSelector;
+				return domatch.call(element, selector);
 			};
 		}
 		else if(has_slick)
@@ -89,6 +91,7 @@
 		}
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer.');
 	})();
+
 
 	var add_event = (function() {
 		return function(el, ev, fn, selector) {
