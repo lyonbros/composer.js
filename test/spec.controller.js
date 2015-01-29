@@ -62,6 +62,23 @@ describe('Composer.Controller', function() {
 		expect(con.clicked_h1).toBe(false);
 		Composer.fire_event(title, 'click');
 		expect(con.clicked_h1).toBe(true);
+
+		var x = 0;
+		var Hard = Composer.Controller.extend({
+			inject: '#test',
+			elements: {
+				'span': 'my_span',
+				'div': 'my_div'
+			},
+			events: { 'click div': 'reg_click' },
+			init: function() { this.render(); },
+			render: function() { this.html('<div><span>hello</span></div>'); },
+			reg_click: function() { x++; }
+		});
+		var hard = new Hard();
+		Composer.fire_event(hard.my_div, 'click');
+		Composer.fire_event(hard.my_span, 'click');
+		expect(x).toBe(2);
 	});
 
 	it('will create non-injected elements', function() {

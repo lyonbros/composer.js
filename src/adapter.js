@@ -103,10 +103,22 @@
 			if(selector)
 			{
 				el.addEventListener(ev, function(event) {
+					if(event.__composer_handled) return false;
 					var target = event.target || event.srcElement;
-					if(event.__composer_handled || !match(target, selector)) return false;
-					event.__composer_handled = true;
-					fn.apply(this, [event].concat(event.params || []));
+					while(target)
+					{
+						if(match(target, selector))
+						{
+							event.__composer_handled = true;
+							fn.apply(this, [event].concat(event.params || []));
+							break;
+						}
+						target = target.parentNode;
+						if(target == el.parentNode || target == document.body.parentNode)
+						{
+							target = false;
+						}
+					}
 				});
 			}
 			else
