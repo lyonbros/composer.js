@@ -103,13 +103,11 @@
 			if(selector)
 			{
 				el.addEventListener(ev, function(event) {
-					if(event.__composer_handled) return false;
 					var target = event.target || event.srcElement;
 					while(target)
 					{
 						if(match(target, selector))
 						{
-							event.__composer_handled = true;
 							fn.apply(this, [event].concat(event.params || []));
 							break;
 						}
