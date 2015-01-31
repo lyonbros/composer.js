@@ -1769,19 +1769,7 @@
 	var has_moo = !!global.MooTools;
 
 	var find = (function() {
-		if('querySelector' in document)
-		{
-			var scope = false;
-			try { document.querySelector(':scope > h1'); scope = true; }
-			catch(e) {}
-
-			return function(context, selector) {
-				context || (context = document);
-				if(scope) selector = ':scope '+selector;
-				return context.querySelector(selector);
-			};
-		}
-		else if(has_slick)
+		if(has_slick)
 		{
 			return function(context, selector) {
 				context || (context = document);
@@ -1802,20 +1790,23 @@
 				return jQuery(context).find(selector)[0];
 			};
 		}
+		else if('querySelector' in document)
+		{
+			var scope = false;
+			try { document.querySelector(':scope > h1'); scope = true; }
+			catch(e) {}
+
+			return function(context, selector) {
+				context || (context = document);
+				if(scope) selector = ':scope '+selector;
+				return context.querySelector(selector);
+			};
+		}
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer (or use a modern browser with document.querySelector).');
 	})();
 
 	var match = (function() {
-		if('querySelector' in document)
-		{
-			return function(element, selector) {
-				element || (element = document);
-				if('matches' in element) var domatch = element.matches;
-				if('msMatchesSelector' in element) var domatch = element.msMatchesSelector;
-				return domatch.call(element, selector);
-			};
-		}
-		else if(has_slick)
+		if(has_slick)
 		{
 			return function(element, selector) {
 				element || (element = document);
@@ -1834,6 +1825,15 @@
 			return function(element, selector) {
 				element || (element = document);
 				return jQuery(element).is(selector);
+			};
+		}
+		else if('querySelector' in document)
+		{
+			return function(element, selector) {
+				element || (element = document);
+				if('matches' in element) var domatch = element.matches;
+				if('msMatchesSelector' in element) var domatch = element.msMatchesSelector;
+				return domatch.call(element, selector);
 			};
 		}
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer.');
