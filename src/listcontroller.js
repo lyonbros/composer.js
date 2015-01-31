@@ -157,7 +157,7 @@
 			{
 				parent.insertBefore(con.el, parent.firstChild);
 			}
-			else if(before_con)
+			else if(before_con && before_con.el.parentNode == parent)
 			{
 				parent.insertBefore(con.el, before_con.el.nextSibling);
 			}
