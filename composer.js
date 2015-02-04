@@ -1833,6 +1833,8 @@
 				element || (element = document);
 				if('matches' in element) var domatch = element.matches;
 				if('msMatchesSelector' in element) var domatch = element.msMatchesSelector;
+				if('mozMatchesSelector' in element) var domatch = element.mozMatchesSelector;
+				if('webkitMatchesSelector' in element) var domatch = element.webkitMatchesSelector;
 				return domatch.call(element, selector);
 			};
 		}
