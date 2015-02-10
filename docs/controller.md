@@ -231,7 +231,7 @@ var MyController = Composer.Controller.extend({
     init: function()
     {
         // re-render when the model's data changes
-        this.model.bind('change', this.render.bind('this'), 'model:change:render');
+        this.model.bind('change', this.render.bind(this), 'model:change:render');
     },
 
     release: function()
@@ -256,7 +256,7 @@ var MyController = Composer.Controller.extend({
         // notice we don't need to use a named event here because the controller
         // mangages the binding for us. you can still specify a name if you plan
         // to unbind the event yourself, but it's optional.
-        this.with_bind(this.model.bind, 'change', this.render.bind('this'));
+        this.with_bind(this.model.bind, 'change', this.render.bind(this));
     }
 
     // notice we don't have to extend Controller.release here!
