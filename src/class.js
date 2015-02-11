@@ -55,12 +55,12 @@
 	{
 		var extended = function()
 		{
-			if(!this.$state.levels[k]) this.$state.levels[k] = 0;
-			this.$state.levels[k]++;
-			this.$state.fn.unshift(k);
+			if(!this.$state.parents[k]) this.$state.parents[k] = [];
+			this.$state.parents[k].push(from);
+			this.$state.fn.push(k);
 			var val = to.apply(this, arguments);
-			this.$state.fn.shift();
-			this.$state.levels[k]--;
+			this.$state.fn.pop();
+			this.$state.parents[k].pop();
 			return val;
 		};
 		extended.$parent = from;
@@ -114,7 +114,7 @@
 		{
 			copy(this);
 			if(cls.$initializing) return this;
-			this.$state = {levels: {}, fn: []};
+			this.$state = {parents: {}, fn: []};
 			if(this.initialize) return this.initialize.apply(this, arguments);
 			else return this;
 		};
@@ -142,17 +142,17 @@
 
 		cls.prototype.$get_parent = function()
 		{
-			var key = this.$state.fn[0];
-			if(!key) return false;
-			var level = this.$state.levels[key];
-			for(var i = 0, parent = cls.prototype[key]; i < level && parent; i++) { parent = parent.$parent; }
+			var k = this.$state.fn[this.$state.fn.length - 1];
+			if(!k) return false;
+			var parents = this.$state.parents[k];
+			var parent = parents[parents.length - 1];
 			return parent || false;
 		};
 		cls.prototype.parent = function()
 		{
 			var fn = this.$get_parent();
 			if(fn) return fn.apply(this, arguments);
-			throw 'Class.js: Bad parent method: '+ this.$state.fn[0];
+			throw 'Class.js: Bad parent method: '+ this.$state.fn[this.$state.fn.length - 1];
 		};
 
 		return cls;

@@ -78,6 +78,42 @@ describe('Composer.Class', function() {
 		expect(cat.noise()).toBe('not so funny meow is it');
 	});
 
+	it('will allow calling this.parent() nested', function() {
+		var sounds = [];
+
+		// use eventing for a specific test case
+		var Animal = Composer.Event.extend({
+			sound_off: function(sound) { sounds.push(sound); }
+		});
+		var Dog = Animal.extend({
+			initialize: function()
+			{
+				this.bind('sound-off', function(sound) {
+					if(sound != 'woof') return;
+					this.sound_off('grr');
+				}.bind(this));
+			},
+
+			sound_off: function(sound)
+			{
+				this.trigger('sound-off', sound);
+				this.parent(sound);
+			}
+		});
+		var Shiba = Dog.extend({
+			sound_off: function(sound)
+			{
+				this.trigger('sound-off', sound);
+				this.parent(sound);
+			}
+		});
+
+		var dog = new Shiba();
+		dog.sound_off('woof');
+		console.log('sound: ', sounds);
+		expect(JSON.stringify(sounds)).toBe('["grr","grr","woof"]');
+	});
+
 	it('will merge_extend other classes properly', function() {
 		var Band = Composer.Class({
 			play: function() { return 'la la la'; }
