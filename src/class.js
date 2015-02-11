@@ -51,18 +51,20 @@
 	 * Wraps an overriding method to track its state so get_parent() can pull
 	 * out the right function.
 	 */
-	var wrapfn = function(origfn, k)
+	var extend_parent = function(to, from, k)
 	{
-		return function()
+		var extended = function()
 		{
 			if(!this.$state.levels[k]) this.$state.levels[k] = 0;
 			this.$state.levels[k]++;
 			this.$state.fn.unshift(k);
-			var val = origfn.apply(this, arguments);
+			var val = to.apply(this, arguments);
 			this.$state.fn.shift();
 			this.$state.levels[k]--;
 			return val;
 		};
+		extended.$parent = from;
+		return extended;
 	};
 
 	/**
@@ -73,8 +75,7 @@
 		return merge(to_prototype, from_prototype, {
 			transform: function(into, from, k) {
 				if(typeof into[k] != 'function' || into[k].prototype.$parent || typeof from[k] != 'function' || from[k].prototype.$parent) return false;
-				from[k] = wrapfn(from[k], k);
-				from[k].$parent = into[k];
+				from[k] = extend_parent(from[k], into[k], k);
 			}
 		});
 	};
@@ -144,7 +145,7 @@
 			var key = this.$state.fn[0];
 			if(!key) return false;
 			var level = this.$state.levels[key];
-			var parent = cls.prototype[key]; for(var i = 0; i < level && parent; i++) { parent = parent.$parent; }
+			for(var i = 0, parent = cls.prototype[key]; i < level && parent; i++) { parent = parent.$parent; }
 			return parent || false;
 		};
 		cls.prototype.parent = function()
