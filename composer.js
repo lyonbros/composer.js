@@ -328,18 +328,20 @@
 	 * Wraps an overriding method to track its state so get_parent() can pull
 	 * out the right function.
 	 */
-	var wrapfn = function(origfn, k)
+	var extend_parent = function(to, from, k)
 	{
-		return function()
+		var extended = function()
 		{
-			if(!this.$state.levels[k]) this.$state.levels[k] = 0;
-			this.$state.levels[k]++;
-			this.$state.fn.unshift(k);
-			var val = origfn.apply(this, arguments);
-			this.$state.fn.shift();
-			this.$state.levels[k]--;
+			if(!this.$state.parents[k]) this.$state.parents[k] = [];
+			this.$state.parents[k].push(from);
+			this.$state.fn.push(k);
+			var val = to.apply(this, arguments);
+			this.$state.fn.pop();
+			this.$state.parents[k].pop();
 			return val;
 		};
+		extended.$parent = from;
+		return extended;
 	};
 
 	/**
@@ -350,8 +352,7 @@
 		return merge(to_prototype, from_prototype, {
 			transform: function(into, from, k) {
 				if(typeof into[k] != 'function' || into[k].prototype.$parent || typeof from[k] != 'function' || from[k].prototype.$parent) return false;
-				from[k] = wrapfn(from[k], k);
-				from[k].$parent = into[k];
+				from[k] = extend_parent(from[k], into[k], k);
 			}
 		});
 	};
@@ -390,7 +391,7 @@
 		{
 			copy(this);
 			if(cls.$initializing) return this;
-			this.$state = {levels: {}, fn: []};
+			this.$state = {parents: {}, fn: []};
 			if(this.initialize) return this.initialize.apply(this, arguments);
 			else return this;
 		};
@@ -418,17 +419,17 @@
 
 		cls.prototype.$get_parent = function()
 		{
-			var key = this.$state.fn[0];
-			if(!key) return false;
-			var level = this.$state.levels[key];
-			var parent = cls.prototype[key]; for(var i = 0; i < level && parent; i++) { parent = parent.$parent; }
+			var k = this.$state.fn[this.$state.fn.length - 1];
+			if(!k) return false;
+			var parents = this.$state.parents[k];
+			var parent = parents[parents.length - 1];
 			return parent || false;
 		};
 		cls.prototype.parent = function()
 		{
 			var fn = this.$get_parent();
 			if(fn) return fn.apply(this, arguments);
-			throw 'Class.js: Bad parent method: '+ this.$state.fn[0];
+			throw 'Class.js: Bad parent method: '+ this.$state.fn[this.$state.fn.length - 1];
 		};
 
 		return cls;
