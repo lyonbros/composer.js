@@ -53,7 +53,7 @@
 	 */
 	var extend_parent = function(to, from, k)
 	{
-		var extended = function()
+		return function()
 		{
 			if(!this.$state.parents[k]) this.$state.parents[k] = [];
 			this.$state.parents[k].push(from);
@@ -63,8 +63,6 @@
 			this.$state.parents[k].pop();
 			return val;
 		};
-		extended.$parent = from;
-		return extended;
 	};
 
 	/**
@@ -76,6 +74,7 @@
 			transform: function(into, from, k) {
 				if(typeof into[k] != 'function' || into[k].prototype.$parent || typeof from[k] != 'function' || from[k].prototype.$parent) return false;
 				from[k] = extend_parent(from[k], into[k], k);
+				from[k].$parent = into[k];
 			}
 		});
 	};
