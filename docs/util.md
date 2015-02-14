@@ -11,8 +11,8 @@ can also be used by your app as well.
 ## Composer.sync :: function(method, model, options)
 
 Composer's syncing function. It provides a central location for models and
-collections to grab and post data to your servers. __By default, it does nothing
-and should be overridden by you.__
+collections to grab and post data to your servers/browser storage/etc.
+__By default, it does nothing and should be overridden by you.__
 
 `method` is one of "create", "read", "update", "delete". `model` is the model
 the sync function is being called on. `options` is the options object passed to
