@@ -6,8 +6,8 @@ layout: documentation
 # Class system
 
 The Composer class system is the base building block of all the objects Composer
-provides (Model, Controller, etc). It is based off of [class.js](https://github.com/kilhage/class.js),
-but modified slightly (non-function members are not shared across classes).
+provides (Model, Controller, etc). It is designed to be a standalone component
+that doesn't necessarily need to be part of Composer.
 
 ## Composer.Class
 
