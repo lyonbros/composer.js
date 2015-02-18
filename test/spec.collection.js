@@ -277,6 +277,17 @@ describe('Composer.Collection', function() {
 		expect(col.models()[3].id()).toBe(1);
 	});
 
+	it('returns a sort_index without a sortfn', function() {
+		var col = new Composer.Collection();
+		var m1 = new Composer.Model({id: 1});
+		var m2 = new Composer.Model({id: 2});
+		var m3 = new Composer.Model({id: 3});
+		col.add([m1, m2]);
+		expect(col.sort_index(m1)).toBe(0);
+		expect(col.sort_index(m2)).toBe(1);
+		expect(col.sort_index(m3)).toBe(2);
+	});
+
 	it('supports iteration constructs', function() {
 		var col = new Composer.Collection([{id: 1}, {id: 2}, {id: 3}]);
 		var each = 0;
