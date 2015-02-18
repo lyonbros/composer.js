@@ -110,7 +110,6 @@ describe('Composer.Class', function() {
 
 		var dog = new Shiba();
 		dog.sound_off('woof');
-		console.log('sound: ', sounds);
 		expect(JSON.stringify(sounds)).toBe('["grr","grr","woof"]');
 	});
 
