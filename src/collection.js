@@ -351,9 +351,14 @@
 		 */
 		sort_index: function(model)
 		{
-			if(!this.sortfn) return false;
-
 			if(this._models.length == 0) return 0;
+
+			if(!this.sortfn)
+			{
+				var idx = this.index_of(model);
+				if(idx === false || idx < 0) return this.size();
+				return idx;
+			}
 
 			var sorted = this._models.slice(0).sort(this.sortfn);
 			for(var i = 0; i < sorted.length; i++)
