@@ -310,6 +310,9 @@ Find a model in the collection by its ID.
 
 `options` can contain the following items:
 
+- `fast` - boolean, tells find\_by\_id to only lookup models by their index
+(collections store an id -> model hash lookup, but the feature is new and this
+flag will remain off by default until it's better vetted).
 - `strict` - boolean passed to the call to [Model.id](/composer.js/docs/model#id)
 - `allow_cid` - boolean indicating if we are allowing a match on CID (client ID)
 as well as a normal ID.
@@ -320,12 +323,18 @@ var larry = collection.find_by_id(3);
 alert('Found larry? '+ (larry ? true : false));
 {% endhighlight %}
 
-### find_by_cid :: function(cid)
+### find_by_cid :: function(cid, options)
 
 Exactly like [find_by_id](#find-by-id), except that it specifically searches
 using models' CID values instead of ID. This is useful if you need to look for
 models that may or may not have a real ID (but all objects have a CID assigned
 on creation, so there will always be a CID).
+
+`options` can contain the following items:
+
+- `fast` - boolean, tells find\_by\_cid to only lookup models by their index
+(collections store an cid -> model hash lookup, but the feature is new and this
+flag will remain off by default until it's better vetted).
 
 ### index_of :: function(model_or_id)
 
