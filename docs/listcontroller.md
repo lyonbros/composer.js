@@ -22,7 +22,21 @@ collection while only having to hook up a few wires.
 ## Events
 
 The list controller fires all events that [Composer.Controller](/composer.js/docs/controller#events)
-fires.
+fires, but also fires a few events to help you manage your views. The following
+events allow you to show empty state views depending on how the data in the
+collection changes (for instance, you'd show a "No items!" view when `list:empty`
+is fired, and you'd render your `<ul class="items"></ul>` when `list:notempty`
+fires:
+
+### list:empty
+
+Triggered when the collection the list controller listens to becomes empty
+after previously not being empty.
+
+### list:notempty
+
+Triggered when the collection the list controller listend to has elements added
+to it after previously being empty.
 
 ## Composer.ListController
 
