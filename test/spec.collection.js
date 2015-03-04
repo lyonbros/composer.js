@@ -391,6 +391,33 @@ describe('Composer.Collection', function() {
 		expect(col.size()).toBe(0);
 		expect(model.collections.length).toBe(0);
 	});
+
+	it('will properly manage model id/cid indexes properly', function() {
+		var col = new Composer.Collection();
+
+		var m1 = new Composer.Model({id: 17, name: 'bernie'});
+		// don't set an id, see if change:id will pick it up
+		var m2 = new Composer.Model({name: 'larry'});
+
+		col.add([m1, m2]);
+		m2.set({id: 42});
+		expect(col.find_by_id(17, {fast: true}).get('name')).toBe('bernie');
+		expect(col.find_by_id(42, {fast: true}).get('name')).toBe('larry');
+		expect(col.find_by_cid(m1.cid(), {fast: true}).get('name')).toBe('bernie');
+		expect(col.find_by_cid(m2.cid(), {fast: true}).get('name')).toBe('larry');
+
+		col.upsert({id: 17, name: 'slappy'});
+		expect(col.find_by_id(17, {fast: true}).get('name')).toBe('slappy');
+		expect(col.find_by_cid(m1.cid(), {fast: true}).get('name')).toBe('slappy');
+
+		col.remove(m1);
+		col.remove(m2);
+
+		expect(col.find_by_id(17, {fast: true})).toBe(false);
+		expect(col.find_by_id(42, {fast: true})).toBe(false);
+		expect(col.find_by_cid(m1.cid(), {fast: true})).toBe(false);
+		expect(col.find_by_cid(m2.cid(), {fast: true})).toBe(false);
+	});
 });
 
 
