@@ -54,6 +54,17 @@
 			this.set_options(options);
 			this._collection = collection;
 
+			// empty state tracking
+			if(collection.size() > 0) this._empty = false;
+			this.with_bind(collection, ['clear', 'add', 'remove', 'reset'], function() {
+				var empty = collection.size() == 0;
+				if(this._empty && !empty) this.trigger('list:notempty');
+				if(!this._empty && empty) this.trigger('list:empty');
+				this._empty = empty;
+			}.bind(this));
+			// trigger the initial empty state event
+			this.trigger('list:'+(this._empty ? 'empty' : 'notempty'));
+
 			this.with_bind(collection, 'clear', function(options) {
 				this.clear_subcontrollers();
 			}.bind(this));
@@ -69,17 +80,6 @@
 					this.reset_subcontrollers(create_fn, options);
 				}.bind(this));
 			}
-
-			// empty state tracking
-			if(collection.size() > 0) this._empty = false;
-			this.with_bind(collection, ['clear', 'add', 'remove', 'reset'], function() {
-				var empty = collection.size() == 0;
-				if(this._empty && !empty) this.trigger('list:notempty');
-				if(!this._empty && empty) this.trigger('list:empty');
-				this._empty = empty;
-			}.bind(this));
-			// trigger the initial empty state event
-			this.trigger('list:'+(this._empty ? 'empty' : 'notempty'));
 
 			this.reset_subcontrollers(create_fn);
 		},
