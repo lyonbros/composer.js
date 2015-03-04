@@ -25,10 +25,16 @@ describe('Composer.ListController', function() {
 			'ul.sublist': 'list_el'
 		},
 
+		empty: 0,
+		not_empty: 0,
+
 		init: function()
 		{
-			this.collection = new Composer.Collection();
+			if(!this.collection) this.collection = new Composer.Collection();
 			this.render()
+
+			this.bind('list:empty', function() { this.empty++; }.bind(this));
+			this.bind('list:notempty', function() { this.not_empty++; }.bind(this));
 
 			// call *after* render()
 			this.track(this.collection, function(model, options) {
@@ -161,6 +167,57 @@ describe('Composer.ListController', function() {
 		con.collection.reset([{name: 'bangarang'}], {get_a_job: 42});
 		expect(options[0]).toBe(69);
 		expect(options[1]).toBe(42);
+	});
+
+	it('will notify via eventing empty/notempty status', function() {
+		var empty = 0;
+		var not_empty = 0;
+
+		var con = new List({
+			collection: new Composer.Collection([{id: 3}]);
+		});
+		expect(con.empty).toBe(0);
+		expect(con.not_empty).toBe(1);
+
+		var con = new List();
+		expect(con.empty).toBe(1);
+		expect(con.not_empty).toBe(0);
+
+		con.bind('list:empty', function() { empty++; });
+		con.bind('list:notempty', function() { not_empty++; });
+		var m1 = new Composer.Model({id: 1});
+		var m2 = new Composer.Model({id: 2});
+		con.collection.add(m1);
+		con.collection.add(m2);
+
+		expect(empty).toBe(0);
+		expect(not_empty).toBe(1);
+
+		con.collection.remove(m1);
+		con.collection.remove(m2);
+
+		expect(empty).toBe(1);
+		expect(not_empty).toBe(1);
+
+		con.collection.add(m1);
+
+		expect(empty).toBe(1);
+		expect(not_empty).toBe(2);
+
+		con.collection.clear();
+
+		expect(empty).toBe(2);
+		expect(not_empty).toBe(2);
+
+		con.collection.add(m1);
+
+		expect(empty).toBe(2);
+		expect(not_empty).toBe(3);
+
+		con.collection.reset([m1]);
+
+		expect(empty).toBe(3);
+		expect(not_empty).toBe(4);
 	});
 });
 
