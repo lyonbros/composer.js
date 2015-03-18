@@ -174,7 +174,7 @@ describe('Composer.ListController', function() {
 		var not_empty = 0;
 
 		var con = new List({
-			collection: new Composer.Collection([{id: 3}]);
+			collection: new Composer.Collection([{id: 3}])
 		});
 		expect(con.empty).toBe(0);
 		expect(con.not_empty).toBe(1);
