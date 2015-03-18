@@ -113,6 +113,21 @@ describe('Composer.Class', function() {
 		expect(JSON.stringify(sounds)).toBe('["grr","grr","woof"]');
 	});
 
+	it('will return values from nested parent() calls', function() {
+		var Animal = Composer.Class.extend({
+			get_legs: function() { return 0; }
+		});
+		var Dog = Animal.extend({
+			get_legs: function() { return this.parent() + 4; }
+		});
+		var Timmy = Dog.extend({
+			get_legs: function() { return this.parent() - 1; }
+		});
+
+		var timmy = new Timmy();
+		expect(timmy.get_legs()).toBe(3);
+	});
+
 	it('will merge_extend other classes properly', function() {
 		var Band = Composer.Class({
 			play: function() { return 'la la la'; }
