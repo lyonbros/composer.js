@@ -258,3 +258,9 @@ Note that your [Composer.sync](#composer-sync) function will not need to change
 once you call `promisify`: it still makes use of the `options.success` and
 `options.error` callbacks in the same way.
 
+### Note on promisify usage
+
+If you are going to use `promisify()`, you need to call it before you define
+your app's Models/Collections, otherwise their prototypes will extend the old
+(non-promisified) Composer.Model/Collection objects (and won't return promises).
+
