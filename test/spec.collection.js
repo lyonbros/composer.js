@@ -418,6 +418,19 @@ describe('Composer.Collection', function() {
 		expect(col.find_by_cid(m1.cid(), {fast: true})).toBe(false);
 		expect(col.find_by_cid(m2.cid(), {fast: true})).toBe(false);
 	});
+
+	it('will unindex a removed model before the remove event triggers', function() {
+		var col = new Composer.Collection();
+		col.add({id: 69, name: 'sandra'});
+		var model = col.find_by_id(69);
+		expect(model.get('name')).toBe('sandra');
+		var bound = null;
+		col.bind('remove', function() {
+			bound = col.find_by_id(69);
+		});
+		col.remove(model);
+		expect(!!bound).toBe(false);
+	});
 });
 
 
