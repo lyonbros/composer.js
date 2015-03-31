@@ -193,14 +193,14 @@
 			// remove the model
 			Composer.array.erase(this._models, model);
 
+			// remove the model from the collection
+			this._remove_reference(model);
+
 			// if the number actually change, trigger our change event
 			if(this._models.length != num_rec)
 			{
 				this.fire_event('remove', options, model);
 			}
-
-			// remove the model from the collection
-			this._remove_reference(model);
 		},
 
 		/**
