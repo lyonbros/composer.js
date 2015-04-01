@@ -20,5 +20,15 @@ for file in "${BUILDLIST[@]}"; do
 	cat src/$file >> composer.js
 done
 
-cat composer.js | jsmin > composer.min.js
+read -r -d '' COPYRIGHT <<EOFLOL
+/*
+ * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ *
+ * Licensed under The MIT License.
+ * Redistributions of files must retain the above copyright notice.
+ */
+EOFLOL
+
+echo -n "$COPYRIGHT" > composer.min.js
+cat composer.js | jsmin >> composer.min.js
 
