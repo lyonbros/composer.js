@@ -319,6 +319,7 @@
 			// override this action, it can just call event.stop().
 			var route_link = function(e)
 			{
+				if(e.defaultPrevented) return;
 				if(e.ctrlKey || e.shiftKey || e.altKey) return;
 
 				var a = Composer.find_parent(selector, e.target);
