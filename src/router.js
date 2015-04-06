@@ -313,6 +313,8 @@
 				selector = 'a:not([class~="'+options.exclude_class+'"])';
 			}
 
+			var bind_element = options.bind_element || document.body;
+
 			// bind our heroic pushState to the <a> tags we specified. this
 			// hopefully be that LAST event called for any <a> tag because it's
 			// so high up the DOM chain. this means if a composer event wants to
@@ -357,7 +359,7 @@
 				return;
 			}.bind(this);
 
-			Composer.add_event(document.body, 'click', route_link, selector);
+			Composer.add_event(bind_element, 'click', route_link, selector);
 		}
 	});
 
