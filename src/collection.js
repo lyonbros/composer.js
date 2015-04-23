@@ -475,6 +475,14 @@
 		},
 
 		/**
+		 * saves typing "find_by_id"
+		 */
+		get: function(_)
+		{
+			return this.find_by_id.apply(this, arguments);
+		},
+
+		/**
 		 * get the index of an item in the list of models. useful for sorting items.
 		 */
 		index_of: function(model_or_id)

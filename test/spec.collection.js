@@ -305,6 +305,7 @@ describe('Composer.Collection', function() {
 		var col = new Composer.Collection([{id: 3}, model, {id: 6}]);
 		expect(col.find(function(m) { return m.id() == 17; })).toBe(model);
 		expect(col.find_by_id(17)).toBe(model);
+		expect(col.get(17)).toBe(model);
 		expect(col.find_by_cid(model.cid())).toBe(model);
 		expect(col.exists(function(m) { return m.id() == 6; })).toBe(true);
 	});
