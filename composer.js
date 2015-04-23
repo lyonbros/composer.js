@@ -23,6 +23,8 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
+		version: '1.1.8',
+
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
 		exp0rt: function(obj)

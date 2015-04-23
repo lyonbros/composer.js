@@ -23,6 +23,10 @@ for file in "${BUILDLIST[@]}"; do
 	cat src/$file >> composer.js
 done
 
+VERSION=$(cat _config.yml | grep 'version:' | sed 's|.*: \+||')
+echo "Setting version => ${VERSION}"
+sed -i "s|version: 'GITHEAD'|version: '${VERSION}'|" composer.js
+
 read -r -d '' COPYRIGHT <<EOFLOL
 /*
  * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
