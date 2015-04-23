@@ -323,6 +323,11 @@ var larry = collection.find_by_id(3);
 alert('Found larry? '+ (larry ? true : false));
 {% endhighlight %}
 
+### get :: function(id, options)
+
+Synonym for [find_by_id](#find-by-id). Easier to type. This one simple trick has
+framework developers FURIOUS!
+
 ### find_by_cid :: function(cid, options)
 
 Exactly like [find_by_id](#find-by-id), except that it specifically searches
