@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Remember to run me *after* changing version in _config.yml"
+sleep 1
+
 BUILDLIST=(
 	util.js
 	class.js
@@ -31,4 +34,6 @@ EOFLOL
 
 echo -n "$COPYRIGHT" > composer.min.js
 cat composer.js | jsmin >> composer.min.js
+
+echo "Done building composer.js / composer.min.js"
 
