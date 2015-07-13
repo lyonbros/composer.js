@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.1.8',
+		version: '1.1.9',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -1904,8 +1904,13 @@
 	})();
 
 
+	var captured_events = {
+		'focus': true,
+		'blur': true
+	};
 	var add_event = (function() {
 		return function(el, ev, fn, selector) {
+			var capture = captured_events[ev] || false;
 			if(selector)
 			{
 				el.addEventListener(ev, function(event) {
@@ -1925,7 +1930,7 @@
 							target = false;
 						}
 					}
-				});
+				}, capture);
 			}
 			else
 			{
@@ -1933,7 +1938,7 @@
 					// if we have a mootools event class, wrap the event in it
 					if(event && window.MooTools && window.DOMEvent) event = new DOMEvent(event);
 					fn.apply(this, [event].concat(event.params || []));
-				}, false);
+				}, capture);
 			}
 		};
 	})();
