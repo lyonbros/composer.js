@@ -100,8 +100,13 @@
 	})();
 
 
+	var captured_events = {
+		'focus': true,
+		'blur': true
+	};
 	var add_event = (function() {
 		return function(el, ev, fn, selector) {
+			var capture = captured_events[ev] || false;
 			if(selector)
 			{
 				el.addEventListener(ev, function(event) {
@@ -121,7 +126,7 @@
 							target = false;
 						}
 					}
-				});
+				}, capture);
 			}
 			else
 			{
@@ -129,7 +134,7 @@
 					// if we have a mootools event class, wrap the event in it
 					if(event && window.MooTools && window.DOMEvent) event = new DOMEvent(event);
 					fn.apply(this, [event].concat(event.params || []));
-				}, false);
+				}, capture);
 			}
 		};
 	})();
