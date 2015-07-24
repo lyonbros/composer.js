@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.1.9',
+		version: '1.1.9.1',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -2847,7 +2847,7 @@
 			var route_link = function(e)
 			{
 				if(e.defaultPrevented) return;
-				if(e.ctrlKey || e.shiftKey || e.altKey) return;
+				if(e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
 
 				var a = Composer.find_parent(selector, e.target);
 				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
