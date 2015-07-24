@@ -324,7 +324,7 @@
 			var route_link = function(e)
 			{
 				if(e.defaultPrevented) return;
-				if(e.ctrlKey || e.shiftKey || e.altKey) return;
+				if(e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
 
 				var a = Composer.find_parent(selector, e.target);
 				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
