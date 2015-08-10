@@ -365,10 +365,11 @@ the controller.
 
 ## Composer.find_parent :: function(selector, element)
 
-This is a utility for (recusrively) finding the first parent of `element` that
-matches the `selector`.
+This is a utility for (recursively) finding the first parent of `element` that
+matches the `selector`. If `element` matches `selector`, it is returned without
+grabbing any parent elements.
 
-For instance, if you [bind an event](#events) to an &lt;a&gt; element but there
+For instance, if you [bind an event](#events-1) to an &lt;a&gt; element but there
 is an image/button/etc inside of the &lt;a&gt;, often times when the event comes
 through, `event.target` will be the image/button/etc instead of the &lt;a&gt;
 element. In that case, you'd use `find_parent` to grab the correct element:
@@ -376,8 +377,6 @@ element. In that case, you'd use `find_parent` to grab the correct element:
 <div id="example-find-parent"></div>
 {% highlight js %}
 var ParentTestController = Composer.Controller.extend({
-    inject: '#example-find-parent',
-
     events: {
         'click a.say-hi': 'say_hi'
     },
@@ -398,10 +397,12 @@ var ParentTestController = Composer.Controller.extend({
 
     say_hi: function(e)
     {
+        // instead of trusting e.target is the element we want, make sure of it.
         var atag = Composer.find_parent('a.say-hi', e.target);
         var name = atag.getAttribute('rel');
         alert('Hello, '+ name);
     }
 });
+var test = new ParentTestController({inject: '#example-find-parent'});
 {% endhighlight %}
 
