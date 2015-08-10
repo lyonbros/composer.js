@@ -264,3 +264,9 @@ If you are going to use `promisify()`, you need to call it before you define
 your app's Models/Collections, otherwise their prototypes will extend the old
 (non-promisified) Composer.Model/Collection objects (and won't return promises).
 
+## Composer.find_parent :: function(selector, element)
+
+Although this is a global utility function, it exists as part of the
+[Controller/Adapter library](/composer.js/docs/controller#composer-find-parent)
+and is documented there.
+

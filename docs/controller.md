@@ -221,7 +221,7 @@ reference to its function(s) that were bound.
 
 __Note:__ `object`s passed to `with_bind` *must* extend [Composer.event](/composer.js/docs/event#composer-event).
 
-Here's an example of the old way of binding/unbinding:
+Here's an example of the traditional way of binding/cleaning up:
 
 <div class="noeval">
 {% highlight js %}
@@ -230,15 +230,14 @@ var MyController = Composer.Controller.extend({
 
     init: function()
     {
-        // re-render when the model's data changes
+        // re-render when the model's data changes. note we have to name the
+        // binding so we can reference it later
         this.model.bind('change', this.render.bind(this), 'model:change:render');
-    },
 
-    release: function()
-    {
-        // manually unbind our 'change' event
-        this.model.unbind('change', 'model:change:render');
-        return this.parent.apply(this, arguments);
+        // manually unbind our 'change' event on release
+        this.bind('release', function() {
+            this.model.unbind('change', 'model:change:render');
+        }.bind(this));
     }
 });
 {% endhighlight %}
@@ -256,10 +255,8 @@ var MyController = Composer.Controller.extend({
         // notice we don't need to use a named event here because the controller
         // mangages the binding for us. you can still specify a name if you plan
         // to unbind the event yourself, but it's optional.
-        this.with_bind(this.model.bind, 'change', this.render.bind(this));
+        this.with_bind(this.model, 'change', this.render.bind(this));
     }
-
-    // notice we don't have to extend Controller.release here!
 });
 {% endhighlight %}
 </div>
@@ -365,4 +362,46 @@ See the [events section](#events-1) for a release example.
 Replace the controller's [el](#el) with another DOM element. Once the replace is
 complete, the [elements](#elements) and [events](#events-1) are refreshed for
 the controller.
+
+## Composer.find_parent :: function(selector, element)
+
+This is a utility for (recusrively) finding the first parent of `element` that
+matches the `selector`.
+
+For instance, if you [bind an event](#events) to an &lt;a&gt; element but there
+is an image/button/etc inside of the &lt;a&gt;, often times when the event comes
+through, `event.target` will be the image/button/etc instead of the &lt;a&gt;
+element. In that case, you'd use `find_parent` to grab the correct element:
+
+<div id="example-find-parent"></div>
+{% highlight js %}
+var ParentTestController = Composer.Controller.extend({
+    inject: '#example-find-parent',
+
+    events: {
+        'click a.say-hi': 'say_hi'
+    },
+
+    init: function()
+    {
+        this.render();
+    },
+
+    render: function()
+    {
+        var html = '';
+        html += '<div>';
+        html += '<a href="#" class="say-hi" rel="larry"><img src="http://killtheradio.net/images/uploads/turtl.png" width="128" height="128"><br>CLICK THIS ^</a>';
+        html += '</div>';
+        this.html(html);
+    },
+
+    say_hi: function(e)
+    {
+        var atag = Composer.find_parent('a.say-hi', e.target);
+        var name = atag.getAttribute('rel');
+        alert('Hello, '+ name);
+    }
+});
+{% endhighlight %}
 
