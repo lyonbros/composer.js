@@ -397,6 +397,9 @@ var ParentTestController = Composer.Controller.extend({
 
     say_hi: function(e)
     {
+        e.preventDefault();
+        e.stopPropagation();
+
         // instead of trusting e.target is the element we want, make sure of it.
         var atag = Composer.find_parent('a.say-hi', e.target);
         var name = atag.getAttribute('rel');
