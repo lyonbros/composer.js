@@ -208,7 +208,7 @@ See [render](#render) for example usage.
 ### with_bind :: function(object, ev, fn, name)
 
 This function wraps `object`'s [bind](/composer.js/docs/event#bind) and tracks
-the binding internally in the controller. When [release](#-1release) is called
+the binding internally in the controller. When [release](#release-1) is called
 on the controller, all the bindings created with `with_bind` are unbound
 automatically.
 
