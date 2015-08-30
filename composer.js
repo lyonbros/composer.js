@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.1.9.1',
+		version: '1.1.10',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -580,12 +580,25 @@
 			var args = Array.prototype.slice.call(arguments, 0);
 			var handlers = this._handlers[event_name] || [];
 			var catch_all = this._handlers['all'] || [];
-			handlers.slice(0).forEach(function(handler) {
-				handler.apply(this, args.slice(1));
-			}.bind(this));
-			catch_all.slice(0).forEach(function(handler) {
-				handler.apply(this, args.slice(0));
-			}.bind(this));
+
+			// we do a copy so unbinds during a trigger don't corrupt the
+			// handler array
+			var handlers_copy = handlers.slice(0);
+			var handlers_args = args.slice(1);
+			for(var i = 0, n = handlers_copy.length; i < n; i++)
+			{
+				handlers_copy[i].apply(this, handlers_args);
+			}
+
+			// we do a copy so unbinds during a trigger don't corrupt the
+			// handler array
+			var catchall_copy = catch_all.slice(0);
+			var catchall_args = args.slice(0);
+			for(var i = 0, n = catchall_copy.length; i < n; i++)
+			{
+				catchall_copy[i].apply(this, catchall_args);
+			}
+
 			return this;
 		}
 	});
