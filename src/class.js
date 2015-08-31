@@ -27,8 +27,7 @@
 		if(obj == null) return 'null';
 		var type = typeof(obj);
 		if(type != 'object') return type;
-		if(Array.isArray && Array.isArray(obj)) return 'array';
-		else if(Object.prototype.toString.call(obj) === '[object Array]') return 'array';
+		if(obj instanceof Array) return 'array';
 		return type;
 	};
 
@@ -38,13 +37,84 @@
 	var merge = function(into, from, options)
 	{
 		options || (options = {});
-		for(var k in from)
+		var keys = Object.keys(from);
+		var transform = options.transform;
+		for(var i = 0, n = keys.length; i < n; i++)
 		{
-			if(!from.hasOwnProperty(k)) continue;
-			if(options.transform) options.transform(into, from, k);
+			var k = keys[i];
+			if(transform) transform(into, from, k);
 			into[k] = from[k];
 		}
 		return into;
+	};
+
+	/**
+	 * Given an object, copy the subobjects/subarrays recursively
+	 */
+	var copy = function(obj)
+	{
+		// we can't do Object.keys or hasOwnProperty here because we actually
+		// want to look at all inherited objects as well as owned objects.
+		for(var k in obj)
+		{
+			var val = obj[k];
+			var type = typeOf(val);
+			if(type == 'object')
+			{
+				obj[k] = copy(merge({}, val));
+			}
+			else if(type == 'array')
+			{
+				obj[k] = val.map(copy);
+			}
+		}
+		return obj;
+	};
+
+	/**
+	 * Create a new class prototype from the given base class.
+	 */
+	var create = function(base)
+	{
+		if('create' in Object)
+		{
+			// create the new object from the prototype
+			var prototype = Object.create(base.prototype);
+		}
+		else
+		{
+			// of we won't have Object.create, then we need to let the object
+			// know we want a bare instance (without initializing it)
+			base.$initializing = true;
+			var prototype = new base();
+			delete base.$initializing;
+		}
+
+		var cls = function Omni()
+		{
+			// don't run the ctor if we're just trying to get a prototype
+			if(cls.$initializing) return this;
+
+			// if we don't copy the objects in the prototype, then if we have an
+			// object in the prototype like so:
+			// {
+			//     count: {x: 0},
+			//     ...
+			// }
+			//
+			// Then by doing `new Counter().count.x = 5`, we set x=5 for the
+			// entire prototype, and hence all the subsequent instantiations of
+			// the class.
+			copy(this);
+			this.$state = {parents: {}, fn: []};
+			if(this.initialize) return this.initialize.apply(this, arguments);
+			else return this;
+		};
+		cls.$constructor = prototype.$constructor = cls;
+		cls.prototype = prototype;
+		cls.prototype.$parent = base;
+
+		return cls;
 	};
 
 	/**
@@ -77,51 +147,6 @@
 				from[k].$parent = into[k];
 			}
 		});
-	};
-
-	/**
-	 * Given an object, copy the subobjects/subarrays recursively
-	 */
-	var copy = function(obj)
-	{
-		for(var k in obj)
-		{
-			var val = obj[k];
-			switch(typeOf(val))
-			{
-			case 'object':
-				obj[k] = copy(merge({}, val));
-				break;
-			case 'array':
-				obj[k] = val.slice(0);
-				break;
-			}
-		}
-		return obj;
-	}
-
-	/**
-	 * Create a new class prototype from the given base class.
-	 */
-	var create = function(base)
-	{
-		base.$initializing = true;
-		var prototype = new base();
-		delete base.$initializing;
-
-		var cls = function Omni()
-		{
-			copy(this);
-			if(cls.$initializing) return this;
-			this.$state = {parents: {}, fn: []};
-			if(this.initialize) return this.initialize.apply(this, arguments);
-			else return this;
-		};
-		cls.$constructor = prototype.$constructor = cls;
-		cls.prototype = prototype;
-		cls.prototype.$parent = base;
-
-		return cls;
 	};
 
 	/**

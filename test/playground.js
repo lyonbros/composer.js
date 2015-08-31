@@ -5,6 +5,7 @@ var TestController = Composer.Controller.extend({
 	elements: {
 		'span': 'el_status'
 	},
+
 	events: {
 		'click input[type=button]': 'run_test'
 	},
@@ -33,15 +34,6 @@ var TestController = Composer.Controller.extend({
 
 var dog;
 window.addEvent('domready', function() {
-	dog = new Dog();
-
-	var barked = 0;
-	var bitten = 0;
-	var sit = 0;
-	dog.bind('bark', function() { barked++; });
-	dog.bind('bite', function() { bitten++; });
-	dog.bind('sit', function() { sit++; });
-
 	new TestController();
 });
 
@@ -64,10 +56,14 @@ function test(n)
 	perf('start', {reset: true});
 	for(var i = 0; i < n; i++)
 	{
-		dog.trigger('bark');
-		dog.trigger('bite');
-		dog.trigger('sit');
+		var dog = new Dog();
 	}
 	perf('end');
 }
 
+function time(n, op)
+{
+	var start = window.performance.now();
+	for(var i = 0; i < n; i++) { op(); };
+	console.log('done: ', window.performance.now() - start);
+}
