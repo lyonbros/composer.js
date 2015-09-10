@@ -60,7 +60,8 @@ binding to reset isn't really needed and doing so may hinder performance.
 However if you need to be able to refresh the list in its entirety, pass `true`
 to `bind_reset` and any `reset` event on the collection will refresh all the
 subcontrollers.
-- `accurate_sort` - passed in to [sort_index](#sort-index) when adding items
+- `accurate_sort` - passed in to [sort_index](/composer.js/docs/collection#sort-index)
+and [sort_at](/composer.js/docs/collection#sort-at) when adding items
 
 <div id="listtrack"></div>
 {% highlight js %}

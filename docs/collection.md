@@ -261,6 +261,19 @@ false, it assumes the models are already sorted correctly (since they are sorted
 on [add](#add-1)). If true, the models are sorted before returning the index.
 `true` is much more accurate, but a large performance hit on larger collections.
 
+### sort_at :: function(n, options)
+
+Returns the model at the position `n` of the sorted models.
+
+`options` can contain the following items:
+
+- `accurate_sort` - boolean indicating whether or not to sort the collection's
+items using [sortfn](#sortfn) before returning the model. If
+false, it assumes the models are already sorted correctly (since they are sorted
+on [add](#add-1)). If true, the models are sorted before returning the index.
+`true` is much more accurate, but a large performance hit on larger collections.
+Note that `false` (the default) makes this function behave the same as [at](#at).
+
 ### parse :: function(data)
 
 Allows pre-processing of data from external API sources before adding to the

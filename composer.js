@@ -1514,7 +1514,6 @@
 		sort_index: function(model, options)
 		{
 			options || (options = {});
-
 			if(this._models.length == 0) return 0;
 
 			if(!this.sortfn)
@@ -1753,11 +1752,13 @@
 		/**
 		 * given the current sort function, find the model at the given position
 		 */
-		sort_at: function(n)
+		sort_at: function(n, options)
 		{
+			options || (options = {});
 			if(!this.sortfn) return false;
 
-			var sorted = this._models.slice(0).sort(this.sortfn);
+			var sorted = this._models;
+			if(options.accurate_sort) sorted = sorted.slice(0).sort(this.sortfn);
 			return sorted[n];
 		},
 
@@ -2530,7 +2531,7 @@
 			// inject the controller at the correct position, according to the
 			// collection's sortfn
 			var sort_idx = this._collection.sort_index(model, options);
-			var before_model = this._collection.sort_at(sort_idx - 1) || false;
+			var before_model = this._collection.sort_at(sort_idx - 1, options) || false;
 			var before_con = this.lookup_controller(before_model);
 
 			var parent = con.el.parentNode;
