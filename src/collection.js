@@ -359,7 +359,6 @@
 		sort_index: function(model, options)
 		{
 			options || (options = {});
-
 			if(this._models.length == 0) return 0;
 
 			if(!this.sortfn)
@@ -598,11 +597,13 @@
 		/**
 		 * given the current sort function, find the model at the given position
 		 */
-		sort_at: function(n)
+		sort_at: function(n, options)
 		{
+			options || (options = {});
 			if(!this.sortfn) return false;
 
-			var sorted = this._models.slice(0).sort(this.sortfn);
+			var sorted = this._models;
+			if(options.accurate_sort) sorted = sorted.slice(0).sort(this.sortfn);
 			return sorted[n];
 		},
 
