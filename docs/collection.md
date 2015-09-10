@@ -141,7 +141,7 @@ certain model type for added data.
 `options` can contain the following items:
 
 - `at` - insert the model at a specific integer index in the collection's data
-- `accurate_sort` - see notes for [sort_index](#sort_index)
+- `accurate_sort` - see notes for [sort_index](#sort-index)
 
 Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
 
