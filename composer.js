@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.1.10.1',
+		version: '1.1.11',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -1304,7 +1304,7 @@
 			{
 				// if we have a sorting function, get the index the model should exist at
 				// and add it to that position
-				var index = options.at ? parseInt(options.at) : this.sort_index(model);
+				var index = options.at ? parseInt(options.at) : this.sort_index(model, options);
 				this._models.splice(index, 0, model);
 			}
 			else
@@ -1511,8 +1511,10 @@
 		 * given the current sort function and a model passecd in, determine the
 		 * index the model should exist at in the collection's model list.
 		 */
-		sort_index: function(model)
+		sort_index: function(model, options)
 		{
+			options || (options = {});
+
 			if(this._models.length == 0) return 0;
 
 			if(!this.sortfn)
@@ -1522,7 +1524,9 @@
 				return idx;
 			}
 
-			var sorted = this._models.slice(0).sort(this.sortfn);
+			var sorted = this._models;
+			if(options.accurate_sort) sorted = sorted.slice(0).sort(this.sortfn);
+
 			for(var i = 0; i < sorted.length; i++)
 			{
 				if(model == sorted[i]) return i;

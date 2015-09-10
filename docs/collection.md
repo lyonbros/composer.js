@@ -141,6 +141,7 @@ certain model type for added data.
 `options` can contain the following items:
 
 - `at` - insert the model at a specific integer index in the collection's data
+- `accurate_sort` - see notes for [sort_index](#sort_index)
 
 Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
 
@@ -247,10 +248,18 @@ Sorts the models in the collection, manually, using [sortfn](#sortfn). Fires the
 
 Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
 
-### sort_index :: function(model)
+### sort_index :: function(model, options)
 
 Returns the index (in [Collection.models()](#models)) of the given model. If no
 [sortfn](#sortfn) property is present in the collection, returns false.
+
+`options` can contain the following items:
+
+- `accurate_sort` - boolean indicating whether or not to sort the collection's
+items using [sortfn](#sortfn) before returning the index of the given model. If
+false, it assumes the models are already sorted correctly (since they are sorted
+on [add](#add-1)). If true, the models are sorted before returning the index.
+`true` is much more accurate, but a large performance hit on larger collections.
 
 ### parse :: function(data)
 
