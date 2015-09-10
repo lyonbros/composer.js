@@ -2529,7 +2529,7 @@
 
 			// inject the controller at the correct position, according to the
 			// collection's sortfn
-			var sort_idx = this._collection.sort_index(model);
+			var sort_idx = this._collection.sort_index(model, options);
 			var before_model = this._collection.sort_at(sort_idx - 1) || false;
 			var before_con = this.lookup_controller(before_model);
 
