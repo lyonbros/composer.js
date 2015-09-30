@@ -116,7 +116,7 @@
 		{
 			if(!this.el) this._ensure_el();
 
-			if(obj.appendChild && obj.tagName)
+			if(obj.appendChild)
 			{
 				this.el.innerHTML = '';
 				this.el.appendChild(obj);
