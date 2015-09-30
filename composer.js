@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.1.11',
+		version: '1.1.12',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -2152,7 +2152,7 @@
 		{
 			if(!this.el) this._ensure_el();
 
-			if(obj.appendChild && obj.tagName)
+			if(obj.appendChild)
 			{
 				this.el.innerHTML = '';
 				this.el.appendChild(obj);

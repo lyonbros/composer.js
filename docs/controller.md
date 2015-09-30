@@ -205,6 +205,8 @@ passed HTML.
 
 See [render](#render) for example usage.
 
+Note that this function can take document fragments as of v1.1.12.
+
 ### with_bind :: function(object, ev, fn, name)
 
 This function wraps `object`'s [bind](/composer.js/docs/event#bind) and tracks
