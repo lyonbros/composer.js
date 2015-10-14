@@ -229,16 +229,17 @@
 				}
 			}
 
-			// if the number of elements in the FC changed, just fire a standard
-			// "change" event (with the forwarded args), otherwise the change
-			// triggered a membership change, so fire a "reset"
+			// if the number of elements in the FC is unchanged, just fire a
+			// standard "change" event (with the forwarded args), otherwise the
+			// change triggered a membership change...in this case, the
+			// add/remove events should cover the change.
 			if(this._models.length == num_items)
 			{
 				forward_args.shift();
 				var args = ['change', options].concat(forward_args);
 				this.fire_event.apply(this, args);
 			}
-			else
+			else if(this.options.refresh_on_change)
 			{
 				this.fire_event('reset', options);
 			}
