@@ -100,5 +100,29 @@ describe('Composer.FilterCollection', function() {
 		cat.set({groups: [2,3]});
 		expect(filter.size()).toBe(2);
 	});
+
+	it('will properly fire add/remove events', function() {
+		var col = new Composer.Collection();
+		col.add({name: 'barry', age: 20});
+		var model = col.first();
+
+		var add_count = 0;
+		var remove_count = 0;
+
+		var filter = new Composer.FilterCollection(col, {
+			filter: function(m) {
+				return m.get('age') > 20;
+			}
+		});
+
+		filter.bind('add', function() { add_count++; });
+		filter.bind('remove', function() { remove_count++; });
+
+		model.set({age: 21});
+		model.set({age: 19});
+
+		expect(add_count).toBe(1);
+		expect(remove_count).toBe(1);
+	});
 });
 
