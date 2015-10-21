@@ -14,11 +14,18 @@ layout: page
         <p>Kikojas is a location-based service focusing on local businesses in Iran</p>
     </li>
     <li>
+        <a target="_blank" href="https://market.space">
+            <img src="/composer.js/images/apps/marketspace.jpg" width="232" height="174" alt="Market.Space">
+        </a>
+        <h3><a target="_blank" href="https://market.space">Market.Space</a></h3>
+        <p>A competitive, real-time intelligence engine</p>
+    </li>
+    <li>
         <a target="_blank" href="https://turtl.it">
             <img src="/composer.js/images/apps/turtl.jpg" width="232" height="174" alt="Turtl">
         </a>
         <h3><a target="_blank" href="https://turtl.it">Turtl</a></h3>
-        <p>A secure, encrypted Evernote alternative geared towards research</p>
+        <p>An open-source, secure Evernote alternative</p>
     </li>
     <li>
         <a target="_blank" href="http://musio.com">
