@@ -36,6 +36,6 @@ layout: page
     </li>
 </ul>
 
-Have an app using composer? [Let us know!](mailto:andrew@lyonbros.com)
+Have an app using Composer? [Let us know!](mailto:andrew@lyonbros.com)
 
 
