@@ -353,7 +353,15 @@
 
 				if(e) e.preventDefault();
 
-				var href = a.href.replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
+				// turn:
+				//  - https://my-domain.com/nerd/city
+				//  - http://slappy.com/#!/nerd/city
+				//  - file:///D:/nerd/city
+				// into:
+				//  nerd/city
+				var href = a.href
+					.replace(/^[a-z]+:\/\/(\/)?.*?\//, '')
+					.replace(/^[#!\/]+/, '');
 				if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
 				href = '/'+href;
 
