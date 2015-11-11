@@ -360,7 +360,7 @@
 				// into:
 				//  nerd/city
 				var href = a.href
-					.replace(/^[a-z]+:\/\/(\/)?.*?\//, '')
+					.replace(/^[a-z]+:\/\/(\/)?([A-Z]:)?\//i, '')
 					.replace(/^[#!\/]+/, '');
 				if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
 				href = '/'+href;
