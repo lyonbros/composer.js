@@ -219,5 +219,41 @@ describe('Composer.ListController', function() {
 		expect(empty).toBe(3);
 		expect(not_empty).toBe(4);
 	});
+
+	it('will properly use a fragment when resetting items', function() {
+		var FragList = List.extend({
+			init: function()
+			{
+				if(!this.collection) this.collection = new Composer.Collection();
+				this.render()
+
+				this.track(this.collection, function(model, options) {
+					options || (options = {});
+					var fragment = options.fragment;
+					return new this.sub({
+						inject: fragment ? fragment : this.list_el,
+						model: model,
+						options: options
+					});
+				}.bind(this), {
+					fragment_on_reset: function() { return this.list_el; }.bind(this)
+				});
+			}
+		});
+		var collection = new Composer.Collection([
+			{id: 3},
+			{id: 12},
+			{id: 69}
+		]);
+		var con = new FragList({collection: collection});
+		expect(con.list_el.childNodes.length).toBe(3);
+
+		var model = collection.get(12);
+		collection.remove(model);
+		expect(con.list_el.childNodes.length).toBe(2);
+
+		con.collection.add({id: 420});
+		expect(con.list_el.childNodes.length).toBe(3);
+	});
 });
 
