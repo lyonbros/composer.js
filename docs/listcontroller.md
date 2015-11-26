@@ -128,7 +128,7 @@ new UserListController({
 This is very similar to the above example, but we'll be using the `fragment_on_reset`
 option here.
 
-<div id="listtrack"></div>
+<div id="listtrack-frag"></div>
 {% highlight js %}
 var UserItemController = Composer.Controller.extend({
     tag: 'li',
@@ -180,7 +180,7 @@ var UserListController = Composer.ListController.extend({
     }
 });
 new UserListController({
-    inject: '#listtrack',
+    inject: '#listtrack-frag',
     collection: new Composer.Collection([
         {name: 'chuck'},
         {name: 'bruce'},
