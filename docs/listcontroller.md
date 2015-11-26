@@ -62,6 +62,14 @@ to `bind_reset` and any `reset` event on the collection will refresh all the
 subcontrollers.
 - `accurate_sort` - passed in to [sort_index](/composer.js/docs/collection#sort-index)
 and [sort_at](/composer.js/docs/collection#sort-at) when adding items
+- `fragment_on_reset` - This is a function that should return the main element
+you're injecting subcontrollers into. If this option is provided, then the
+`create_fn` will receive a `DocumentFragment` as one of its options (the second
+value passed to `create_fn`). If the fragment is present in the options, you
+can pass it to your subcontroller's `inject:` key. This allows fragment
+rendering, which on larger lists can significantly reduce the overhead of
+resetting the entire list (which happens when initially calling `track()`.
+[See a usage example below.](#example-using-fragment-on-reset)
 
 <div id="listtrack"></div>
 {% highlight js %}
@@ -98,6 +106,72 @@ var UserListController = Composer.ListController.extend({
                 model: model
             });
         }.bind(this))
+    },
+
+    render: function()
+    {
+        this.html('<h3>Users</h3><ul></ul>');
+    }
+});
+new UserListController({
+    inject: '#listtrack',
+    collection: new Composer.Collection([
+        {name: 'chuck'},
+        {name: 'bruce'},
+        {name: 'tony'}
+    ])
+});
+{% endhighlight %}
+
+#### Example: using fragment_on_reset
+
+This is very similar to the above example, but we'll be using the `fragment_on_reset`
+option here.
+
+<div id="listtrack"></div>
+{% highlight js %}
+var UserItemController = Composer.Controller.extend({
+    tag: 'li',
+    model: null,
+
+    init: function()
+    {
+        this.render();
+    },
+
+    render: function()
+    {
+        this.html('Hi, my name is '+ this.model.get('name'));
+    }
+});
+
+var UserListController = Composer.ListController.extend({
+    elements: {
+        'ul': 'el_list'
+    },
+
+    collection: null,
+
+    init: function()
+    {
+        this.render();
+
+        // set up tracking to inject subcontrollers into our <ul>
+        this.track(this.collection, function(model, options) {
+            options || (options = {});
+            var fragment = options.fragment;
+            return new UserItemController({
+                // notice here we test for the fragment existing before using
+                // because it's not always passed (only on reset)
+                inject: fragment ? fragment : this.el_list,
+                model: model
+            });
+        }.bind(this), {
+            // note that fragment_on_reset is a function returning the same list
+            // element we pass to the subcontroller's inject key in the create_fn
+            // above
+            fragment_on_reset: function() { return this.el_list; }.bind(this)
+        })
     },
 
     render: function()
