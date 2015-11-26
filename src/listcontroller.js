@@ -139,10 +139,29 @@
 		 */
 		reset_subcontrollers: function(create_fn, options)
 		{
+			options || (options = {});
+
 			this.clear_subcontrollers();
+
+			var reset_fragment = this.options.fragment_on_reset;
+			if(reset_fragment)
+			{
+				var fragment = new DocumentFragment();
+				options = Composer.object.clone(options);
+				options.fragment = fragment;
+			}
+
 			this._collection.each(function(model) {
 				this.add_subcontroller(model, create_fn, options);
 			}, this);
+
+			if(reset_fragment && fragment.children && fragment.children.length > 0)
+			{
+				var inject_to = reset_fragment instanceof Function ?
+					reset_fragment() :
+					reset_fragment;
+				inject_to.appendChild(fragment);
+			}
 		},
 
 		/**
