@@ -69,7 +69,7 @@ value passed to `create_fn`). If the fragment is present in the options, you
 can pass it to your subcontroller's `inject:` key. This allows fragment
 rendering, which on larger lists can significantly reduce the overhead of
 resetting the entire list (which happens when initially calling `track()`.
-[See a usage example below.](#example-using-fragment-on-reset)
+[See a usage example below.](#example-using-fragmentonreset)
 
 <div id="listtrack"></div>
 {% highlight js %}
