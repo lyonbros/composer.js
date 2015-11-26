@@ -169,9 +169,10 @@
 		};
 	})();
 
-	var find_parent = function(selector, element)
+	var find_parent = function(selector, element, stop)
 	{
 		if(!element) return false;
+		if(element == stop) return false;
 		if(match(element, selector)) return element;
 		var par = element.parentNode;
 		return find_parent(selector, par);
