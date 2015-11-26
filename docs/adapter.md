@@ -23,7 +23,11 @@ event actually occuring as if the user had done an action in their browser.
 - `args` - The arguments passed into the `CustomEvent` class if `type` is any
 value other than `"click"`.
 
-## Composer.find_parent :: function(selector, element)
+## Composer.find_parent :: function(selector, element[, stop])
 
 Find the first parent node of `element` that matches the given CSS `selector`.
+
+If, during the recursion, the element being tested == `stop`, then return false.
+The idea is that if you know the element you're looking for is not above a
+certain element, then don't bother recursing up to the body element.
 
