@@ -154,6 +154,7 @@
 			if(!options.raw) newpath = decodeURIComponent(newpath);
 			var href = base + '/' + newpath;
 			var old = base + this.cur_path();
+			var title = options.title || (this.options.default_title || '');
 			if(old == href)
 			{
 				this.trigger('statechange', href, true);
@@ -172,11 +173,11 @@
 			{
 				if(options.replace_state)
 				{
-					History.replaceState(options.state, '', href);
+					History.replaceState(options.state, title, href);
 				}
 				else
 				{
-					History.pushState(options.state, '', href);
+					History.pushState(options.state, title, href);
 				}
 			}
 		},
