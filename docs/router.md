@@ -151,7 +151,8 @@ options: {
     suppress_initial_route: false,
     enable_cb: function(url) { return true; },
     process_querystring: false,
-    base: false
+    base: false,
+    default_title: ''
 }
 {% endhighlight %}
 </div>
@@ -181,6 +182,9 @@ container such as a Firefox or Node-webkit *app* that needs all `pushState` URLs
 to fall under a predetermined folder (ie `/content`) that otherwise would cause
 a `SecurityError`. In other words, don't use `base` unless you really need it.
 It won't hurt things, but it might make them harder to debug.
+
+`default_title` is used by [route()](#route-1) to set the brwoser window's title
+on route if one is not given to it directly.
 
 ### initialize :: function(routes, options)
 
@@ -219,7 +223,7 @@ Convenience function to get the value of a URL query parameter out of the
 
 `search` is the query string (preusmably you got this from `window.location.search`.
 
-### route: function(url, options)
+### route :: function(url, options)
 
 Route to a URL. This function is provided as an abstraction around setting your
 URL directly via pushState. Note that if `base` is set to a string in your
@@ -248,6 +252,8 @@ URLs.
 `History.pushState` to change the URL.
 - `state` - An object that is passed as the `state` parameter to
 `History.pushState` or `History.replaceState`.
+- `title` - A string title to push to the browser's header. If not specified,
+`Router.options.default_title` is used instead (otherwise a blank string).
 
 ### find_matching_route :: function(url, routes)
 

@@ -46,7 +46,8 @@
 			suppress_initial_route: false,
 			enable_cb: function(url) { return true; },
 			process_querystring: false,
-			base: false
+			base: false,
+			default_title: ''
 		},
 
 		/**
