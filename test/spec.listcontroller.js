@@ -118,7 +118,7 @@ describe('Composer.ListController', function() {
 		con.release();
 	});
 
-	it('will release subcontrollers properly', function() {
+	it('will release subcontrollers properly', function(done) {
 		var released = 0;
 
 		var MySub = Sub.extend({
@@ -133,7 +133,11 @@ describe('Composer.ListController', function() {
 		con.collection.add([{name: 'bob'}, {name: 'cornelius'}]);
 		con.release();
 
-		expect(released).toBe(2);
+		// list controllers release async
+		setTimeout(function() {
+			expect(released).toBe(2);
+			done();
+		}, 10);
 	});
 
 	it('will remove all subcontrollers on clear', function() {
