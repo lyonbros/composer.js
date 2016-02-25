@@ -86,7 +86,13 @@
 
 		release: function()
 		{
-			this.clear_subcontrollers();
+			// move the el to a fragment, which keeps a bunch of reflows from
+			// happening on release
+			var fragment = document.createDocumentFragment();
+			fragment.appendChild(this.el);
+
+			// do an async wipe of the subcontrollers
+			this.clear_subcontrollers({async: true});
 			return this.parent.apply(this, arguments);
 		},
 
@@ -124,11 +130,43 @@
 		/**
 		 * Untrack all subcontrollers, releasing each one
 		 */
-		clear_subcontrollers: function()
+		clear_subcontrollers: function(options)
 		{
-			this._subcontroller_list.forEach(function(con) {
-				con.release();
-			});
+			options || (options = {});
+
+			// we allow an async option here, which clears out subcontrollers
+			// in batches. this is more favorable than doing it sync because we
+			// don't have to block the interface while removing all our subs.
+			if(options.async)
+			{
+				// clone the subcon list in case someone else makes mods to it
+				// while we're clearing.
+				var subs = this._subcontroller_list.slice(0);
+				var batch = 10;
+				var idx = 0;
+				var next = function()
+				{
+					for(var i = 0; i < batch; i++)
+					{
+						var con = subs[idx];
+						if(!con) return;
+						idx++;
+						try
+						{
+							con.release();
+						}
+						catch(e) {}
+					}
+					setTimeout(next);
+				}.bind(this);
+				setTimeout(next);
+			}
+			else
+			{
+				this._subcontroller_list.forEach(function(con) {
+					con.release();
+				});
+			}
 			this._subcontroller_list = [];
 			this._subcontroller_idx = {};
 		},
@@ -146,7 +184,7 @@
 			var reset_fragment = this.options.fragment_on_reset;
 			if(reset_fragment)
 			{
-				var fragment = new DocumentFragment();
+				var fragment = document.createDocumentFragment();
 				options = Composer.object.clone(options);
 				options.fragment = fragment;
 			}
