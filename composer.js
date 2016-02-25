@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.1.18',
+		version: '1.1.19',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -1871,81 +1871,77 @@
 	var has_sizzle = !!global.Sizzle;
 	var has_jquery = !!global.jQuery;
 	var has_slick = !!global.Slick;
-	var has_moo = !!global.MooTools;
 
-	var find = (function() {
-		if(has_slick)
+	var which_adapter = function(types)
+	{
+		var wrap = function(fn)
 		{
 			return function(context, selector) {
 				context || (context = document);
-				return Slick.find(context, selector);
+				if(types.native && context instanceof window.DocumentFragment)
+				{
+					return types.native(context, selector);
+				}
+				else
+				{
+					return fn(context, selector);
+				}
 			};
-		}
-		else if(has_sizzle)
+		};
+		if(has_slick && types.slick) return wrap(types.slick);
+		if(has_sizzle && types.sizzle) return wrap(types.sizzle);
+		if(has_jquery && types.jquery) return wrap(types.jquery);
+		if('querySelector' in document && types.native) return wrap(types.native);
+		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer (or use a modern browser with document.querySelector).');
+	};
+
+	var find = which_adapter({
+		slick: function(context, selector)
 		{
-			return function(context, selector) {
-				context || (context = document);
-				return Sizzle.select(selector, context)[0];
-			};
-		}
-		else if(has_jquery)
+			return Slick.find(context, selector);
+		},
+		sizzle: function(context, selector)
 		{
-			return function(context, selector) {
-				context || (context = document);
-				return jQuery(context).find(selector)[0];
-			};
-		}
-		else if('querySelector' in document)
+			return Sizzle.select(selector, context)[0];
+		},
+		jquery: function(context, selector)
 		{
+			return jQuery(context).find(selector)[0];
+		},
+		native: (function() {
 			var scope = false;
 			try { document.querySelector(':scope > h1'); scope = true; }
 			catch(e) {}
 
 			return function(context, selector) {
-				context || (context = document);
-				if(scope) selector = ':scope '+selector;
+				if(scope && !(context instanceof window.DocumentFragment)) selector = ':scope '+selector;
 				return context.querySelector(selector);
 			};
-		}
-		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer (or use a modern browser with document.querySelector).');
-	})();
+		})()
+	});
 
-	var match = (function() {
-		if(has_slick)
+	var match = which_adapter({
+		slick: function(context, selector)
 		{
-			return function(element, selector) {
-				element || (element = document);
-				return Slick.match(element, selector);
-			};
-		}
-		else if(has_sizzle)
+			return Slick.match(context, selector);
+		},
+		sizzle: function(context, selector)
 		{
-			return function(element, selector) {
-				element || (element = document);
-				return Sizzle.matchesSelector(element, selector);
-			};
-		}
-		else if(has_jquery)
+			return Sizzle.matchesSelector(context, selector);
+		},
+		jquery: function(context, selector)
 		{
-			return function(element, selector) {
-				element || (element = document);
-				return jQuery(element).is(selector);
-			};
-		}
-		else if('querySelector' in document)
+			return jQuery(context).is(selector);
+		},
+		native: function(context, selector)
 		{
-			return function(element, selector) {
-				element || (element = document);
-				if('matches' in element) var domatch = element.matches;
-				if('msMatchesSelector' in element) var domatch = element.msMatchesSelector;
-				if('mozMatchesSelector' in element) var domatch = element.mozMatchesSelector;
-				if('webkitMatchesSelector' in element) var domatch = element.webkitMatchesSelector;
-				return domatch.call(element, selector);
-			};
+			if('matches' in context) var domatch = context.matches;
+			if('msMatchesSelector' in context) var domatch = context.msMatchesSelector;
+			if('mozMatchesSelector' in context) var domatch = context.mozMatchesSelector;
+			if('webkitMatchesSelector' in context) var domatch = context.webkitMatchesSelector;
+			return domatch.call(context, selector);
 		}
-		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer.');
-	})();
-
+	});
 
 	var captured_events = {
 		'focus': true,
@@ -2454,7 +2450,13 @@
 
 		release: function()
 		{
-			this.clear_subcontrollers();
+			// move the el to a fragment, which keeps a bunch of reflows from
+			// happening on release
+			var fragment = document.createDocumentFragment();
+			fragment.appendChild(this.el);
+
+			// do an async wipe of the subcontrollers
+			this.clear_subcontrollers({async: true});
 			return this.parent.apply(this, arguments);
 		},
 
@@ -2492,11 +2494,43 @@
 		/**
 		 * Untrack all subcontrollers, releasing each one
 		 */
-		clear_subcontrollers: function()
+		clear_subcontrollers: function(options)
 		{
-			this._subcontroller_list.forEach(function(con) {
-				con.release();
-			});
+			options || (options = {});
+
+			// we allow an async option here, which clears out subcontrollers
+			// in batches. this is more favorable than doing it sync because we
+			// don't have to block the interface while removing all our subs.
+			if(options.async)
+			{
+				// clone the subcon list in case someone else makes mods to it
+				// while we're clearing.
+				var subs = this._subcontroller_list.slice(0);
+				var batch = 10;
+				var idx = 0;
+				var next = function()
+				{
+					for(var i = 0; i < batch; i++)
+					{
+						var con = subs[idx];
+						if(!con) return;
+						idx++;
+						try
+						{
+							con.release();
+						}
+						catch(e) {}
+					}
+					setTimeout(next);
+				}.bind(this);
+				setTimeout(next);
+			}
+			else
+			{
+				this._subcontroller_list.forEach(function(con) {
+					con.release();
+				});
+			}
 			this._subcontroller_list = [];
 			this._subcontroller_idx = {};
 		},
@@ -2514,7 +2548,7 @@
 			var reset_fragment = this.options.fragment_on_reset;
 			if(reset_fragment)
 			{
-				var fragment = new DocumentFragment();
+				var fragment = document.createDocumentFragment();
 				options = Composer.object.clone(options);
 				options.fragment = fragment;
 			}
