@@ -143,10 +143,7 @@
 			if(!this.el) this._ensure_el();
 
 			var el = this.el;
-			if(batch_rendering)
-			{
-				el = el.cloneNode();
-			}
+			if(batch_rendering) el = el.cloneNode();
 
 			if(obj.appendChild)
 			{
