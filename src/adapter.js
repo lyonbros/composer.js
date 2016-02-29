@@ -174,13 +174,59 @@
 		return find_parent(selector, par);
 	};
 
+	var diff = function(from, to)
+	{
+		return [from, to];
+	};
+
+	var patch = function(from, diff, options)
+	{
+		options || (options = {});
+
+		return morphdom(from, diff[1], {
+			// this callback preserves form input values (text, checkboxes,
+			// radios, textarea, selects)
+			onBeforeMorphEl: function(from, to) {
+				if(options.reset_inputs) return true;
+
+				var tag = from.tagName.toLowerCase();
+				switch(tag)
+				{
+				case 'input':
+				case 'textarea':
+					var type = from.getAttribute('type');
+					switch(type)
+					{
+					case 'checkbox':
+					case 'radio':
+						to.checked = from.checked;
+						break;
+					default:
+						if(from.value && !to.value)
+						{
+							to.value = from.value;
+						}
+						break;
+					}
+					break;
+				case 'select':
+					to.value = from.value;
+					break;
+				}
+				return true;
+			}
+		});
+	};
+
 	this.Composer.exp0rt({
 		find: find,
 		match: match,
 		add_event: add_event,
 		fire_event: fire_event,
 		remove_event: remove_event,
-		find_parent: find_parent
+		find_parent: find_parent,
+		diff: diff,
+		patch: patch
 	});
 }).apply((typeof exports != 'undefined') ? exports : this);
 

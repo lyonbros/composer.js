@@ -19,6 +19,30 @@
 (function() {
 	"use strict";
 
+	var batch_rendering = false;
+
+	var schedule_render = (function() {
+		var diffs = [];
+		return function(from, to, options, callback)
+		{
+			options || (options = {});
+
+			var diff = Composer.diff(from, to);
+			diffs.push([from, diff, options, callback]);
+			window.requestAnimationFrame(function() {
+				diffs.forEach(function(entry) {
+					var from = entry[0];
+					var diff = entry[1];
+					var options = entry[2];
+					var cb = entry[3];
+					Composer.patch(from, diff, options);
+					if(cb) cb();
+				});
+				diffs = [];
+			});
+		};
+	})();
+
 	/**
 	 * The controller class sits between views and your models/collections.
 	 * Controllers bind events to your data objects and update views when the data
@@ -112,20 +136,40 @@
 		 * replace this.el's html with the given test, also refresh the controllers
 		 * elements.
 		 */
-		html: function(obj)
+		html: function(obj, options)
 		{
+			options || (options = {});
+
 			if(!this.el) this._ensure_el();
+
+			var el = this.el;
+			if(batch_rendering)
+			{
+				el = el.cloneNode();
+			}
 
 			if(obj.appendChild)
 			{
-				this.el.innerHTML = '';
-				this.el.appendChild(obj);
+				el.innerHTML = '';
+				el.appendChild(obj);
 			}
 			else
 			{
-				this.el.innerHTML = obj;
+				el.innerHTML = obj;
 			}
-			this.refresh_elements();
+
+			if(batch_rendering)
+			{
+				var cb = options.complete;
+				schedule_render(this.el, el, options, function() {
+					this.refresh_elements();
+					if(cb) cb();
+				}.bind(this));
+			}
+			else
+			{
+				this.refresh_elements();
+			}
 		},
 
 		/**
@@ -323,6 +367,11 @@
 			}.bind(this));
 		}
 	});
+
+	Controller.enable_batch_rendering = function()
+	{
+		batch_rendering = true;
+	};
 
 	this.Composer.merge_extend(Controller, ['events', 'elements']);
 

@@ -263,6 +263,7 @@
 		['fetch', 'save', 'destroy'].forEach(create_converter('Model'));
 		['fetch'].forEach(convert_collection_fn);
 		convert_collection_fn('reset_async', {options_idx: 1, names: ['complete']});
+		(create_converter('Controller'))('html', {options_idx: 1, names: ['complete']});
 	};
 
 	this.Composer.exp0rt({

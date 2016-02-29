@@ -1,69 +1,77 @@
-var Dog = Composer.Model.extend({ });
-var TestController = Composer.Controller.extend({
-	inject: '#app',
-
+var VDomTestController = Composer.Controller.extend({
 	elements: {
-		'span': 'el_status'
+		'p': 'el_p',
+		'input[name=name]': 'inp_name'
 	},
 
 	events: {
-		'click input[type=button]': 'run_test'
+		'click p': 'clicked',
+		'click h1': 'head',
+		'input input[name=name]': 'head'
 	},
 
 	init: function()
 	{
+		this.model = new Composer.Model();
 		this.render();
+		this.with_bind(this.model, 'change', this.render.bind(this));
+		//this.poll();
 	},
 
 	render: function()
 	{
-		this.html('<input type="button" name="test" value="run">&nbsp;<span></span>');
+		var name = this.model.get('name');
+		var html = [
+			'<h1>HELLO beep boop</h1>',
+			'<p>my name is <span>x-'+name+'</span></p>',
+			'<input type="text" name="name" value="">',
+			'<br>',
+			'<select name="try"><option value="1">pick me</option><option selected value="2">no pick me asswipe</option></select>',
+			'<br>',
+			'<input type="radio" name="bov" value="1">',
+			'<input type="radio" name="bov" value="2">',
+			'<br>',
+			'<input type="checkbox" value="1">',
+			'<br>',
+			'<textarea name="body"></textarea>'
+		].join('\n');
+		this.html(html)
+			.then(function() { console.log('done rendering!!'); });
 	},
 
-	run_test: function()
+	clicked: function(e)
 	{
-		this.el_status.set('html', 'running');
-		setTimeout(function() {
-			test();
-			setTimeout(function() {
-				this.el_status.set('html', 'complete');
-			}.bind(this));
-		}.bind(this))
+		console.log('clicked: ', e.target);
+	},
+
+	head: function(e)
+	{
+		this.model.set({name: this.inp_name.get('value')});
+	},
+
+	poll: function(e)
+	{
+		var set_name = function()
+		{
+			var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+			var name = '';
+			for(var i = 0; i < 12; i++)
+			{
+				name += chars[Math.floor(Math.random() * chars.length)];
+			}
+			this.model.set({name: name});
+			setTimeout(set_name, 5000 + (5000 * Math.random()));
+		}.bind(this);
+		set_name();
 	}
 });
 
-var dog;
-window.addEvent('domready', function() {
-	new TestController();
-});
-
-var _perf = {first: window.performance.now(), last: window.performance.now()};
-function perf(where, options)
-{
-	options || (options = {});
-	var now = window.performance.now();
-	if(options.reset) _perf.first = _perf.last = now;
-
-	// `where` should always be n chars, w/ space padding
-	for(var i = 0, n = (24 - where.length); i < n; i++) where = ' ' + where;
-	console.log(where + ': ', now - _perf.last, now - _perf.first);
-	_perf.last = now;
-}
-
-function test(n)
-{
-	n || (n = 99999);
-	perf('start', {reset: true});
-	for(var i = 0; i < n; i++)
-	{
-		var dog = new Dog();
-	}
-	perf('end');
-}
-
-function time(n, op)
-{
+document.addEvent('domready', function() {
+	Composer.promisify();
+	Composer.Controller.enable_batch_rendering();
 	var start = window.performance.now();
-	for(var i = 0; i < n; i++) { op(); };
-	console.log('done: ', window.performance.now() - start);
-}
+	new VDomTestController({ inject: '#app' });
+	new VDomTestController({ inject: '#app' });
+	console.log('took: ', window.performance.now() - start);
+});
+
