@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.1.20',
+		version: '1.1.21',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -2239,6 +2239,7 @@
 		},
 
 		/**
+		 * remove a subcontroller from tracking and (by default) release it
 		 */
 		remove_subcontroller: function(name, options)
 		{
@@ -2436,10 +2437,10 @@
 				this.clear_subcontrollers();
 			}.bind(this));
 			this.with_bind(collection, 'add', function(model, _, options) {
-				this.add_subcontroller(model, create_fn, options);
+				this._add_subcontroller(model, create_fn, options);
 			}.bind(this));
 			this.with_bind(collection, 'remove', function(model) {
-				this.remove_subcontroller(model);
+				this._remove_subcontroller(model);
 			}.bind(this));
 			if(options.bind_reset)
 			{
@@ -2557,7 +2558,7 @@
 			}
 
 			this._collection.each(function(model) {
-				this.add_subcontroller(model, create_fn, options);
+				this._add_subcontroller(model, create_fn, options);
 			}, this);
 
 			if(reset_fragment && fragment.children && fragment.children.length > 0)
@@ -2574,7 +2575,7 @@
 		 * subcontroller at the correct spot in the DOM (based on the model's
 		 * sort order).
 		 */
-		add_subcontroller: function(model, create_fn, options)
+		_add_subcontroller: function(model, create_fn, options)
 		{
 			var con = create_fn(model, options);
 			this.index_controller(model, con);
@@ -2610,7 +2611,7 @@
 		 * Given a model, lookup the subcontroller that wraps it and release it,
 		 * also untracking that subcontroller.
 		 */
-		remove_subcontroller: function(model)
+		_remove_subcontroller: function(model)
 		{
 			var con = this.lookup_controller(model);
 			if(!con) return false;
