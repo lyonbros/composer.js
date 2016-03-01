@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.1.19',
+		version: '1.1.20',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -2218,21 +2218,14 @@
 		 */
 		track_subcontroller: function(name, create_fn)
 		{
-			var remove_subcontroller = function(name, skip_release)
-			{
-				if(!this._subcontrollers[name]) return
-				if(!skip_release) this._subcontrollers[name].release();
-				delete this._subcontrollers[name];
-			}.bind(this);
-
 			// if we have an existing controller with the same name, release and
 			// remove it.
-			remove_subcontroller(name);
+			this.remove_subcontroller(name);
 
 			// create the new controller, track it, and make sure if it's
 			// released we untrack it
 			var instance = create_fn();
-			instance.bind('release', function() { remove_subcontroller(name, true); });
+			instance.bind('release', this.remove_subcontroller.bind(this, name, {skip_release: true}));
 			this._subcontrollers[name] = instance;
 			return instance;
 		},
@@ -2243,6 +2236,16 @@
 		get_subcontroller: function(name)
 		{
 			return this._subcontrollers[name] || false;
+		},
+
+		/**
+		 */
+		remove_subcontroller: function(name, options)
+		{
+			options || (options = {});
+			if(!this._subcontrollers[name]) return
+			if(!options.skip_release) this._subcontrollers[name].release();
+			delete this._subcontrollers[name];
 		},
 
 		/**

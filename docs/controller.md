@@ -348,6 +348,19 @@ Recently used [track_subcontroller](#track-subcontroller)? Use
 `get_subcontroller` to retrieve the tracked sub-controller by the name given in
 the call to `track_subcontroller`.
 
+### remove_subcontroller :: function(name, options)
+
+Recently used [track_subcontroller](#track-subcontroller)? Use
+`remove_subcontroller` is a helper function that removes and releases a tracked
+sub-controller by the name given in the call to `track_subcontroller`. It allows
+you to manually untrack and release a subcontroller without having to pull it
+out via [get_subcontroller](#get-subcontroller) and check if it exists.
+
+`options` can contain the following items:
+
+- `skip_release` - If true, remove the subcontroller from the parent's tracking
+without releasing it. There are very few cases where this would ever be needed.
+
 ### release :: function(options)
 
 Remove the controller from the DOM (removes [el](#el)) and perform any cleanup
