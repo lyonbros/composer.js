@@ -268,7 +268,10 @@ describe('Composer.Controller', function() {
 
 			init: function()
 			{
-				this.render();
+				this.track_subcontroller('Sub2', function() {
+					return new Sub();
+				});
+				this.remove_subcontroller('Sub2');
 			},
 
 			render: function()
@@ -282,7 +285,8 @@ describe('Composer.Controller', function() {
 		var master = new Master();
 		master.render();
 		master.render();
-		expect(sub_released).toBe(2);
+		master.render();
+		expect(sub_released).toBe(3);
 		expect(master.get_subcontroller('Sub') instanceof Sub).toBe(true);
 	});
 
