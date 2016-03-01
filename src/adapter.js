@@ -183,6 +183,7 @@
 	{
 		options || (options = {});
 
+		if(!from || !diff[1]) return;
 		return morphdom(from, diff[1], {
 			// this callback preserves form input values (text, checkboxes,
 			// radios, textarea, selects)
@@ -218,6 +219,8 @@
 		});
 	};
 
+	var frame = function(cb) { global.requestAnimationFrame(cb); };
+
 	this.Composer.exp0rt({
 		find: find,
 		match: match,
@@ -226,7 +229,8 @@
 		remove_event: remove_event,
 		find_parent: find_parent,
 		diff: diff,
-		patch: patch
+		patch: patch,
+		frame: frame
 	});
 }).apply((typeof exports != 'undefined') ? exports : this);
 

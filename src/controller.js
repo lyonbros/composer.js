@@ -23,14 +23,19 @@
 
 	var schedule_render = (function() {
 		var diffs = [];
+		var scheduled = false;
 		return function(from, to, options, callback)
 		{
 			options || (options = {});
 
-			var diff = Composer.diff(from, to);
-			diffs.push([from, diff, options, callback]);
-			window.requestAnimationFrame(function() {
-				diffs.forEach(function(entry) {
+			diffs.push([from, Composer.diff(from, to), options, callback]);
+			if(scheduled) return;
+			scheduled = true;
+			Composer.frame(function() {
+				scheduled = false;
+				var diff_clone = diffs.slice(0);
+				diffs = [];
+				diff_clone.forEach(function(entry) {
 					var from = entry[0];
 					var diff = entry[1];
 					var options = entry[2];
@@ -38,7 +43,6 @@
 					Composer.patch(from, diff, options);
 					if(cb) cb();
 				});
-				diffs = [];
 			});
 		};
 	})();
@@ -62,6 +66,9 @@
 
 		// tracks sub-controllers
 		_subcontrollers: {},
+
+		// if true, enables XDOM just for this controller
+		xdom: false,
 
 		// the DOM element to tie this controller to (a container element)
 		el: false,
@@ -143,7 +150,7 @@
 			if(!this.el) this._ensure_el();
 
 			var el = this.el;
-			if(xdom) el = el.cloneNode();
+			if(xdom || this.xdom) el = el.cloneNode();
 
 			if(obj.appendChild)
 			{
@@ -155,7 +162,7 @@
 				el.innerHTML = obj;
 			}
 
-			if(xdom)
+			if(xdom || this.xdom)
 			{
 				var cb = options.complete;
 				schedule_render(this.el, el, options, function() {
