@@ -19,7 +19,7 @@
 (function() {
 	"use strict";
 
-	var batch_rendering = false;
+	var xdom = false;
 
 	var schedule_render = (function() {
 		var diffs = [];
@@ -143,7 +143,7 @@
 			if(!this.el) this._ensure_el();
 
 			var el = this.el;
-			if(batch_rendering) el = el.cloneNode();
+			if(xdom) el = el.cloneNode();
 
 			if(obj.appendChild)
 			{
@@ -155,7 +155,7 @@
 				el.innerHTML = obj;
 			}
 
-			if(batch_rendering)
+			if(xdom)
 			{
 				var cb = options.complete;
 				schedule_render(this.el, el, options, function() {
@@ -365,10 +365,7 @@
 		}
 	});
 
-	Controller.enable_batch_rendering = function()
-	{
-		batch_rendering = true;
-	};
+	Controller.xdomify = function() { xdom = true; };
 
 	this.Composer.merge_extend(Controller, ['events', 'elements']);
 

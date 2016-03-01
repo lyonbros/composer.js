@@ -15,7 +15,7 @@ var VDomTestController = Composer.Controller.extend({
 		this.model = new Composer.Model();
 		this.render();
 		this.with_bind(this.model, 'change', this.render.bind(this));
-		//this.poll();
+		this.poll();
 	},
 
 	render: function()
@@ -60,7 +60,7 @@ var VDomTestController = Composer.Controller.extend({
 				name += chars[Math.floor(Math.random() * chars.length)];
 			}
 			this.model.set({name: name});
-			setTimeout(set_name, 5000 + (5000 * Math.random()));
+			setTimeout(set_name, 1000 + (1000 * Math.random()));
 		}.bind(this);
 		set_name();
 	}
@@ -68,9 +68,8 @@ var VDomTestController = Composer.Controller.extend({
 
 document.addEvent('domready', function() {
 	Composer.promisify();
-	Composer.Controller.enable_batch_rendering();
+	Composer.Controller.xdomify();
 	var start = window.performance.now();
-	new VDomTestController({ inject: '#app' });
 	new VDomTestController({ inject: '#app' });
 	console.log('took: ', window.performance.now() - start);
 });
