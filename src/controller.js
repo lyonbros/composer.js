@@ -206,6 +206,7 @@
 		},
 
 		/**
+		 * remove a subcontroller from tracking and (by default) release it
 		 */
 		remove_subcontroller: function(name, options)
 		{
