@@ -37,6 +37,29 @@ describe('Promises', function() {
 		expect(promise instanceof Promise).toBe(true);
 	});
 
+	it('returns a promise on Controller.html() when using xdom', function(done) {
+		var x = 0;
+		var MyCon = Composer.Controller.extend({
+			xdom: true,
+			render: function()
+			{
+				this.html('<h1>hai</h1>')
+					.bind(this)
+					.then(function() {
+						x++;
+						this.trigger('rendered');
+					})
+			}
+		});
+
+		var con = new MyCon();
+		con.bind_once('rendered', function() {
+			expect(x).toBe(1);
+			done();
+		});
+		con.render();
+	});
+
 	var make_resolver_test = function(name, data, datatest)
 	{
 		return function(fn)
