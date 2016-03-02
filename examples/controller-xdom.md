@@ -18,6 +18,9 @@ var Dog = Composer.Model.extend({});
 
 // create a controller to show a dog in our view
 var ShowDogController = Composer.Controller.extend({
+    // enable XDOM
+    xdom: true,
+
     elements: {
         'input[name=name]': 'inp_name'
     },
@@ -32,12 +35,10 @@ var ShowDogController = Composer.Controller.extend({
     {
         if(!this.model) return this.release();
         this.with_bind(this.model, 'change', this.render.bind(this));
-        this.render()
-            .bind(this)
-            .then(function() { this.inp_name.focus(); });
+        this.render({complete: function() { this.inp_name.focus(); }.bind(this)});
     },
 
-    render: function()
+    render: function(options)
     {
         // we're going to inject data directly into the view. this is the simple
         // way to do things, but is vulnerable to XSS attacks. in general, use a
@@ -51,7 +52,7 @@ var ShowDogController = Composer.Controller.extend({
             '   <input type="submit" value="Change dog name">',
             '</form>'
         ].join('\n');
-        return this.html(html);
+        this.html(html, options);
     },
 
     submit: function(e)
