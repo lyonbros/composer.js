@@ -26,23 +26,20 @@ var ShowDogController = Composer.Controller.extend({
     },
 
     events: {
-        'submit form': 'submit'
+        'input input[name=name]': 'change_name'
     },
 
     model: false,
 
     init: function()
     {
-        if(!this.model) return this.release();
+        // re-render on all model changes
         this.with_bind(this.model, 'change', this.render.bind(this));
         this.render({complete: function() { this.inp_name.focus(); }.bind(this)});
     },
 
     render: function(options)
     {
-        // we're going to inject data directly into the view. this is the simple
-        // way to do things, but is vulnerable to XSS attacks. in general, use a
-        // real templating engine to avoid such things =]
         var data = this.model.toJSON();
         var html = [
             '<h3>This dog\'s name is '+ data.name +'</h3>',
@@ -55,13 +52,9 @@ var ShowDogController = Composer.Controller.extend({
         this.html(html, options);
     },
 
-    submit: function(e)
+    change_name: function(e)
     {
-        if(e) e.preventDefault();
         var name = this.inp_name.value;
-
-        // save the name back into the dog. this fires our "change" event, which
-        // re-renders
         this.model.set({name: name});
     }
 });
