@@ -435,7 +435,7 @@ var HiController = Composer.Controller.extend({
 {% endhighlight %}
 </div>
 
-This is great for existing composer projects that want to slowly move to the
+This is great for existing Composer projects that want to slowly move to the
 XDOM model. Alternatively, you can enable XDOM for all controllers:
 
 <div class="noeval">
@@ -444,7 +444,7 @@ Composer.Controller.xdomify();
 {% endhighlight %}
 </div>
 
-This goes great with a [Composer.promisify()](/docs/util#composer-promisify)
+This goes great with a [Composer.promisify()](/composer.js/docs/util#composer-promisify)
 call =].
 
 ### Examples
