@@ -66,7 +66,7 @@
 			this.trigger('list:'+(this._empty ? 'empty' : 'notempty'));
 
 			this.with_bind(collection, 'clear', function(options) {
-				this.clear_subcontrollers();
+				this._clear_subcontrollers();
 			}.bind(this));
 			this.with_bind(collection, 'add', function(model, _, options) {
 				this._add_subcontroller(model, create_fn, options);
@@ -77,11 +77,11 @@
 			if(options.bind_reset)
 			{
 				this.with_bind(collection, 'reset', function(options) {
-					this.reset_subcontrollers(create_fn, options);
+					this._reset_subcontrollers(create_fn, options);
 				}.bind(this));
 			}
 
-			this.reset_subcontrollers(create_fn);
+			this._reset_subcontrollers(create_fn);
 		},
 
 		release: function()
@@ -92,14 +92,14 @@
 			fragment.appendChild(this.el);
 
 			// do an async wipe of the subcontrollers
-			this.clear_subcontrollers({async: true});
+			this._clear_subcontrollers({async: true});
 			return this.parent.apply(this, arguments);
 		},
 
 		/**
 		 * Index a controller so it can be looked up by the model is wraps
 		 */
-		index_controller: function(model, controller)
+		_index_controller: function(model, controller)
 		{
 			if(!model) return false;
 			this._subcontroller_idx[model.cid()] = controller;
@@ -109,7 +109,7 @@
 		/**
 		 * Unindex a model -> controller lookup
 		 */
-		unindex_controller: function(model, controller)
+		_unindex_controller: function(model, controller)
 		{
 			if(!model) return false;
 			delete this._subcontroller_idx[model.cid()];
@@ -121,7 +121,7 @@
 		/**
 		 * Lookup a controller by its model
 		 */
-		lookup_controller: function(model)
+		_lookup_controller: function(model)
 		{
 			if(!model) return false;
 			return this._subcontroller_idx[model.cid()];
@@ -130,7 +130,7 @@
 		/**
 		 * Untrack all subcontrollers, releasing each one
 		 */
-		clear_subcontrollers: function(options)
+		_clear_subcontrollers: function(options)
 		{
 			options || (options = {});
 
@@ -175,11 +175,11 @@
 		 * Sync the tracked subcontrollers with the items in the wrapped
 		 * collection
 		 */
-		reset_subcontrollers: function(create_fn, options)
+		_reset_subcontrollers: function(create_fn, options)
 		{
 			options || (options = {});
 
-			this.clear_subcontrollers();
+			this._clear_subcontrollers();
 
 			var reset_fragment = this.options.fragment_on_reset;
 			if(reset_fragment)
@@ -210,19 +210,19 @@
 		_add_subcontroller: function(model, create_fn, options)
 		{
 			var con = create_fn(model, options);
-			this.index_controller(model, con);
+			this._index_controller(model, con);
 
 			// if the subcontroller releases itself, be sure to remove it from
 			// tracking
 			con.bind('release', function() {
-				this.unindex_controller(model, con);
+				this._unindex_controller(model, con);
 			}.bind(this));
 
 			// inject the controller at the correct position, according to the
 			// collection's sortfn
 			var sort_idx = this._collection.sort_index(model, options);
 			var before_model = this._collection.sort_at(sort_idx - 1, options) || false;
-			var before_con = this.lookup_controller(before_model);
+			var before_con = this._lookup_controller(before_model);
 
 			var parent = con.el.parentNode;
 			if(sort_idx == 0)
@@ -245,10 +245,10 @@
 		 */
 		_remove_subcontroller: function(model)
 		{
-			var con = this.lookup_controller(model);
+			var con = this._lookup_controller(model);
 			if(!con) return false;
 			con.release();
-			this.unindex_controller(model, con);
+			this._unindex_controller(model, con);
 		}
 	});
 	this.Composer.exp0rt({ ListController: ListController });
