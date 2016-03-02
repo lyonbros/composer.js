@@ -449,7 +449,7 @@ call =].
 
 ### Examples
 
-Check out some [XDOM controllers on the examples page.](/composer.js/examples/controller-xdom)
+Check out some [XDOM controllers on the examples page](/composer.js/examples/controller-xdom).
 
 ### Caveats
 
