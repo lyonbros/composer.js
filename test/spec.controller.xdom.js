@@ -37,6 +37,7 @@ describe('Composer.Controller.XDOM', function() {
 		expect(con.param1).toBe('omg');
 		expect(con.el.tagName.toLowerCase()).toBe('div');
 		expect(con.clicked_h1).toBe(false);
+		expect(con.title).toBeFalsy();
 		con.bind_once('rendered', function() {
 			con.click_title();
 			expect(con.clicked_h1).toBe(true);
