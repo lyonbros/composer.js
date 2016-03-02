@@ -197,7 +197,7 @@ var con = new MyController({ inject: '#render-test' });
 {% endhighlight %}
 <div id="render-test"></div>
 
-### html :: function(element_or_string)
+### html :: function(element_or_string, options)
 
 Update the controller's [el](#el)'s inner HTML. This also refreshes the
 [controller's elements](#elements), making sure they reflect the elements in the
@@ -206,6 +206,13 @@ passed HTML.
 See [render](#render) for example usage.
 
 Note that this function can take document fragments as of v1.1.12.
+
+`options` can contain the following items:
+
+- `complete` - Only used when [XDOM](#XDOM) is enabled, this function is called
+when batched rendering has completed. Note that when [Composer.promisify()](/docs/util#composer-promisify)
+is called, `html()` returns a promise that resolves when rendering is complete
+and `options.complete` is not needed.
 
 ### with_bind :: function(object, ev, fn, name)
 
@@ -377,6 +384,103 @@ See the [events section](#events-1) for a release example.
 Replace the controller's [el](#el) with another DOM element. Once the replace is
 complete, the [elements](#elements) and [events](#events-1) are refreshed for
 the controller.
+
+## XDOM
+
+New in Composer v1.2 is a feaure we call XDOM. It is a diffing / patching
+implementation for the DOM which does a few things:
+
+1.  Instead of replacing the DOM entirely when calling [Controller.html()](/composer.js/docs/controller#html),
+XDOM compares the differences in the HTML being handed to `html()` and what is
+currently in the DOM and uses that to patch the DOM. This is a large shift from
+before, where re-rendering a controller meant actually swapping out all the DOM
+nodes under [Controller.el](/composer.js/docs/controller#el) for new ones. XDOM
+compares the differences and only change what's needed.
+
+    This is important because without XDOM, developers had to be cautious about
+how to manage state in the DOM while rendering. You had to be careful about how
+re-rendering might lose certain classes on elements, or how your form fields
+would lose the values users input into them (or lose focus). This is no longer
+an issue...calling `Controller.html()` several times will only update the pieces
+that have changed and leave everything else untouched.
+
+   What this means is that with XDOM, it's actually much better to re-render as
+much as possible. You don't have to apply classes to DOM elements directly. You
+don't have to worry about losing form field values. Just re-render and it all
+works.
+1.  XDOM batches calls to [Controller.html()](/composer.js/docs/controller#html)
+so many changes at once are saved up and applied on the browser's animation
+frame. This frees the developer from having to think about the most efficient
+rendering strategy and allows them to re-render whenever they want and have it
+be performant.
+
+This can be compared to frameworks like Angular or React, which use Virtual DOM
+implementations to patch the DOM sa changes are made. The difference is we don't
+use a Virtual DOM implementation, we just use the DOM itself. Not only is this
+more efficient in a lto of cases but also creates less of a gap when having to
+think about building apps. You're already used to using the DOM. Why should you
+have to give it up entirely and let a framework manage it for you?
+
+### Using XDOM
+
+There are two ways to use XDOM. You can enable it on a per-controller basis:
+
+<div class="noeval">
+{% highlight js %}
+var HiController = Composer.Controller.extend({
+    xdom: true,
+    ...
+});
+{% endhighlight %}
+</div>
+
+This is great for existing composer projects that want to slowly move to the
+XDOM model. Alternatively, you can enable XDOM for all controllers:
+
+<div class="noeval">
+{% highlight js %}
+Composer.Controller.xdomify();
+{% endhighlight %}
+</div>
+
+This goes great with a [Composer.promisify()](/docs/util#composer-promisify)
+call =].
+
+### Examples
+
+Check out some [XDOM controllers on the examples page.](/composer.js/examples/controller-xdom)
+
+### Caveats
+
+There are some differences you need to be aware of when using XDOM:
+
+- You need to include some form of DOM diffing library. The default supported
+library is [morphdom](https://github.com/patrick-steele-idem/morphdom). You can
+[hook in your own diffing/patching library](#composer-xdom-hooks) if desired.
+- [Controller.html()](/composer.js/docs/controller#html) is asynchronous. It
+will passes your DOM element/HTML string off to the XDOM rendering system and
+doesn't update the Controller's [elements](/composer.js/docs/controller#elements)
+until rendering is complete.
+- You can still make incremental updates to the DOM after rendering, however
+with XDOM it conceptually makes much more sense to just re-render your
+controller instead. So if you are used to writing non-XDOM controllers, this may
+be a bit of a paradigm shift in some cases (like when rendering forms, for
+instance). Re-rendering is (nearly) free, so it's much better to overuse it.
+
+### Composer.xdom.hooks :: function(options)
+
+If you don't want to use [morphdom](https://github.com/patrick-steele-idem/morphdom)
+(the default supported DOM diffing implementation) you are free to use your own
+by hooking it into Composer. Simply call `Composer.xdom.hooks`.
+
+`options` can contain the following items:
+
+- `diff` - A function (`function(from_element, to_element)`) that takes two DOM
+elements and returns a diff between them. The result of this function will be
+passed directly to `patch`:
+- `patch`- A function (`function(root_element, diff, options)`) that takes a
+root DOM element to apply the patch to, a diff created by the `diff` function,
+and a set of options (passed down from [Controller.html()](/composer.js/docs/controller#html)).
 
 ## Composer.find_parent :: function(selector, element)
 
