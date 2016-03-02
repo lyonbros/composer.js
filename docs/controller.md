@@ -395,9 +395,9 @@ XDOM compares the differences in the HTML being handed to `html()` and what is
 currently in the DOM and uses that to patch the DOM. This is a large shift from
 before, where re-rendering a controller meant actually swapping out all the DOM
 nodes under [Controller.el](/composer.js/docs/controller#el) for new ones. XDOM
-compares the differences and only change what's needed.
+compares the differences and only changes what's needed.
 
-    This is important because without XDOM, developers had to be cautious about
+    This is important because without XDOM, you had to be cautious about
 how to manage state in the DOM while rendering. You had to be careful about how
 re-rendering might lose certain classes on elements, or how your form fields
 would lose the values users input into them (or lose focus). This is no longer
@@ -411,9 +411,9 @@ works.
 
 1.  XDOM batches calls to [Controller.html()](/composer.js/docs/controller#html)
 so many changes at once are saved up and applied on the browser's animation
-frame. This frees the developer from having to think about the most efficient
-rendering strategy and allows them to re-render whenever they want and have it
-be performant.
+frame. This frees you from having to think about the most efficient
+rendering strategy and allows you to render often without sacrificing
+performance.
 
 This can be compared to frameworks like Angular or React, which use Virtual DOM
 implementations to patch the DOM as changes are made. The difference is we don't
