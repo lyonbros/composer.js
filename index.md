@@ -43,6 +43,8 @@ that makes asynchronous programming much simpler.
 extendable modules.
 - [Controller event extension merging](/composer.js/docs/class#composer-merge-extend)
 so child Controllers can inherit DOM event tracking from parent Controllers.
+- [In-depth and understandable documentation](/composer.js/docs) with lots of
+runnable examples sprinkled in.
 
 Composer is framework-agnostic: it does not require jQuery, Mootools, or any other
 framework to function (however, to support older versions of IE, Mootools is
