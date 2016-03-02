@@ -1,68 +1,85 @@
+var DogController = Composer.Controller.extend({
+	model: null,
+	init: function()
+	{
+		this.render();
+		this.with_bind(this.model, 'change', this.render.bind(this));
+	},
+
+	render: function()
+	{
+		var html = [
+			'<p>woof '+this.model.get('name')+'</p>'
+		].join('\n');
+		return this.html(html);
+	}
+});
+
+var RabbitController = Composer.Controller.extend({
+	model: null,
+	init: function()
+	{
+		this.render();
+		this.with_bind(this.model, 'change', this.render.bind(this));
+	},
+
+	render: function()
+	{
+		var html = [
+			'<p>*hop* '+this.model.get('name')+'</p>'
+		].join('\n');
+		return this.html(html);
+	}
+});
+
 var VDomTestController = Composer.Controller.extend({
 	elements: {
-		'p': 'el_p',
+		'.dogs': 'el_dogs',
+		'.rabbits': 'el_rabbits',
 		'input[name=name]': 'inp_name'
 	},
 
 	events: {
 		'click p': 'clicked',
 		'click h1': 'head',
-		'input input[name=name]': 'head'
+		'input input[name=name]': 'change'
 	},
 
 	init: function()
 	{
 		this.model = new Composer.Model();
-		this.render();
+		this.render().bind(this)
+			.then(function() {
+				this.track_subcontroller('dog', function() {
+					return new DogController({
+						inject: this.el_dogs,
+						model: this.model
+					});
+				}.bind(this));
+				this.track_subcontroller('rabbit', function() {
+					return new RabbitController({
+						inject: this.el_rabbits,
+						model: this.model
+					});
+				}.bind(this));
+			});
 		this.with_bind(this.model, 'change', this.render.bind(this));
-		this.poll();
 	},
 
 	render: function()
 	{
-		var name = this.model.get('name');
 		var html = [
-			'<h1>HELLO beep boop</h1>',
-			'<p>my name is <span>x-'+name+'</span></p>',
-			'<input type="text" name="name" value="">',
-			'<br>',
-			'<select name="try"><option value="1">pick me</option><option selected value="2">no pick me asswipe</option></select>',
-			'<br>',
-			'<input type="radio" name="bov" value="1">',
-			'<input type="radio" name="bov" value="2">',
-			'<br>',
-			'<input type="checkbox" value="1">',
-			'<br>',
-			'<textarea name="body"></textarea>'
+			'<h1>my name is '+this.model.get('name')+'</h1>',
+			'<input type="text" name="name">',
+			'<div class="dogs"></div>',
+			'<div class="rabbits"></div>'
 		].join('\n');
-		this.html(html)
-			.then(function() { console.log('done rendering!!'); });
+		return this.html(html);
 	},
 
-	clicked: function(e)
+	change: function(e)
 	{
-		console.log('clicked: ', e.target);
-	},
-
-	head: function(e)
-	{
-		this.model.set({name: this.inp_name.get('value')});
-	},
-
-	poll: function(e)
-	{
-		var set_name = function()
-		{
-			var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-			var name = '';
-			for(var i = 0; i < 12; i++)
-			{
-				name += chars[Math.floor(Math.random() * chars.length)];
-			}
-			this.model.set({name: name});
-			setTimeout(set_name, 1000 + (1000 * Math.random()));
-		}.bind(this);
-		set_name();
+		this.model.set({name: this.inp_name.value});
 	}
 });
 

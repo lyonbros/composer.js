@@ -1,4 +1,4 @@
-describe('Composer.Controller.XDOM', function() {
+describe('Composer.Controller.xdom', function() {
 	var MyController = Composer.Controller.extend({
 		inject: '#test',
 		xdom: true,
@@ -157,7 +157,7 @@ describe('Composer.Controller.XDOM', function() {
 		con.render();
 	});
 
-	it('handles subcontrollers properly', function(done) {
+	it('treats subcontrollers the same as non xdom', function(done) {
 		var ChildController = Composer.Controller.extend({
 			xdom: true,
 			init: function()
@@ -214,6 +214,62 @@ describe('Composer.Controller.XDOM', function() {
 			con.render();
 		});
 		con.render();
+	});
+
+	it('will preserve subcontroller\'s el when re-rendering', function(done) {
+		var SubController = Composer.Controller.extend({
+			xdom: true,
+			init: function() { this.html('<p>hello</p>'); }
+		});
+
+		var rendered = 0;
+		var MasterController = Composer.Controller.extend({
+			xdom: true,
+
+			elements: {
+				'h1': 'el_h1',
+				'.sub': 'el_sub'
+			},
+
+			model: null,
+
+			init: function()
+			{
+				this.render({
+					complete: function() {
+						this.track_subcontroller('jerry', function() {
+							return new SubController({ inject: this.el_sub });
+						}.bind(this));
+						this.trigger('rendered');
+					}.bind(this)
+				});
+				this.with_bind(this.model, 'change', this.render.bind(this));
+			},
+
+			render: function(options)
+			{
+				options || (options = {})
+				if(!options.complete) options.complete = this.trigger.bind(this, 'rendered');
+				rendered++;
+				this.html('<h1>name: '+this.model.get('name')+'</h1>', options);
+			}
+		});
+
+		var model = new Composer.Model({name: 'biff'});
+		var con = new MasterController({ model: model });
+		con.bind_once('rendered', function() {
+			var el = con.get_subcontroller('jerry').el;
+			var render_cb = 0;
+			con.bind('rendered', function() { render_cb++; });
+			model.set({name: 'slappy'});
+			model.set({name: 'wtf'});
+			con.bind_once('rendered', function() {
+				expect(rendered).toBe(3);
+				expect(el).toBe(con.get_subcontroller('jerry').el);
+				expect(con.el_h1.innerHTML).toBe('name: wtf');
+				done();
+			});
+		});
 	});
 });
 

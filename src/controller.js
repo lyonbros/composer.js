@@ -35,14 +35,17 @@
 				scheduled = false;
 				var diff_clone = diffs.slice(0);
 				diffs = [];
+				var cbs = [];
 				diff_clone.forEach(function(entry) {
 					var from = entry[0];
 					var diff = entry[1];
 					var options = entry[2];
 					var cb = entry[3];
 					Composer.xdom.patch(from, diff, options);
-					if(cb) cb();
+					if(cb) cbs.push(cb);
 				});
+				// run our callbacks after we run our DOM updates
+				cbs.forEach(function(cb) { cb(); });
 			});
 		};
 	})();
@@ -165,6 +168,9 @@
 			if(xdom || this.xdom)
 			{
 				var cb = options.complete;
+				options.ignore_children = Object.keys(this._subcontrollers)
+					.map(function(name) { return this._subcontrollers[name].el; }.bind(this))
+					.filter(function(el) { return !!el; });
 				schedule_render(this.el, el, options, function() {
 					this.refresh_elements();
 					if(cb) cb();

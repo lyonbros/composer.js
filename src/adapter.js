@@ -201,6 +201,7 @@
 			options || (options = {});
 
 			if(!root || !diff[1]) return;
+			var ignore_children = options.ignore_children;
 			return morphdom(root, diff[1], {
 				// this callback preserves form input values (text, checkboxes,
 				// radios, textarea, selects)
@@ -219,6 +220,9 @@
 						to.value = from.value;
 						break;
 					}
+				},
+				onBeforeNodeDiscarded: function(node) {
+					if(ignore_children.indexOf(node) >= 0) return false;
 				}
 			});
 		},
