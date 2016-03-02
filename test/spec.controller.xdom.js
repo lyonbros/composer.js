@@ -186,7 +186,7 @@ describe('Composer.Controller.xdom', function() {
 			{
 				this.html('<h1>test</h1><div class="sub"></div>', {
 					complete: function() {
-						this.track_subcontroller('child', function() {
+						this.sub('child', function() {
 							tracked++;
 							return new ChildController({
 								inject: this.el_sub
@@ -200,12 +200,12 @@ describe('Composer.Controller.xdom', function() {
 
 		var con = new MasterController();
 		con.bind_once('rendered', function() {
-			var child = con.get_subcontroller('child');
+			var child = con.sub('child');
 			var el = child.el;
 			expect(child instanceof Composer.Controller).toBe(true);
 			expect(el.parentNode).toBe(con.el_sub);
 			con.bind_once('rendered', function() {
-				var child = con.get_subcontroller('child');
+				var child = con.sub('child');
 				expect(child.el.parentNode).toBe(con.el_sub);
 				expect(el == child.el).toBe(false);
 				expect(tracked).toBe(2);
@@ -237,7 +237,7 @@ describe('Composer.Controller.xdom', function() {
 			{
 				this.render({
 					complete: function() {
-						this.track_subcontroller('jerry', function() {
+						this.sub('jerry', function() {
 							return new SubController({ inject: this.el_sub });
 						}.bind(this));
 						this.trigger('rendered');
@@ -258,14 +258,14 @@ describe('Composer.Controller.xdom', function() {
 		var model = new Composer.Model({name: 'biff'});
 		var con = new MasterController({ model: model });
 		con.bind_once('rendered', function() {
-			var el = con.get_subcontroller('jerry').el;
+			var el = con.sub('jerry').el;
 			var render_cb = 0;
 			con.bind('rendered', function() { render_cb++; });
 			model.set({name: 'slappy'});
 			model.set({name: 'wtf'});
 			con.bind_once('rendered', function() {
 				expect(rendered).toBe(3);
-				expect(el).toBe(con.get_subcontroller('jerry').el);
+				expect(el).toBe(con.sub('jerry').el);
 				expect(con.el_h1.innerHTML).toBe('name: wtf');
 				done();
 			});

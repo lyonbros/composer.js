@@ -239,40 +239,42 @@
 
 		/**
 		 * keep track of a sub controller that will release when this controller
-		 * does
+		 * does. If no creation function given, return the subcontroller under
+		 * the given name.
 		 */
-		track_subcontroller: function(name, create_fn)
+		sub: function(name, create_fn)
 		{
+			if(!create_fn) return this._subcontrollers[name] || false;
+
 			// if we have an existing controller with the same name, release and
 			// remove it.
-			this.remove_subcontroller(name);
+			this.remove(name);
 
 			// create the new controller, track it, and make sure if it's
 			// released we untrack it
 			var instance = create_fn();
-			instance.bind('release', this.remove_subcontroller.bind(this, name, {skip_release: true}));
+			instance.bind('release', this.remove.bind(this, name, {skip_release: true}));
 			this._subcontrollers[name] = instance;
 			return instance;
 		},
 
 		/**
-		 * get a tracked subcontroller by name
-		 */
-		get_subcontroller: function(name)
-		{
-			return this._subcontrollers[name] || false;
-		},
-
-		/**
 		 * remove a subcontroller from tracking and (by default) release it
 		 */
-		remove_subcontroller: function(name, options)
+		remove: function(name, options)
 		{
 			options || (options = {});
 			if(!this._subcontrollers[name]) return
 			if(!options.skip_release) this._subcontrollers[name].release();
 			delete this._subcontrollers[name];
 		},
+
+		/**
+		 * DEPRECATED. use sub()/remove()
+		 */
+		track_subcontroller: function() { return this.sub.apply(this, arguments); },
+		get_subcontroller: function(name) { return this.sub.apply(this, arguments); },
+		remove_subcontroller: function() { return this.remove.apply(this, arguments); },
 
 		/**
 		 * make sure el is defined as an HTML element
