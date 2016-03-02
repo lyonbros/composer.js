@@ -15,6 +15,9 @@ We'll start off basic and move into more complex territory.
 Shows how to tie a model and controller together using eventing
 - [A form in a controller](/composer.js/examples/controller-form)  
 Use a controller to monitor form fields and update them into a model
+- [A form in an XDOM controller](/composer.js/examples/controller-xdom)  
+Use an XDOM controller to monitor form fields and update them into a model
+with efficient re-rendering.
 - [Simple TODO app](/composer.js/examples/todo)  
 Take what we've learned and build a simple TODO app
 - [Using the Router](/composer.js/examples/router)  
