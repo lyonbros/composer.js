@@ -4,7 +4,7 @@ layout: home
 ---
 
 <div class="intro">
-    <strong>Composer is a framework for building complex single-page applications.</strong>
+    <strong>Composer is a set of stackable libraries for building complex single-page apps.</strong>
 
     <div class="button-row">
         <div class="button download min">
@@ -20,14 +20,20 @@ layout: home
     </div>
 </div>
 
-Composer is a javascript MVC framework that provides a means to organize and scale
-complex single-page applications. For the curious, read about
-[the differences between Composer and Backbone](/composer.js/pages/comparison).
+Composer is a set of stackable libraries that follow the MVC pattern, providing
+a means to organize and scale complex single-page applications. For the curious,
+read about [the differences between Composer and Backbone](/composer.js/pages/comparison).
+
+Composer relies heavily on loosely tying pieces together with eventing, and also
+provides efficient DOM diffing/patching/batching without relying on a virtual DOM
+implementation.
 
 Composer is framework-agnostic: it does not require jQuery, Mootools, or any other
 framework to function (however, to support older versions of IE, Mootools is
 reccommended). As of version 1.1.0, Composer's only external dependency is 
-[History.js](https://github.com/browserstate/history.js/).
+[History.js](https://github.com/browserstate/history.js/) (and as of 1.2.0,
+Composer *suggests* [morhpdom](https://github.com/patrick-steele-idem/morphdom)
+for the [XDOM feature](/composer.js/docs/controller/#xdom).
 
 See [apps using Composer in production &raquo;](/composer.js/pages/apps)
 
