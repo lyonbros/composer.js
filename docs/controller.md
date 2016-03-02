@@ -459,9 +459,10 @@ There are some differences you need to be aware of when using XDOM:
 library is [morphdom](https://github.com/patrick-steele-idem/morphdom). You can
 [hook in your own diffing/patching library](#composer-xdom-hooks) if desired.
 - [Controller.html()](/composer.js/docs/controller#html) is asynchronous. It
-will passes your DOM element/HTML string off to the XDOM rendering system and
-doesn't update the Controller's [elements](/composer.js/docs/controller#elements)
-until rendering is complete.
+passes your DOM element/HTML string off to the XDOM rendering system and doesn't
+update the Controller's [elements](/composer.js/docs/controller#elements) until
+rendering is complete. See the `Composer.html()` docs for ways to know when
+rendering is complete.
 - You can still make incremental updates to the DOM after rendering, however
 with XDOM it conceptually makes much more sense to just re-render your
 controller instead. So if you are used to writing non-XDOM controllers, this may
