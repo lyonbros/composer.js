@@ -404,7 +404,7 @@ would lose the values users input into them (or lose focus). This is no longer
 an issue...calling `Controller.html()` several times will only update the pieces
 that have changed and leave everything else untouched.
 
-   What this means is that with XDOM, it's actually much better to re-render as
+    What this means is that with XDOM, it's actually much better to re-render as
 much as possible. You don't have to apply classes to DOM elements directly. You
 don't have to worry about losing form field values. Just re-render and it all
 works.
