@@ -205,33 +205,20 @@
 				// this callback preserves form input values (text, checkboxes,
 				// radios, textarea, selects)
 				onBeforeMorphEl: function(from, to) {
-					if(options.reset_inputs) return true;
+					if(options.reset_inputs) return;
 
 					var tag = from.tagName.toLowerCase();
 					switch(tag)
 					{
 					case 'input':
 					case 'textarea':
-						var type = from.getAttribute('type');
-						switch(type)
-						{
-						case 'checkbox':
-						case 'radio':
-							to.checked = from.checked;
-							break;
-						default:
-							if(from.value && !to.value)
-							{
-								to.value = from.value;
-							}
-							break;
-						}
+						to.checked = from.checked;
+						to.value = from.value;
 						break;
 					case 'select':
 						to.value = from.value;
 						break;
 					}
-					return true;
 				}
 			});
 		},
