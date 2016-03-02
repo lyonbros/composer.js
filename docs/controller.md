@@ -408,6 +408,7 @@ that have changed and leave everything else untouched.
 much as possible. You don't have to apply classes to DOM elements directly. You
 don't have to worry about losing form field values. Just re-render and it all
 works.
+
 1.  XDOM batches calls to [Controller.html()](/composer.js/docs/controller#html)
 so many changes at once are saved up and applied on the browser's animation
 frame. This frees the developer from having to think about the most efficient
