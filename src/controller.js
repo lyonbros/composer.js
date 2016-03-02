@@ -28,7 +28,7 @@
 		{
 			options || (options = {});
 
-			diffs.push([from, Composer.diff(from, to), options, callback]);
+			diffs.push([from, Composer.xdom.diff(from, to), options, callback]);
 			if(scheduled) return;
 			scheduled = true;
 			Composer.frame(function() {
@@ -40,7 +40,7 @@
 					var diff = entry[1];
 					var options = entry[2];
 					var cb = entry[3];
-					Composer.patch(from, diff, options);
+					Composer.xdom.patch(from, diff, options);
 					if(cb) cb();
 				});
 			});

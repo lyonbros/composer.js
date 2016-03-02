@@ -174,52 +174,81 @@
 		return find_parent(selector, par);
 	};
 
-	var diff = function(from, to)
-	{
-		return [from, to];
-	};
+	var frame = function(cb) { global.requestAnimationFrame(cb); };
 
-	var patch = function(from, diff, options)
-	{
-		options || (options = {});
+	/**
+	 * our xdom system! provides hooks for diffing/patching the DOM, and also
+	 * allows parts of itself to be replaced by different implementations.
+	 */
+	var xdom = {
+		/**
+		 * diff two DOM elements. in the default case, we use morphdom which
+		 * does the diffing/patching in one call so we don't really need to do
+		 * anything here, but other DOM patching libs may have discrete steps so
+		 * we want to have a hook for it.
+		 */
+		diff: function(from, to)
+		{
+			return [from, to];
+		},
 
-		if(!from || !diff[1]) return;
-		return morphdom(from, diff[1], {
-			// this callback preserves form input values (text, checkboxes,
-			// radios, textarea, selects)
-			onBeforeMorphEl: function(from, to) {
-				if(options.reset_inputs) return true;
+		/**
+		 * patch the DOM! uses morphdom by default. takes a root DOM node to
+		 * patch and a patch to apply to it.
+		 */
+		patch: function(root, diff, options)
+		{
+			options || (options = {});
 
-				var tag = from.tagName.toLowerCase();
-				switch(tag)
-				{
-				case 'input':
-				case 'textarea':
-					var type = from.getAttribute('type');
-					switch(type)
+			if(!root || !diff[1]) return;
+			return morphdom(root, diff[1], {
+				// this callback preserves form input values (text, checkboxes,
+				// radios, textarea, selects)
+				onBeforeMorphEl: function(from, to) {
+					if(options.reset_inputs) return true;
+
+					var tag = from.tagName.toLowerCase();
+					switch(tag)
 					{
-					case 'checkbox':
-					case 'radio':
-						to.checked = from.checked;
-						break;
-					default:
-						if(from.value && !to.value)
+					case 'input':
+					case 'textarea':
+						var type = from.getAttribute('type');
+						switch(type)
 						{
-							to.value = from.value;
+						case 'checkbox':
+						case 'radio':
+							to.checked = from.checked;
+							break;
+						default:
+							if(from.value && !to.value)
+							{
+								to.value = from.value;
+							}
+							break;
 						}
 						break;
+					case 'select':
+						to.value = from.value;
+						break;
 					}
-					break;
-				case 'select':
-					to.value = from.value;
-					break;
+					return true;
 				}
-				return true;
-			}
-		});
-	};
+			});
+		},
 
-	var frame = function(cb) { global.requestAnimationFrame(cb); };
+		/**
+		 * allows hooking in your own DOM diffing/patching library
+		 */
+		hooks: function(options)
+		{
+			options || (options = {});
+			var diff = options.diff;
+			var patch = options.patch;
+
+			if(diff) xdom.diff = diff;
+			if(patch) xdom.patch = patch;
+		}
+	};
 
 	this.Composer.exp0rt({
 		find: find,
@@ -228,9 +257,8 @@
 		fire_event: fire_event,
 		remove_event: remove_event,
 		find_parent: find_parent,
-		diff: diff,
-		patch: patch,
-		frame: frame
+		frame: frame,
+		xdom: xdom
 	});
 }).apply((typeof exports != 'undefined') ? exports : this);
 
