@@ -21,10 +21,8 @@ layout: home
 </div>
 
 Composer is a set of stackable libraries that follow the MVC pattern, providing
-a means to organize and scale complex single-page applications. For the curious,
-read about [the differences between Composer and Backbone](/composer.js/pages/comparison).
-
-Beyond the usual Model/Collection/Controller modules, Composer provides
+a means to organize and scale complex single-page applications. On top of normal
+MVC, Composer provides
 
 - [An independent eventing module](/composer.js/docs/event) to encourage loose
 coupling between components.
@@ -53,7 +51,9 @@ reccommended). As of version 1.1.0, Composer's only external dependency is
 Composer *suggests* [morhpdom](https://github.com/patrick-steele-idem/morphdom)
 for the [XDOM feature](/composer.js/docs/controller/#xdom).
 
-See [apps using Composer in production &raquo;](/composer.js/pages/apps)
+For the curious, read about [the differences between Composer and Backbone](/composer.js/pages/comparison).
+
+Also see [apps using Composer in production &raquo;](/composer.js/pages/apps)
 
 ## Dependencies
 

@@ -35,7 +35,8 @@ body.body-build-awesome-apps header ul {float: none; display: block; margin: 12p
 }
 
 content {padding: 64px 0 0 0;}
-content .home p {font-size: 1.15em; line-height: 1.6em;}
+content .home p,
+content .home ul {font-size: 1.15em; line-height: 1.6em;}
 content .page {}
 
 footer {margin: 64px 0 32px 0; padding: 6px 0 0 0; font-size: .85em; border-top: 1px solid #ccc;}
