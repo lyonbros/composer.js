@@ -168,9 +168,13 @@
 			if(xdom || this.xdom)
 			{
 				var cb = options.complete;
-				options.ignore_children = Object.keys(this._subcontrollers)
-					.map(function(name) { return this._subcontrollers[name].el; }.bind(this))
-					.filter(function(el) { return !!el; });
+				var ignore_children = options.ignore_children || [];
+				ignore_children = ignore_children.concat(
+					Object.keys(this._subcontrollers)
+						.map(function(name) { return this._subcontrollers[name].el; }.bind(this))
+						.filter(function(el) { return !!el; })
+				);
+				options.ignore_children = ignore_children;
 				schedule_render(this.el, el, options, function() {
 					this.refresh_elements();
 					if(cb) cb();
