@@ -157,24 +157,63 @@ describe('Composer.Controller.XDOM', function() {
 		con.render();
 	});
 
-	it('will set className properly', function() {
-		var Item1 = Composer.Controller.extend({
+	it('handles subcontrollers properly', function(done) {
+		var ChildController = Composer.Controller.extend({
 			xdom: true,
-			// deprecated, but we want to support it
-			className: 'myclass'
+			init: function()
+			{
+				this.render();
+			},
+
+			render: function()
+			{
+				this.html('<p>Get a job, sir.</p>');
+			}
 		});
-		var Item2 = Composer.Controller.extend({
+		var tracked = 0;
+		var MasterController = Composer.Controller.extend({
 			xdom: true,
-			class_name: 'top doge'
+
+			elements: {
+				'.sub': 'el_sub'
+			},
+
+			init: function()
+			{
+			},
+
+			render: function()
+			{
+				this.html('<h1>test</h1><div class="sub"></div>', {
+					complete: function() {
+						this.track_subcontroller('child', function() {
+							tracked++;
+							return new ChildController({
+								inject: this.el_sub
+							});
+						}.bind(this));
+						this.trigger('rendered');
+					}.bind(this)
+				});
+			}
 		});
 
-		var con1 = new Item1();
-		var con2 = new Item2();
-
-		expect(con1.el.className).toContain('myclass');
-		expect(con2.el.className).toContain('top doge');
-		con1.release();
-		con2.release();
+		var con = new MasterController();
+		con.bind_once('rendered', function() {
+			var child = con.get_subcontroller('child');
+			var el = child.el;
+			expect(child instanceof Composer.Controller).toBe(true);
+			expect(el.parentNode).toBe(con.el_sub);
+			con.bind_once('rendered', function() {
+				var child = con.get_subcontroller('child');
+				expect(child.el.parentNode).toBe(con.el_sub);
+				expect(el == child.el).toBe(false);
+				expect(tracked).toBe(2);
+				done();
+			});
+			con.render();
+		});
+		con.render();
 	});
 });
 
