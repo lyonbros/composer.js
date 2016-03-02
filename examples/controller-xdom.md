@@ -26,12 +26,14 @@ var ShowDogController = Composer.Controller.extend({
         'input input[name=name]': 'change_name'
     },
 
-    model: false,
+    model: null,
 
     init: function()
     {
         // re-render on all model changes
         this.with_bind(this.model, 'change', this.render.bind(this));
+
+        // we only need to focus once since our input will never be replaced
         this.render({complete: function() { this.inp_name.focus(); }.bind(this)});
     },
 
