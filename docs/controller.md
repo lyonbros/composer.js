@@ -209,7 +209,7 @@ Note that this function can take document fragments as of v1.1.12.
 
 `options` can contain the following items:
 
-- `complete` - Only used when [XDOM](#XDOM) is enabled, this function is called
+- `complete` - Only used when [XDOM](#xdom) is enabled, this function is called
 when batched rendering has completed. Note that when [Composer.promisify()](/docs/util#composer-promisify)
 is called, `html()` returns a promise that resolves when rendering is complete
 and `options.complete` is not needed.
