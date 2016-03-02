@@ -13,9 +13,6 @@ controller form example](/composer.js/examples/controller-form).
 <div id="form-example" class="example fade"></div>
 
 {% highlight js %}
-// create a simple dog model
-var Dog = Composer.Model.extend({});
-
 // create a controller to show a dog in our view
 var ShowDogController = Composer.Controller.extend({
     // enable XDOM
@@ -42,10 +39,8 @@ var ShowDogController = Composer.Controller.extend({
     {
         var data = this.model.toJSON();
         var html = [
-            '<h3>This dog\'s name is '+ data.name +'</h3>',
-            '<form>',
-            '   Rename dog: <input type="text" name="name" value="">',
-            '</form>'
+            '<h3>Woof, I\'m '+ data.name +'</h3>',
+            'Rename dog: <input type="text" name="name" value="">',
         ].join('\n');
         this.html(html, options);
     },
@@ -57,10 +52,12 @@ var ShowDogController = Composer.Controller.extend({
     }
 });
 
-var dog = new Dog({name: 'timmy'});
-var controller = new ShowDogController({
+// create a simple dog model
+var Dog = Composer.Model.extend({});
+
+new ShowDogController({
     inject: '#form-example',
-    model: dog
+    model: new Dog({name: 'timmy'})
 });
 Composer.find(document, '#form-example').className += ' enabled';
 {% endhighlight %}
