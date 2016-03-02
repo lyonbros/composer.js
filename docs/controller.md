@@ -416,7 +416,7 @@ rendering strategy and allows them to re-render whenever they want and have it
 be performant.
 
 This can be compared to frameworks like Angular or React, which use Virtual DOM
-implementations to patch the DOM sa changes are made. The difference is we don't
+implementations to patch the DOM as changes are made. The difference is we don't
 use a Virtual DOM implementation, we just use the DOM itself. Not only is this
 more efficient in a lot of cases but also creates less of a gap when having to
 think about building apps. You're already used to using the DOM. Why should you
