@@ -268,16 +268,16 @@ describe('Composer.Controller', function() {
 
 			init: function()
 			{
-				this.track_subcontroller('Sub2', function() {
+				this.sub('Sub2', function() {
 					return new Sub();
 				});
-				this.remove_subcontroller('Sub2');
+				this.remove('Sub2');
 			},
 
 			render: function()
 			{
 				this.html('<div class="sub"></div>');
-				this.track_subcontroller('Sub', function() {
+				this.sub('Sub', function() {
 					return new Sub();
 				});
 			}
@@ -287,7 +287,7 @@ describe('Composer.Controller', function() {
 		master.render();
 		master.render();
 		expect(sub_released).toBe(3);
-		expect(master.get_subcontroller('Sub') instanceof Sub).toBe(true);
+		expect(master.sub('Sub') instanceof Sub).toBe(true);
 	});
 
 	it('will merge_extend other classes properly', function() {
@@ -323,6 +323,48 @@ describe('Composer.Controller', function() {
 		expect(con2.el.className).toContain('top doge');
 		con1.release();
 		con2.release();
+	});
+
+	it('supports the old subcontroller api', function() {
+		var sub_init = 0;
+		var sub_release = 0;
+		var SubController = Composer.Controller.extend({
+			init: function()
+			{
+				sub_init++;
+				this.bind('release', function() { sub_release++; });
+			}
+		});
+
+		var MasterController = Composer.Controller.extend({
+			elements: { 'div': 'el_div' },
+
+			init: function()
+			{
+				this.render();
+			},
+
+			render: function()
+			{
+				this.html('<div></div>');
+				this.track_subcontroller('sub1', function() {
+					return new SubController({ inject: this.el_div });
+				}.bind(this));
+			}
+		});
+
+		var con = new MasterController();
+		expect(sub_init).toBe(1);
+		con.render();
+		con.render();
+		expect(sub_init).toBe(3);
+		expect(sub_release).toBe(2);
+		expect(con.get_subcontroller('sub1')).toBe(con.sub('sub1'));
+		expect(con.get_subcontroller('sub1') instanceof SubController).toBe(true);
+		con.remove_subcontroller('sub1');
+		expect(sub_init).toBe(3);
+		expect(sub_release).toBe(3);
+
 	});
 });
 
