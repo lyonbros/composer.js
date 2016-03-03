@@ -63,6 +63,15 @@ describe('Composer.ListController', function() {
 		con.release();
 	});
 
+	it('initializes properly with an existing set of models', function() {
+		var collection = new Composer.Collection();
+		collection.add({name: 'barry'});
+		collection.add({name: 'larry'});
+		collection.add({name: 'jerry'});
+		var con = new List({collection: collection});
+		expect(con.list_el.childNodes.length).toBe(3);
+	});
+
 	it('will add sub-controllers when models are added to its collection', function() {
 		var con = new List();
 		var ul = con.list_el;
@@ -224,26 +233,26 @@ describe('Composer.ListController', function() {
 		expect(not_empty).toBe(4);
 	});
 
-	it('will properly use a fragment when resetting items', function() {
-		var FragList = List.extend({
-			init: function()
-			{
-				if(!this.collection) this.collection = new Composer.Collection();
-				this.render()
+	var FragList = List.extend({
+		init: function()
+		{
+			if(!this.collection) this.collection = new Composer.Collection();
+			this.render()
 
-				this.track(this.collection, function(model, options) {
-					options || (options = {});
-					var fragment = options.fragment;
-					return new this.sub({
-						inject: fragment ? fragment : this.list_el,
-						model: model,
-						options: options
-					});
-				}.bind(this), {
-					fragment_on_reset: function() { return this.list_el; }.bind(this)
+			this.track(this.collection, function(model, options) {
+				options || (options = {});
+				var fragment = options.fragment;
+				return new this.sub({
+					inject: fragment ? fragment : this.list_el,
+					model: model,
+					options: options
 				});
-			}
-		});
+			}.bind(this), {
+				fragment_on_reset: function() { return this.list_el; }.bind(this)
+			});
+		}
+	});
+	it('properly uses a fragment when resetting items', function() {
 		var collection = new Composer.Collection([
 			{id: 3},
 			{id: 12},

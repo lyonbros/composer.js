@@ -19,9 +19,7 @@ describe('Composer.Controller.xdom', function() {
 
 		render: function()
 		{
-			this.html('<h1>Mai title</h1><p>Lorum ippsem dollar sin amut or something<span>lol</span></p><div class="gutter"></div>', {
-				complete: this.trigger.bind(this, 'rendered')
-			});
+			this.html('<h1>Mai title</h1><p>Lorum ippsem dollar sin amut or something<span>lol</span></p><div class="gutter"></div>');
 		},
 
 		click_title: function()
@@ -38,7 +36,7 @@ describe('Composer.Controller.xdom', function() {
 		expect(con.el.tagName.toLowerCase()).toBe('div');
 		expect(con.clicked_h1).toBe(false);
 		expect(con.title).toBeFalsy();
-		con.bind_once('rendered', function() {
+		con.bind_once('xdom:render', function() {
 			con.click_title();
 			expect(con.clicked_h1).toBe(true);
 			expect(con.el.tagName.toLowerCase()).toBe('div');
@@ -48,9 +46,23 @@ describe('Composer.Controller.xdom', function() {
 		con.render();
 	});
 
+	it('calls the html(..., {complete: fn}) callback when rendering done', function(done) {
+		var Con = Composer.Controller.extend({
+			xdom: true,
+			init: function()
+			{
+				this.html('hai', {complete: this.trigger.bind(this, 'HELLO-YES-THIS-IS-DOG')});
+			}
+		});
+		var con = new Con();
+		con.bind_once('HELLO-YES-THIS-IS-DOG', function() {
+			done();
+		});
+	});
+
 	it('can delegate events properly', function(done) {
 		var con = new MyController();
-		con.bind_once('rendered', function() {
+		con.bind_once('xdom:render', function() {
 			var title = con.title;
 			expect(con.clicked_h1).toBe(false);
 			Composer.fire_event(title, 'click');
@@ -67,14 +79,12 @@ describe('Composer.Controller.xdom', function() {
 				init: function() { this.render(); },
 				render: function()
 				{
-					this.html('<div><span>hello</span></div>', {
-						complete: this.trigger.bind(this, 'rendered')
-					});
+					this.html('<div><span>hello</span></div>');
 				},
 				reg_click: function() { x++; }
 			});
 			var hard = new Hard();
-			hard.bind_once('rendered', function() {
+			hard.bind_once('xdom:render', function() {
 				Composer.fire_event(hard.my_div, 'click');
 				Composer.fire_event(hard.my_span, 'click');
 				expect(x).toBe(2);
@@ -112,11 +122,11 @@ describe('Composer.Controller.xdom', function() {
 					'<input id="rad1" type="radio" name="radbrahhhhhh" value="1">',
 					'<input id="rad2" type="radio" name="radbrahhhhhh" value="2">'
 				].join('\n');
-				this.html(html, {complete: this.trigger.bind(this, 'rendered')});
+				this.html(html);
 			}
 		});
 		var con = new InpController();
-		con.bind_once('rendered', function() {
+		con.bind_once('xdom:render', function() {
 			var inp1 = con.inp_name;
 			var txt1 = con.inp_body;
 			var sel1 = con.inp_select;
@@ -128,7 +138,7 @@ describe('Composer.Controller.xdom', function() {
 			sel1.value = '3';
 			chk1.checked = true;
 			rad2.checked = true;
-			con.bind_once('rendered', function() {
+			con.bind_once('xdom:render', function() {
 				var inp2 = con.inp_name;
 				var txt2 = con.inp_body;
 				var sel2 = con.inp_select;
@@ -192,19 +202,18 @@ describe('Composer.Controller.xdom', function() {
 								inject: this.el_sub
 							});
 						}.bind(this));
-						this.trigger('rendered');
 					}.bind(this)
 				});
 			}
 		});
 
 		var con = new MasterController();
-		con.bind_once('rendered', function() {
+		con.bind_once('xdom:render', function() {
 			var child = con.sub('child');
 			var el = child.el;
 			expect(child instanceof Composer.Controller).toBe(true);
 			expect(el.parentNode).toBe(con.el_sub);
-			con.bind_once('rendered', function() {
+			con.bind_once('xdom:render', function() {
 				var child = con.sub('child');
 				expect(child.el.parentNode).toBe(con.el_sub);
 				expect(el == child.el).toBe(false);
@@ -216,7 +225,7 @@ describe('Composer.Controller.xdom', function() {
 		con.render();
 	});
 
-	it('will preserve subcontroller\'s el when re-rendering', function(done) {
+	it('preserves subcontroller\'s el when re-rendering', function(done) {
 		var SubController = Composer.Controller.extend({
 			xdom: true,
 			init: function() { this.html('<p>hello</p>'); }
@@ -240,7 +249,6 @@ describe('Composer.Controller.xdom', function() {
 						this.sub('jerry', function() {
 							return new SubController({ inject: this.el_sub });
 						}.bind(this));
-						this.trigger('rendered');
 					}.bind(this)
 				});
 				this.with_bind(this.model, 'change', this.render.bind(this));
@@ -249,7 +257,6 @@ describe('Composer.Controller.xdom', function() {
 			render: function(options)
 			{
 				options || (options = {})
-				if(!options.complete) options.complete = this.trigger.bind(this, 'rendered');
 				rendered++;
 				this.html('<h1>name: '+this.model.get('name')+'</h1>', options);
 			}
@@ -257,13 +264,13 @@ describe('Composer.Controller.xdom', function() {
 
 		var model = new Composer.Model({name: 'biff'});
 		var con = new MasterController({ model: model });
-		con.bind_once('rendered', function() {
+		con.bind_once('xdom:render', function() {
 			var el = con.sub('jerry').el;
 			var render_cb = 0;
-			con.bind('rendered', function() { render_cb++; });
+			con.bind('xdom:render', function() { render_cb++; });
 			model.set({name: 'slappy'});
 			model.set({name: 'wtf'});
-			con.bind_once('rendered', function() {
+			con.bind_once('xdom:render', function() {
 				expect(rendered).toBe(3);
 				expect(el).toBe(con.sub('jerry').el);
 				expect(con.el_h1.innerHTML).toBe('name: wtf');
