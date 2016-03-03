@@ -187,7 +187,7 @@
 		 * anything here, but other DOM patching libs may have discrete steps so
 		 * we want to have a hook for it.
 		 */
-		diff: function(from, to)
+		diff: function(from, to, options)
 		{
 			return [from, to];
 		},
@@ -201,7 +201,8 @@
 			options || (options = {});
 
 			if(!root || !diff[1]) return;
-			var ignore_children = options.ignore_children;
+			var ignore_elements = options.ignore_elements || [];
+			var ignore_children = options.ignore_children || [];
 			return morphdom(root, diff[1], {
 				// this callback preserves form input values (text, checkboxes,
 				// radios, textarea, selects)
@@ -222,7 +223,10 @@
 					}
 				},
 				onBeforeNodeDiscarded: function(node) {
-					if(ignore_children.indexOf(node) >= 0) return false;
+					if(ignore_elements.indexOf(node) >= 0) return false;
+				},
+				onBeforeMorphElChildren: function(from, to) {
+					if(ignore_children.indexOf(from) >= 0) return false;
 				}
 			});
 		},

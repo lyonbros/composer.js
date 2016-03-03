@@ -28,7 +28,7 @@
 		{
 			options || (options = {});
 
-			diffs.push([from, Composer.xdom.diff(from, to), options, callback]);
+			diffs.push([from, Composer.xdom.diff(from, to, options), options, callback]);
 			if(scheduled) return;
 			scheduled = true;
 			Composer.frame(function() {
@@ -168,16 +168,18 @@
 			if(xdom || this.xdom)
 			{
 				var cb = options.complete;
+				var ignore_elements = options.ignore_elements || [];
 				var ignore_children = options.ignore_children || [];
-				ignore_children = ignore_children.concat(
+				ignore_elements = ignore_elements.concat(
 					Object.keys(this._subcontrollers)
 						.map(function(name) { return this._subcontrollers[name].el; }.bind(this))
 						.filter(function(el) { return !!el; })
 				);
-				options.ignore_children = ignore_children;
+				options.ignore_elements = ignore_elements;
 				schedule_render(this.el, el, options, function() {
 					this.refresh_elements();
 					if(cb) cb();
+					this.trigger('xdom:render');
 				}.bind(this));
 			}
 			else
