@@ -80,8 +80,8 @@ window.app = {
 // create our test links
 var container = document.getElementById('full-route-example');
 container.innerHTML =
-    '<a href="/composer.js/docs/router/users">Load users</a> | ' +
-    '<a href="/composer.js/docs/router/notes">Load notes</a>' +
+    '<a href="docs/router/users">Load users</a> | ' +
+    '<a href="docs/router/notes">Load notes</a>' +
     '<div></div>';
 container.className += ' enabled';
 {% endhighlight %}

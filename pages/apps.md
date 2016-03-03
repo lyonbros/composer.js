@@ -8,28 +8,28 @@ layout: page
 <ul class="apps clear">
     <li>
         <a target="_blank" href="https://market.space">
-            <img src="/composer.js/images/apps/marketspace.jpg" width="232" height="174" alt="Market.Space">
+            <img src="images/apps/marketspace.jpg" width="232" height="174" alt="Market.Space">
         </a>
         <h3><a target="_blank" href="https://market.space">Market.Space</a></h3>
         <p>A competitive, real-time intelligence engine</p>
     </li>
     <li>
         <a target="_blank" href="http://kikojas.com">
-            <img src="/composer.js/images/apps/kikojas.jpg" width="232" height="174" alt="Kikojas">
+            <img src="images/apps/kikojas.jpg" width="232" height="174" alt="Kikojas">
         </a>
         <h3><a target="_blank" href="http://kikojas.com">Kikojas</a></h3>
         <p>Kikojas is a location-based service focusing on local businesses in Iran</p>
     </li>
     <li>
         <a target="_blank" href="https://turtl.it">
-            <img src="/composer.js/images/apps/turtl.jpg" width="232" height="174" alt="Turtl">
+            <img src="images/apps/turtl.jpg" width="232" height="174" alt="Turtl">
         </a>
         <h3><a target="_blank" href="https://turtl.it">Turtl</a></h3>
         <p>An open-source, secure Evernote alternative</p>
     </li>
     <li>
         <a target="_blank" href="http://musio.com">
-            <img src="/composer.js/images/apps/musio.jpg" width="232" height="174" alt="Musio">
+            <img src="images/apps/musio.jpg" width="232" height="174" alt="Musio">
         </a>
         <h3><a target="_blank" href="http://musio.com">Musio</a></h3>
         <p>An app that provides online tools for independent musicians</p>

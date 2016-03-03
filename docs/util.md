@@ -99,7 +99,7 @@ alert('eq? ' + Composer.eq(
 {% endhighlight %}
 ## Composer.merge_extend :: function(class, array_of_property_names)
 
-See [Composer.merge_extend in the class docs](/composer.js/docs/class#composer-merge-extend).
+See [Composer.merge_extend in the class docs](docs/class#composer-merge-extend).
 
 ## Composer.array
 
@@ -194,11 +194,11 @@ alert(city);
 New in version 1.0.6, this function replaces the following methods with
 promise-ready versions:
 
-- [Model.fetch](/composer.js/docs/model#fetch)
-- [Model.save](/composer.js/docs/model#save)
-- [Model.destroy](/composer.js/docs/model#destroy)
-- [Collection.fetch](/composer.js/docs/collection#fetch)
-- [Collection.reset\_async](/composer.js/docs/collection#reset-async)
+- [Model.fetch](docs/model#fetch)
+- [Model.save](docs/model#save)
+- [Model.destroy](docs/model#destroy)
+- [Collection.fetch](docs/collection#fetch)
+- [Collection.reset\_async](docs/collection#reset-async)
 
 Instead of accepting `options.success` and `options.error`, these functions will
 now return promises (assuming you have included a promise library in the page).
@@ -267,6 +267,6 @@ your app's Models/Collections, otherwise their prototypes will extend the old
 ## Composer.find_parent :: function(selector, element)
 
 Although this is a global utility function, it exists as part of the
-[Controller/Adapter library](/composer.js/docs/controller#composer-find-parent)
+[Controller/Adapter library](docs/controller#composer-find-parent)
 and is documented there.
 

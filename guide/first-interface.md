@@ -47,10 +47,10 @@ new BasicController();
 
 Let's go over what's happening here. We define our controller by extending the
 `Composer.Controller` class, giving us a custom controller class. When we create
-our controller via `new BasicController()`, the controller immediately [creates a new &lt;div&gt;](/composer.js/docs/controller#el)
+our controller via `new BasicController()`, the controller immediately [creates a new &lt;div&gt;](docs/controller#el)
 element for itself, and injects that div into the element on the page with
 `id="guide-0"`. The div the controller created and injected is referenced by
-`this.el` within the controller's functions. When [html()](/composer.js/docs/controller#html)
+`this.el` within the controller's functions. When [html()](docs/controller#html)
 is called in our `render()` function, the controller main element (`this.el`)
 has its innerHTML set with the content passed to `html()`.
 
@@ -141,17 +141,17 @@ this.model.bind('change', this.render.bind(this));
 
 At first glance it looks fine, and works great as you can see above. When the
 model changes, we re-render, showing a new name. However, if the controller
-is [released](/composer.js/docs/controller#release-1), it is never actually
+is [released](docs/controller#release-1), it is never actually
 garbage collected until the model is collected as well. This has the potential
 to create memory leaks in your app, especially when rendering more complex
 interfaces.
 
-What's happening is that we [bind](/composer.js/docs/event#bind) the `change`
+What's happening is that we [bind](docs/event#bind) the `change`
 event to `render()`. This means that as long as that model exists, the reference
 to `render()` (and all the state it requires, including the entire controller)
 is kept alive.
 
-The best way to handle this is to use [Controller.with_bind](/composer.js/docs/controller#with-bind),
+The best way to handle this is to use [Controller.with_bind](docs/controller#with-bind),
 which will automatically unbind itself from any bound events when the controller
 is released:
 
@@ -249,5 +249,5 @@ new `[release]` button we put in. Give it a try.
 We've created some basic interfaces, and even seen how to use eventing to
 refresh interfaces based on model data. Next up, we're going to take a look at
 how models are not just good for storing data, but also for retreiving and
-saving it. [Let's continue &raquo;](/composer.js/guide/using-models).
+saving it. [Let's continue &raquo;](guide/using-models).
 

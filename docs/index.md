@@ -25,7 +25,7 @@ themselves.
 This way of thinking, although it takes some getting used to, allows for very
 complex applications that are highly modular and maintainable.
 
-Every object in Composer extends the [event](/composer.js/docs/event) class,
+Every object in Composer extends the [event](docs/event) class,
 giving them all the same eventing abilities.
 
 ## Components

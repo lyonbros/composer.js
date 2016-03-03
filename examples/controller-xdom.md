@@ -8,7 +8,7 @@ layout: examples
 Let's use XDOM to build a form that can re-render without losing its state.
 Notice how we re-render the the controller each time the dog's name changes,
 *however* the input element's state is not reset like it is in the [regular
-controller form example](/composer.js/examples/controller-form).
+controller form example](examples/controller-form).
 
 <div id="form-example" class="example fade"></div>
 

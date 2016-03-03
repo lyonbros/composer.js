@@ -74,8 +74,8 @@ var shiba = new Shiba();
 alert(JSON.stringify(shiba.bites));  // {people: true, rats: true}
 {% endhighlight %}
 
-This is mainly used in [Controllers](/composer.js/docs/controller) (the `events`
-and `elements` properties) as well as the [Relational Model](/composer.js/docs/relational)'s 
+This is mainly used in [Controllers](docs/controller) (the `events`
+and `elements` properties) as well as the [Relational Model](docs/relational)'s 
 `relations` property.
 
 ## Constructors

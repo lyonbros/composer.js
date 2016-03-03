@@ -67,7 +67,7 @@ Arguments passed:
 
 ## Composer.Router
 
-The main router class. Extends [Composer.Base](/composer.js/docs/base), giving
+The main router class. Extends [Composer.Base](docs/base), giving
 it access to all of Base's abilities.
 
 It's important to note that unlike most other Composer objects, the router has

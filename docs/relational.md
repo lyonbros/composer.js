@@ -5,7 +5,7 @@ layout: documentation
 
 # Relational model
 
-The relational model extends the [model](/composer.js/docs/model). The idea is
+The relational model extends the [model](docs/model). The idea is
 that while a model is great for a single record, sometimes you need hierarchies
 in your data, and you need each part of the hierarchy to be a model/collection.
 The relational model lets you specify a structure and will automatically
@@ -16,7 +16,7 @@ API returns nested data.
 
 ## Composer.RelationalModel
 
-The main relational class. Extends [Composer.Model](/composer.js/docs/model), so
+The main relational class. Extends [Composer.Model](docs/model), so
 anything the model has, this has as well.
 
 That said, we're going to re-document some of the behavior of `Composer.Model`
@@ -158,7 +158,7 @@ alert('Legs / tail name: '+ legs + ' / ' + tail);
 
 ### toJSON :: function(options)
 
-Like [Model.toJSON](/composer.js/docs/model#tojson), this function serializes
+Like [Model.toJSON](docs/model#tojson), this function serializes
 the data contained in the model into objects/arrays. However, this function also
 aggregates the serialized results from all its sub-objects:
 
@@ -185,7 +185,7 @@ alert('Second friend: '+ serialized.friends[1].name);
 
 ### set :: function(data, options)
 
-Set, like [Model.set](/composer.js/docs/model#set), sets data into the
+Set, like [Model.set](docs/model#set), sets data into the
 relational model, but is also responsible for turning the nested data into your
 object hierarchy.
 

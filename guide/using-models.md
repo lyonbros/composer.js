@@ -17,10 +17,10 @@ Before your app can display all the wonderful data you want to show (dog photos,
 user profiles, leaked government defense contract documents), it needs to get
 this data from somewhere.
 
-This is easy using the [Composer.sync](/composer.js/docs/util#composer-sync)
+This is easy using the [Composer.sync](docs/util#composer-sync)
 function. This function is meant to be replaced by you, and is called whenever
-one of your models calls [fetch](/composer.js/docs/model#fetch),
-[save](/composer.js/docs/model#save), or [destroy](/composer.js/docs/model#destroy-1).
+one of your models calls [fetch](docs/model#fetch),
+[save](docs/model#save), or [destroy](docs/model#destroy-1).
 
 It allows you to hook up the wiring between your models and your external data.
 
@@ -88,7 +88,7 @@ interpret what operation we're performing and turn it into an HTTP verb (GET,
 POST, etc). Then it calls our ajax function to grab our remote data. This all
 happens asynchronously. Once the data is returned from the server, it is
 JSON parsed and sent into `Composer.sync`'s `options.success` function, which
-processes the data and then passed it into the collection via [reset](/composer.js/docs/collection#reset-1),
+processes the data and then passed it into the collection via [reset](docs/collection#reset-1),
 firing a `reset` event once complete.
 
 We bind to the `reset` event, showing an alert with lots of juicy information
@@ -128,6 +128,6 @@ lets you easily switch out one datastore for another if desired.
 
 At some point, you'll probably want to take data from a user interface and save
 it to a database. Models are well-equipped for this, providing a very nice
-[save](/composer.js/docs/model#save) function which uses `Composer.sync` to send
+[save](docs/model#save) function which uses `Composer.sync` to send
 data to where it needs to go.
 

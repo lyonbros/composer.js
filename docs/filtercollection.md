@@ -23,12 +23,12 @@ your data even more.
 
 ## Events
 
-The filter collection fires all events that [Composer.Collection](/composer.js/docs/collection#composer-collection)
+The filter collection fires all events that [Composer.Collection](docs/collection#composer-collection)
 fires, with no material differences.
 
 ## Composer.FilterCollection
 
-This is the filter collection class. It extends [Composer.Collection class](/composer.js/docs/collection#composer-collection),
+This is the filter collection class. It extends [Composer.Collection class](docs/collection#composer-collection),
 giving it all the Collection's abilities.
 
 ### master :: attribute(null)
@@ -55,7 +55,7 @@ on models [added](#add) or [removed](#remove) from the filter collection.
 
 Either false (disabled) or an integer value that determines
 the max number of models this filter collection should hold. This is applied
-*after* the [sortfn](/composer.js/docs/collection#sortfn).
+*after* the [sortfn](docs/collection#sortfn).
 
 ### options :: attribute({...})
 
@@ -125,11 +125,11 @@ apply the limit (if it exists).
 - `diff_events` - if true, `refresh` will track which models have been added /
 removed during the process and trigger "add" or "remove" events for them.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 ### add :: function(data, options)
 
-Like [Collection.add](/composer.js/docs/collection#add-1), but will apply the
+Like [Collection.add](docs/collection#add-1), but will apply the
 [transform](#transform) function to the model (with the "add" action) and also
 will return false if after transformation the model does not result in
 [filter](#filter) returning true.
@@ -140,14 +140,14 @@ This function also adds the model to the [master](#master) collection.
 
 - `at` - insert the model at a specific integer index in the collection's data
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 ### remove :: function(model, options)
 
-Like [Collection.remove](/composer.js/docs/collection#remove-1), but will apply
+Like [Collection.remove](docs/collection#remove-1), but will apply
 the [transform](#transform) function the the model (with the "remove" action).
 Removes the passed model from the [master](#master) collection as well as the
 filter collection.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 

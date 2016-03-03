@@ -7,7 +7,7 @@ layout: documentation
 
 The model object is the *heart* of composer. Almost all data in your app will
 exist in one model or another. Models not only store data, but make it very
-easy to tie into various actions that occur on models (via [eventing](/composer.js/docs/event))
+easy to tie into various actions that occur on models (via [eventing](docs/event))
 as well as syncing your data to your servers (assuming you have them).
 
 ## Events
@@ -98,7 +98,7 @@ The model's constructor. `data` is a hash object that contains the initial data
 to set into the model. Sets `data` into the model via [set](#set).
 
 `options` is a hash object that can be passed in to various operations in the
-contructor. Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+contructor. Note that `options` can contain [silencing directives](docs/event#silencing).
 The `options` value is also passed into [init](#init).
 
 __Note:__ unless you know what you're doing, you shouldn't overwrite the
@@ -149,7 +149,7 @@ alert('Has key? '+ model.has('age') + ' / ' + model.has('tears'));
 Sets data into the model. `data` is a hash object of data to set into the model,
 `options` is a hash of options.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
@@ -234,7 +234,7 @@ Unset an item in a model. `key` is the key to unset in the model's data.
 This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 {% highlight js %}
 var model = new Composer.Model({name: 'Scooter'});
@@ -249,7 +249,7 @@ Clear all data from the model.
 This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 {% highlight js %}
 var model = new Composer.Model({name: 'andrew', age: 27});
@@ -259,7 +259,7 @@ alert('model data: '+ model.get('name') + ' / '+ model.get('age'));
 
 ### fetch :: function(options)
 
-This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
+This function uses the [Composer.sync](docs/util#composer-sync) to
 grab the model from your app's API. If successful, the data returned is set into
 to model.
 
@@ -271,11 +271,11 @@ to model.
 This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 ### save :: function(options)
 
-This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
+This function uses the [Composer.sync](docs/util#composer-sync) to
 save the model to your app's API. If successful, the data returned is set into
 to model. Depending on the result of [is_new](#is-new), will perform either a
 'create' or 'update'.
@@ -288,11 +288,11 @@ to model. Depending on the result of [is_new](#is-new), will perform either a
 This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 ### destroy :: function(options)
 
-This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
+This function uses the [Composer.sync](docs/util#composer-sync) to
 delete the model to your app's API. If successful, the data returned is set into
 to model.
 
@@ -304,7 +304,7 @@ to model.
 This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
 events.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 ### parse :: function(data)
 
@@ -323,7 +323,7 @@ model.fetch();
 ### id :: function(no_cid)
 
 Returns the model's `id` field. If `id` doesn't exist, returns the model's
-[CID](/composer.js/docs/base#cid). If `no_cid` is true, returns `false` if no
+[CID](docs/base#cid). If `no_cid` is true, returns `false` if no
 `id` field is present.
 
 {% highlight js %}
@@ -370,5 +370,5 @@ alert('URL: '+ model.get_url());
 {% endhighlight %}
 
 *Also*, model's can pull a URL from a collection they exist in. See
-[Collection.url](/composer.js/docs/collection#url).
+[Collection.url](docs/collection#url).
 

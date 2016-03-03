@@ -30,7 +30,7 @@ Arguments passed:
 
 ## Composer.Controller
 
-The main controller class. Extends [Composer.Base](/composer.js/docs/base),
+The main controller class. Extends [Composer.Base](docs/base),
 giving it access to all of Base's abilities.
 
 ### el :: attribute(false)
@@ -216,19 +216,19 @@ and `options.complete` is not needed.
 
 ### with_bind :: function(object, ev, fn, name)
 
-This function wraps `object`'s [bind](/composer.js/docs/event#bind) and tracks
+This function wraps `object`'s [bind](docs/event#bind) and tracks
 the binding internally in the controller. When [release](#release-1) is called
 on the controller, all the bindings created with `with_bind` are unbound
 automatically.
 
 This is mainly to alleviate a common pattern of having to do manually clean up
 bound events in a custom release function. When your controller binds to events
-on, say, a model, it previously had to remember to [unbind](/composer.js/docs/event#unbind)
+on, say, a model, it previously had to remember to [unbind](docs/event#unbind)
 the event otherwise the controller would never be garbage collected (even after
 all references to it are gone from your app) because the model still holds a
 reference to its function(s) that were bound.
 
-__Note:__ `object`s passed to `with_bind` *must* extend [Composer.event](/composer.js/docs/event#composer-event).
+__Note:__ `object`s passed to `with_bind` *must* extend [Composer.event](docs/event#composer-event).
 
 Here's an example of the traditional way of binding/cleaning up:
 
@@ -274,12 +274,12 @@ var MyController = Composer.Controller.extend({
 
 This function is *exactly* like [with_bind](#with-bind), except that instead of
 calling `object.bind`, it calls `object.bind_once`. This lets you add one-time
-events on any object that extends [Composer.Event](/composer.js/docs/event#composer-event)
+events on any object that extends [Composer.Event](docs/event#composer-event)
 without worrying about cleaning them up if your controller is released.
 
 See [with_bind](#with-bind) for full usage examples.
 
-__Note:__ `object`s passed to `with_bind_once` *must* extend [Composer.Event](/composer.js/docs/event#composer-event).
+__Note:__ `object`s passed to `with_bind_once` *must* extend [Composer.Event](docs/event#composer-event).
 
 ### track_subcontroller :: function(name, create_fn)
 
@@ -375,7 +375,7 @@ needed (such as unbinding events bound using [with_bind](#with-bind)).
 
 Fires the [release event](#release).
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 See the [events section](#events-1) for a release example.
 
@@ -390,11 +390,11 @@ the controller.
 New in Composer v1.2 is a feaure we call XDOM. It is a diffing / patching
 implementation for the DOM which does a few things:
 
-1.  Instead of replacing the DOM entirely when calling [Controller.html()](/composer.js/docs/controller#html),
+1.  Instead of replacing the DOM entirely when calling [Controller.html()](docs/controller#html),
 XDOM compares the differences in the HTML being handed to `html()` and what is
 currently in the DOM and uses that to patch the DOM. This is a large shift from
 before, where re-rendering a controller meant actually swapping out all the DOM
-nodes under [Controller.el](/composer.js/docs/controller#el) for new ones. XDOM
+nodes under [Controller.el](docs/controller#el) for new ones. XDOM
 compares the differences and only changes what's needed.
 
     This is important because without XDOM, you had to be cautious about
@@ -409,7 +409,7 @@ much as possible. You don't have to apply classes to DOM elements directly. You
 don't have to worry about losing form field values. Just re-render and it all
 works.
 
-1.  XDOM batches calls to [Controller.html()](/composer.js/docs/controller#html)
+1.  XDOM batches calls to [Controller.html()](docs/controller#html)
 so many changes at once are saved up and applied on the browser's animation
 frame. This frees you from having to think about the most efficient
 rendering strategy and allows you to render often without sacrificing
@@ -444,12 +444,12 @@ Composer.Controller.xdomify();
 {% endhighlight %}
 </div>
 
-This goes great with a [Composer.promisify()](/composer.js/docs/util#composer-promisify)
+This goes great with a [Composer.promisify()](docs/util#composer-promisify)
 call =].
 
 ### Examples
 
-Check out some [XDOM controllers on the examples page](/composer.js/examples/controller-xdom).
+Check out some [XDOM controllers on the examples page](examples/controller-xdom).
 
 ### Caveats
 
@@ -458,9 +458,9 @@ There are some differences you need to be aware of when using XDOM:
 - You need to include some form of DOM diffing library. The default supported
 library is [morphdom](https://github.com/patrick-steele-idem/morphdom). You can
 [hook in your own diffing/patching library](#composer-xdom-hooks) if desired.
-- [Controller.html()](/composer.js/docs/controller#html) is asynchronous. It
+- [Controller.html()](docs/controller#html) is asynchronous. It
 passes your DOM element/HTML string off to the XDOM rendering system and doesn't
-update the Controller's [elements](/composer.js/docs/controller#elements) until
+update the Controller's [elements](docs/controller#elements) until
 rendering is complete. See the `Composer.html()` docs for ways to know when
 rendering is complete.
 - You can still make incremental updates to the DOM after rendering, however
@@ -482,7 +482,7 @@ elements and returns a diff between them. The result of this function will be
 passed directly to `patch`:
 - `patch`- A function (`function(root_element, diff, options)`) that takes a
 root DOM element to apply the patch to, a diff created by the `diff` function,
-and a set of options (passed down from [Controller.html()](/composer.js/docs/controller#html)).
+and a set of options (passed down from [Controller.html()](docs/controller#html)).
 
 ## Composer.find_parent :: function(selector, element)
 

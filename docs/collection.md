@@ -63,7 +63,7 @@ passed:
 
 ## Composer.Collection
 
-This is the collection class. It extends [Composer.Base](/composer.js/docs/base),
+This is the collection class. It extends [Composer.Base](docs/base),
 giving you everything base has.
 
 ### model :: attribute(Composer.Model)
@@ -78,22 +78,22 @@ being inserted into the collection. Note that sorting is only done on insertion,
 and if the data in your models changes, the sort may not be correct.
 
 If you need a collection that maintains sort order of your models as they
-update, see the [Filter collection](/composer.js/docs/filtercollection).
+update, see the [Filter collection](docs/filtercollection).
 
 ### url :: attribute("/mycollection")
 
 Tells the collection what URL base the models should
-use (assuming they don't have a URL manually specified) when calling the [Composer.sync](/composer.js/docs/util#composer-sync)
+use (assuming they don't have a URL manually specified) when calling the [Composer.sync](docs/util#composer-sync)
 function.
 
 ### priority :: attribute(1)
 
 Used mainly to determine which collection to derive the URL from
-when a model calls [get_url](/composer.js/docs/model#get-url).
+when a model calls [get_url](docs/model#get-url).
 
 ### initialize :: function(models, params, options)
 
-The constructor. `models` can be an array of either [Composer.Model](/composer.js/docs/model)
+The constructor. `models` can be an array of either [Composer.Model](docs/model)
 objects, or an array of flat data. If data is passed instead of models, the
 [model parameter](#model) is used to determine what kind of model to create.
 
@@ -101,7 +101,7 @@ objects, or an array of flat data. If data is passed instead of models, the
 (such as [the model parameter](#model) or [sortfn](#sortfn)).
 
 `options` is a hash object that can be passed in to various operations in the
-contructor. Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+contructor. Note that `options` can contain [silencing directives](docs/event#silencing).
 
 __Note:__ unless you know what you're doing, you shouldn't overwrite the
 initialize function. Use [init](#init) instead.
@@ -113,7 +113,7 @@ initialization work. Meant to be overridden.
 
 ### toJSON :: function()
 
-Calls [Model.toJSON](/composer.js/docs/model#tojson) on every contained model
+Calls [Model.toJSON](docs/model#tojson) on every contained model
 and shoves the results into a nice array. This is nice for serializing a
 collection into JSON or another format.
 
@@ -143,7 +143,7 @@ certain model type for added data.
 - `at` - insert the model at a specific integer index in the collection's data
 - `accurate_sort` - see notes for [sort_index](#sort-index)
 
-Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can also contain [silencing directives](docs/event#silencing).
 
 {% highlight js %}
 var collection = new Composer.Collection();
@@ -156,21 +156,21 @@ alert('Hello, '+ collection.at(2).get('name'));
 Remove a model from the collection. `model` must be a Composer model object. If
 a model is passed that isn't in the current collection, no changes are made.
 
-Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can also contain [silencing directives](docs/event#silencing).
 
 ### upsert :: function(data, options)
 
 Upsert a model (insert if it doesn't exist, otherwise update the existing model
 with the given data). `data` can be a javascript hash object, a Composer model,
 or an array of either. The model passed to `upsert` doesn't need to be the same
-reference as the existing model, only the IDs ([model.id()](/composer.js/docs/model#id))
+reference as the existing model, only the IDs ([model.id()](docs/model#id))
 need to match.
 
 `options` can contain the following items:
 
 - `at` - insert the model at a specific integer index in the collection's data
 
-Note that `options` can also contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can also contain [silencing directives](docs/event#silencing).
 
 {% highlight js %}
 var collection = new Composer.Collection();
@@ -185,7 +185,7 @@ Clear (remove) all models from the collection. Fires [remove](#remove) events
 for each model removed. Also fires the [clear](#clear) event if any models were
 removed.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 ### reset :: function(data, options)
 
@@ -203,7 +203,7 @@ current data (as opposed to the current data being wiped first)
 for updating a large number of items in the collection with new data without
 removing/re-adding everything.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 {% highlight js %}
 var collection = new Composer.Collection({name: 'shemp'});
@@ -230,7 +230,7 @@ completes
 to add to the collection at once (defaults to `1`). Useful for tunning your
 latency-to-loop-blocking ratio.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 {% highlight js %}
 var collection = new Composer.Collection();
@@ -246,7 +246,7 @@ collection.reset_async([{name: 'larry'}, {name: 'curly'}, {name: 'moe'}], {
 Sorts the models in the collection, manually, using [sortfn](#sortfn). Fires the
 [reset](#reset) event on completion.
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 ### sort_index :: function(model, options)
 
@@ -277,7 +277,7 @@ Note that `false` (the default) makes this function behave the same as [at](#at)
 ### parse :: function(data)
 
 Allows pre-processing of data from external API sources before adding to the
-collection (see [Model.parse](/composer.js/docs/model#parse)).
+collection (see [Model.parse](docs/model#parse)).
 
 ### each :: function(callback, bind)
 
@@ -335,7 +335,7 @@ Find a model in the collection by its ID.
 - `fast` - boolean, tells find\_by\_id to only lookup models by their index
 (collections store an id -> model hash lookup, but the feature is new and this
 flag will remain off by default until it's better vetted).
-- `strict` - boolean passed to the call to [Model.id](/composer.js/docs/model#id)
+- `strict` - boolean passed to the call to [Model.id](docs/model#id)
 - `allow_cid` - boolean indicating if we are allowing a match on CID (client ID)
 as well as a normal ID.
 
@@ -437,7 +437,7 @@ alert('Second is '+ second.get('name'));
 
 ### fetch :: function(options)
 
-This function uses the [Composer.sync](/composer.js/docs/util#composer-sync) to
+This function uses the [Composer.sync](docs/util#composer-sync) to
 grab a list of models from your app's API. If successful, the data returned is
 [reset](#reset-1) into the collection.
 
@@ -446,6 +446,6 @@ grab a list of models from your app's API. If successful, the data returned is
 - `success` - callback called if the operation completed successfully
 - `error` - callback called if operation failed
 
-Note that `options` can contain [silencing directives](/composer.js/docs/event#silencing).
+Note that `options` can contain [silencing directives](docs/event#silencing).
 
 

@@ -5,15 +5,15 @@ layout: documentation
 
 # Base
 
-The base object, which extends [Composer.Event](/composer.js/docs/event), is the
+The base object, which extends [Composer.Event](docs/event), is the
 object that all other components are based off of.
 
 ## Composer.Base
 
-The base class all others extend. All extending objects ([model](/composer.js/docs/model),
-[collection](/composer.js/docs/collection), [controller](/composer.js/docs/controller),
+The base class all others extend. All extending objects ([model](docs/model),
+[collection](docs/collection), [controller](docs/controller),
 etc) will have access to these attributes/functions (as well as any functions in
-the [Composer.Event class](/composer.js/docs/event#composer-event), which
+the [Composer.Event class](docs/event#composer-event), which
 Composer.base extends).
 
 ### options :: attribute({})
@@ -27,7 +27,7 @@ Returns the object's *client ID*. This is an auto-assigned string value, used to
 distinguish various objects from each other *without* having to having to assign
 them an ID manually.
 
-See [Composer.cid](/composer.js/docs/util#composer-cid).
+See [Composer.cid](docs/util#composer-cid).
 
 {% highlight js %}
 // grab a cid!

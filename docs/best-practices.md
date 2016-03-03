@@ -43,7 +43,7 @@ Sometimes you want your app to have a global event bus. This allows various
 pieces of it to communicate without having direct knowledge of each other. This
 improves the scalability and maintainability of your app in many cases.
 
-So how do you create an event bus? Easy! Create an instance of [Composer.Event](/composer.js/docs/event#composer-event):
+So how do you create an event bus? Easy! Create an instance of [Composer.Event](docs/event#composer-event):
 
 {% highlight js %}
 // our app's top-level namespace
@@ -73,7 +73,7 @@ collection holding the rendered list and *re-renders everything on every event*.
 1. Have a main controller that listens to `add` events on the rendered
 collection, and for each new added model, creates a sub-controller that tracks
 that specific model. This requires a list template and an item template. This
-pattern is now made a lot easier by the [list controller](/composer.js/docs/listcontroller).
+pattern is now made a lot easier by the [list controller](docs/listcontroller).
 
 The first way is quick and dirty. It is great for small lists of data or for
 large lists of data that *rarely change*. You will be re-rendering the entire
@@ -83,7 +83,7 @@ changes, which is not very scalable.
 The second way is more "correct" in that it separates your components from each
 other in a more defined fashion. You have a controller that handles showing the
 list, and you have a controller that shows an item. You can see this pattern in
-[the TODO example](/composer.js/examples/todo). This is more scalable because
+[the TODO example](examples/todo). This is more scalable because
 the data in the collection can change and you'll only re-render the specific
 pieces that changed.
 
