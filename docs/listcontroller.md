@@ -69,17 +69,10 @@ new as of Composer v1.2.1 and does a few things:
   children when rendering, meaning you can call [Controller.html()](docs/controller#html)
   all you want without having to also re-render all the children in your
   ListController. This only applies if using xdom.
-    1. Enables fragment rendering by default, making `fragment_on_reset` obsolete.
+    1. Enables fragment rendering by default.
 
     Note that `container` can be a function that returns an element. [See a usage
   example below.](#example-using-container)
-- `fragment_on_reset` - This is a function that should return the main element
-you're injecting subcontrollers into. If this option is provided, then the
-`create_fn` will receive a `DocumentFragment` as one of its options (the second
-value passed to `create_fn`). If the fragment is present in the options, you
-can pass it to your subcontroller's `inject:` key. This allows fragment
-rendering, which on larger lists can significantly reduce the overhead of
-resetting the entire list (which happens when initially calling `track()`.
 
 <div id="listtrack"></div>
 {% highlight js %}
@@ -202,3 +195,11 @@ new UserListController({
 Exactly like [Controller.release](docs/controller#release-1) but on
 top of releasing the current controller, releases all sub-controllers as well.
 
+## xdom
+
+The ListController ties into the xdom system to make sure the child controllers
+it renders are not removed when the ListControllers [html()](docs/controller#html)
+function is called. The main way to enable this is to use [track()](#track)'s
+`container` option.
+
+[See a ListController with xdom enabled in action](docs/xdom#listcontroller).

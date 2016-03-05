@@ -52,31 +52,69 @@ you?
 ## Using xdom
 
 Since Composer strives to maintain backwards compatibility with old versions,
-you have to explicitely enable xdom. There are two ways to do this. You can
-enable it on a per-controller basis:
+you have to explicitely user xdom. The way to do this is by extending
+`ControllerXDOM` instead of `Controller`:
 
 <div class="noeval">
 {% highlight js %}
-var HiController = Composer.Controller.extend({
-    xdom: true,
+var HiController = Composer.XDOMController.extend({
     ...
 });
 {% endhighlight %}
 </div>
 
-This is great for existing Composer projects that want to slowly move to the
-xdom model. Secondly, you can enable xdom for all controllers:
+### General strategy
+
+In the old days, back before Composer v1.2, re-rendering a Controller that had
+subcontrollers meant re-creating the subcontroller tree each time. That meant
+releasing the subcontrollers and initializing them after each render. Same with
+ListControllers: you had to be careful about re-rendering or the element the
+ListController injected its children into would disappear.
+
+With xdom, instead of setting up your [subcontrollers](#subcontrollers) or
+[tracking](#listcontroller) on each render, you just set them up once
+after the first render:
 
 <div class="noeval">
 {% highlight js %}
-Composer.Controller.xdomify();
+var ExampleController = Composer.ListController.extend({
+    xdom: true,
+
+    model: null,
+    init: function()
+    {
+        // this assumes Composer.promisify() has been called
+        this.render()
+            .then(function() {
+                // init your subcontrollers/tracking once after the first render
+                this.sub(...);
+                this.track(...);
+            });
+
+        // re-render all we want on changes...our subcontrollers/list tracking
+        // will not be affected
+        this.with_bind(this.model, 'change', this.render.bind(this));
+    },
+
+    render: function()
+    {
+        var html = 'Generate some html';
+        return this.html(html);
+    }
+});
 {% endhighlight %}
 </div>
 
-This goes great with a [Composer.promisify()](docs/util#composer-promisify)
-call =].
+This simplifies your setup and also makes things a lot more efficient. Instead
+of destroying/recreating trees of Javascript objects and DOM nodes on each
+render, you're creating an initial object/DOM tree and letting xdom make
+incremental patches to it for you from then on.
 
-## Subcontrollers
+This also frees you from having to do DOM updates by hand. Just let your view
+layer keep the DOM up-to-date and let your Controller focus on tying the
+DOM/data layer together via eventing.
+
+### Subcontrollers
 
 When using xdom, calling [html()](docs/controller#html) will preserve the elements
 of the sub-controllers. What this means is you can re-render your controller as
@@ -173,7 +211,7 @@ This is great because we don't need to completely re-render our entire tree of
 subcontrollers just because the top one needs to render. We set up our
 subcontrollers *once* and can re-render as much as needed after that.
 
-## ListController
+### ListController
 
 The [ListController](docs/listcontroller) also plugs into the xdom renderer to
 make things easier on us. Much like subcontrollers, the ListController lets the
@@ -288,7 +326,33 @@ controller instead. So if you are used to writing non-xdom controllers, this may
 be a bit of a paradigm shift in some cases (like when rendering forms, for
 instance). Re-rendering is (nearly) free, so it's much better to overuse it.
 
-## Composer.xdom.hooks :: function(options)
+## Tying into xdom
+
+You can hook into various aspects of xdom yourself if you need custom behavior,
+and can even supply your own DOM patching library if need be.
+
+### html()'s options argument
+
+[Controller.html()](dccs/controller#html) now accepts an `options` object as its
+second argument. Options can contain:
+
+- `complete` - A function of zero arguments that gets called when rendering has
+completed for this call of `html()`.
+- `ignore_elements` - An array of existing DOM elements that will not be
+discarded by xdom should they not match the content being passed to `html()`.
+This is how the Controller preserves [subcontrollers](docs/controller#sub)
+when re-rendering. You can supply your own elements as well (which will be
+appended to by `html`).
+- `ignore_children` - An array of existing DOM elements whose children will be
+ignored by xdom if they do not match the content being passed to `html()`.
+This is how the ListController preserves child controllers when re-rendering.
+You can supply your own elements as well (which will be appended to by `html`).
+- `reset_inputs` - If set to true, form elements in your view will have their
+`.value` and `.checked` attributes reset to the form default. The default
+mode of operation is to leave form element values/focus untouched, but there
+may be cases where you also want a hard reset of the form/template.
+
+### Composer.xdom.hooks :: function(options)
 
 If you don't want to use [morphdom](https://github.com/patrick-steele-idem/morphdom)
 (the default supported DOM diffing implementation) you are free to use your own
@@ -302,4 +366,9 @@ passed directly to `patch`:
 - `patch`- A function (`function(root_element, diff, options)`) that takes a
 root DOM element to apply the patch to, a diff created by the `diff` function,
 and a set of options (passed down from [Controller.html()](docs/controller#html)).
+
+Keep in mind that if implementing your own DOM patching system, you will want to
+implement the [available options that Controller.html() handles](#htmls-options-argument)
+for everything to function properly. For an idea of how this is done, check out
+the `xdom` section of [src/adapter.js in the current codebase](https://github.com/lyonbros/composer.js/blob/master/src/adapter.js).
 
