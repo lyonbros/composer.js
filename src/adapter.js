@@ -227,7 +227,8 @@
 				},
 				onBeforeMorphElChildren: function(from, to) {
 					if(ignore_children.indexOf(from) >= 0) return false;
-				}
+				},
+				childrenOnly: options.children_only
 			});
 		},
 
