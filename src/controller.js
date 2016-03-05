@@ -19,8 +19,17 @@
 (function() {
 	"use strict";
 
+	// whether or not to enable xdom rendering
 	var xdom = false;
 
+	/**
+	 * This function is responsible for
+	 *  - diffing elements via our xdom object
+	 *  - scheduling rendering/patching of the DOM
+	 *  - batching patches so they happen on the browser's animation frame
+	 *  - patching the DOM using the diff we got
+	 *  - letting the callers know when the updates happened
+	 */
 	var schedule_render = (function() {
 		var diffs = [];
 		var scheduled = false;

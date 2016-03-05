@@ -21,9 +21,9 @@
 	"use strict";
 
 	/**
-	 * The controller class sits between views and your models/collections.
-	 * Controllers bind events to your data objects and update views when the data
-	 * changes. Controllers are also responsible for rendering views.
+	 * The ListController extends the Controller object to provide a way of
+	 * tracking a collection and keeping its models in-sync with a set of
+	 * controllers that are injected into the DOM.
 	 */
 	var ListController = Composer.Controller.extend({
 		/**
