@@ -80,8 +80,9 @@ call =].
 
 When using xdom, calling [html()](docs/controller#html) will preserve the elements
 of the sub-controllers. What this means is you can re-render your controller as
-many times as you want and your sub-controller's [main elements](docs/controller#el) will not
-be removed from the DOM.
+many times as you want and your sub-controller's [main elements](docs/controller#el)
+will not be removed from the DOM, even though their DOM tree(s) are not part of
+your template.
 
 This may change the way you use subcontrollers a bit:
 
@@ -177,8 +178,10 @@ subcontrollers *once* and can re-render as much as needed after that.
 The [ListController](docs/listcontroller) also plugs into the xdom renderer to
 make things easier on us. Much like subcontrollers, the ListController lets the
 rendering system know it should ignore the element it renders its children into
-so they aren't removed/overwritten when `html()` is called again. Here's an
-example:
+so they aren't removed/overwritten when `html()` is called again.
+
+It does this by looking for a new option in its [track() function](docs/listcontroller#track)
+called `container`. Here's a quick example:
 
 <div id="lc-xdom"></div>
 {% highlight js %}

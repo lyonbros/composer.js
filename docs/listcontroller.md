@@ -62,6 +62,17 @@ to `bind_reset` and any `reset` event on the collection will refresh all the
 subcontrollers.
 - `accurate_sort` - passed in to [sort_index](docs/collection#sort-index)
 and [sort_at](docs/collection#sort-at) when adding items
+-  `container` - This is the element we render our child controller into. This
+element also comes through in the `create_fn`'s options object. This option is
+new as of Composer v1.2.1 and does a few things:
+    1. Tells the [xdom](docs/xdom) system to *ignore* the `container` element's
+  children when rendering, meaning you can call [Controller.html()](docs/controller#html)
+  all you want without having to also re-render all the children in your
+  ListController. This only applies if using xdom.
+    1. Enables fragment rendering by default, making `fragment_on_reset` obsolete.
+
+    Note that `container` can be a function that returns an element. [See a usage
+  example below.](#example-using-container)
 - `fragment_on_reset` - This is a function that should return the main element
 you're injecting subcontrollers into. If this option is provided, then the
 `create_fn` will receive a `DocumentFragment` as one of its options (the second
@@ -69,7 +80,6 @@ value passed to `create_fn`). If the fragment is present in the options, you
 can pass it to your subcontroller's `inject:` key. This allows fragment
 rendering, which on larger lists can significantly reduce the overhead of
 resetting the entire list (which happens when initially calling `track()`.
-[See a usage example below.](#example-using-fragmentonreset)
 
 <div id="listtrack"></div>
 {% highlight js %}
@@ -123,9 +133,9 @@ new UserListController({
 });
 {% endhighlight %}
 
-#### Example: using fragment_on_reset
+#### Example: using container
 
-This is very similar to the above example, but we'll be using the `fragment_on_reset`
+This is very similar to the above example, but we'll be using the `container`
 option here.
 
 <div id="listtrack-frag"></div>
@@ -158,19 +168,17 @@ var UserListController = Composer.ListController.extend({
 
         // set up tracking to inject subcontrollers into our <ul>
         this.track(this.collection, function(model, options) {
-            options || (options = {});
-            var fragment = options.fragment;
             return new UserItemController({
-                // notice here we test for the fragment existing before using
-                // because it's not always passed (only on reset)
-                inject: fragment ? fragment : this.el_list,
+                // options.container can be the element we passed into track()
+                // or if can be a document fragment. we don't really care, we
+                // can just transparently inject our child controller into it
+                inject: options.container,
                 model: model
             });
         }.bind(this), {
-            // note that fragment_on_reset is a function returning the same list
-            // element we pass to the subcontroller's inject key in the create_fn
-            // above
-            fragment_on_reset: function() { return this.el_list; }.bind(this)
+            // this makes the ListController aware of the element we're rendering
+            // into, and also enables fragment rendering by default
+            container: function() { return this.el_list; }.bind(this)
         })
     },
 
