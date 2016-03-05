@@ -52,16 +52,29 @@ you?
 ## Using xdom
 
 Since Composer strives to maintain backwards compatibility with old versions,
-you have to explicitely user xdom. The way to do this is by extending
-`ControllerXDOM` instead of `Controller`:
+you have to explicitely enable xdom. There are two ways to do this. You can
+enable it on a per-controller basis:
 
 <div class="noeval">
 {% highlight js %}
-var HiController = Composer.XDOMController.extend({
+var HiController = Composer.Controller.extend({
+    xdom: true,
     ...
 });
 {% endhighlight %}
 </div>
+
+This is great for existing Composer projects that want to slowly move to the
+xdom model. Secondly, you can enable xdom for all controllers:
+
+<div class="noeval">
+{% highlight js %}
+Composer.Controller.xdomify();
+{% endhighlight %}
+</div>
+
+This goes great with a [Composer.promisify()](docs/util#composer-promisify)
+call =].
 
 ### General strategy
 
