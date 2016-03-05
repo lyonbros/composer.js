@@ -131,10 +131,12 @@
 		 */
 		html: function(obj, options)
 		{
-			if(this.options.container)
+			var container = this.options.container;
+			if(container instanceof Function) container = container();
+			if(container)
 			{
 				var ignore_children = options.ignore_children || [];
-				ignore_children.push(this.options.container);
+				ignore_children.push(container);
 				options.ignore_children = ignore_children;
 			}
 			return this.parent.apply(this, arguments);
@@ -240,11 +242,10 @@
 
 			if(reset_fragment && fragment.children && fragment.children.length > 0)
 			{
-				var container = this.options.container || reset_fragment;
-				var inject_to = container instanceof Function ?
-					container() :
-					container;
-				inject_to.appendChild(fragment);
+				var container = reset_fragment instanceof Function ?
+					reset_fragment() :
+					reset_fragment;
+				container.appendChild(fragment);
 			}
 		},
 
@@ -258,6 +259,7 @@
 			// add our container into the options (non-destructively)
 			options = Composer.object.clone(options);
 			options.container = this.options.container;
+			if(options.container instanceof Function) options.container = options.container();
 
 			var con = create_fn(model, options);
 			this._index_controller(model, con);
