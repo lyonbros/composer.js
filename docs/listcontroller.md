@@ -197,8 +197,8 @@ top of releasing the current controller, releases all sub-controllers as well.
 
 ## xdom
 
-The ListController ties into the xdom system to make sure the child controllers
-it renders are not removed when the ListControllers [html()](docs/controller#html)
+The ListController ties into the [xdom system](docs/xdom) to make sure the child
+controllers it renders are not removed when the ListControllers [html()](docs/controller#html)
 function is called. The main way to enable this is to use [track()](#track)'s
 `container` option.
 
