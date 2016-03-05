@@ -209,7 +209,7 @@ Note that this function can take document fragments as of v1.1.12.
 
 `options` can contain the following items:
 
-- `complete` - Only used when [XDOM](#xdom) is enabled, this function is called
+- `complete` - Only used when [xdom](docs/xdom#xdom) is enabled, this function is called
 when batched rendering has completed. Note that when [Composer.promisify()](/docs/util#composer-promisify)
 is called, `html()` returns a promise that resolves when rendering is complete
 and `options.complete` is not needed.
@@ -281,29 +281,32 @@ See [with_bind](#with-bind) for full usage examples.
 
 __Note:__ `object`s passed to `with_bind_once` *must* extend [Composer.Event](docs/event#composer-event).
 
-### track_subcontroller :: function(name, create_fn)
+### sub :: function(name, [create_fn])
 
-A common pattern is for a controller to have one or more sub-controllers. So you
+A common pattern is for a controller to have one or more subcontrollers. So you
 may have a Dashboard controller and it could have a UserList controller and a
 RecentComments controller.
 
 When the Dashboard controller [releases](#release-1), you want it to release its
-sub-controllers automatically. `track_subcontroller` does this for you! It keeps
-track of sub-controllers you are using and frees them on release.
+subcontrollers automatically. `sub` does this for you! It keeps
+track of subcontrollers you are using and frees them on release.
 
-`name` is the (string) name you wish to give your sub-controller. It must be
-unique from other sub-controllers you're tracking.
+`name` is the (string) name you wish to give your subcontroller. It must be
+unique from other subcontrollers you're tracking. This is because the name is
+used to release and re-create the subcontroller if it already exists.
 
 `create_fn` is a function of zero arguments that *must return a controller
 instance*. This function is where you create, set up, and return your
-sub-controller.
+subcontroller.
 
-Note that `track_subcontroller` will check if a controller is already stored
+If you omit `create_fn`, `sub` will return the controller stored under `name`.
+
+Note that `sub` will check if a controller is already stored
 under the given `name`. If one exists, it is released and removed from tracking
 before the new one is put into its place. This is very useful in situations
-where your master controller re-creates its sub-controllers on [render](#render)
+where your master controller re-creates its subcontrollers on [render](#render)
 and you don't want to have to worry about dangling controllers not being cleaned
-up. `track_subcontrollers` handles everything for you.
+up. `subs` handles everything for you.
 
 <div class="noeval">
 {% highlight js %}
@@ -332,36 +335,35 @@ var DashboardController = Composer.Controller.extend({
     {
         this.html('<h1>Dashboard</h1><div class="users"></div>');
         // track our UserListController. if DashboardController renders again,
-        // the sub-controller will be released and recreated. if the Dashboard
-        // is released, so is the sub-controller.
-        this.track_subcontroller('users', function() {
+        // the subcontroller will be released and recreated. if the Dashboard
+        // is released, so is the subcontroller.
+        this.sub('users', function() {
             return new UserListController({
                 // put the subcontroller into our <div class="users"> element
                 inject: this.user_list
             });
         }.bind(this));
+
+        // we can use `sub` the pull the subcontroller out
+        this.sub('users').bind('rendered', function() {
+            console.log('rendered!');
+        });
     }
 });
 {% endhighlight %}
 </div>
 
 In the above, `DashboardController` will automatically clean its
-`UserListController` sub-controller each time it renders (or when it's released)
+`UserListController` subcontroller each time it renders (or when it's released)
 so you can focus on building your app and not a bunch of boilerplate cleanup BS.
 
-### get_subcontroller :: function(name)
+### remove :: function(name, options)
 
-Recently used [track_subcontroller](#track-subcontroller)? Use
-`get_subcontroller` to retrieve the tracked sub-controller by the name given in
-the call to `track_subcontroller`.
-
-### remove_subcontroller :: function(name, options)
-
-Recently used [track_subcontroller](#track-subcontroller)? Use
-`remove_subcontroller` is a helper function that removes and releases a tracked
-sub-controller by the name given in the call to `track_subcontroller`. It allows
+Recently used [sub](#sub)? Use
+`remove` is a helper function that removes and releases a tracked
+subcontroller by the name given in the call to `sub`. It allows
 you to manually untrack and release a subcontroller without having to pull it
-out via [get_subcontroller](#get-subcontroller) and check if it exists.
+out via [sub](#sub) and check if it exists.
 
 `options` can contain the following items:
 
@@ -384,105 +386,6 @@ See the [events section](#events-1) for a release example.
 Replace the controller's [el](#el) with another DOM element. Once the replace is
 complete, the [elements](#elements) and [events](#events-1) are refreshed for
 the controller.
-
-## XDOM
-
-New in Composer v1.2 is a feaure we call XDOM. It is a diffing / patching
-implementation for the DOM which does a few things:
-
-1.  Instead of replacing the DOM entirely when calling [Controller.html()](docs/controller#html),
-XDOM compares the differences in the HTML being handed to `html()` and what is
-currently in the DOM and uses that to patch the DOM. This is a large shift from
-before, where re-rendering a controller meant actually swapping out all the DOM
-nodes under [Controller.el](docs/controller#el) for new ones. XDOM
-compares the differences and only changes what's needed.
-
-    This is important because without XDOM, you had to be cautious about
-how to manage state in the DOM while rendering. You had to be careful about how
-re-rendering might lose certain classes on elements, or how your form fields
-would lose the values users input into them (or lose focus). This is no longer
-an issue...calling `Controller.html()` several times will only update the pieces
-that have changed and leave everything else untouched.
-
-    What this means is that with XDOM, it's actually much better to re-render as
-much as possible. You don't have to apply classes to DOM elements directly. You
-don't have to worry about losing form field values. Just re-render and it all
-works.
-
-1.  XDOM batches calls to [Controller.html()](docs/controller#html)
-so many changes at once are saved up and applied on the browser's animation
-frame. This frees you from having to think about the most efficient
-rendering strategy and allows you to render often without sacrificing
-performance.
-
-This can be compared to frameworks like Angular or React, which use Virtual DOM
-implementations to patch the DOM as changes are made. The difference is we don't
-use a Virtual DOM implementation, we just use the DOM itself. Not only is this
-more efficient in a lot of cases but also creates less of a gap when having to
-think about building apps. You're already used to using the DOM. Why should you
-have to give it up entirely and let a framework manage it for you?
-
-### Using XDOM
-
-There are two ways to use XDOM. You can enable it on a per-controller basis:
-
-<div class="noeval">
-{% highlight js %}
-var HiController = Composer.Controller.extend({
-    xdom: true,
-    ...
-});
-{% endhighlight %}
-</div>
-
-This is great for existing Composer projects that want to slowly move to the
-XDOM model. Alternatively, you can enable XDOM for all controllers:
-
-<div class="noeval">
-{% highlight js %}
-Composer.Controller.xdomify();
-{% endhighlight %}
-</div>
-
-This goes great with a [Composer.promisify()](docs/util#composer-promisify)
-call =].
-
-### Examples
-
-Check out some [XDOM controllers on the examples page](examples/controller-xdom).
-
-### Caveats
-
-There are some differences you need to be aware of when using XDOM:
-
-- You need to include some form of DOM diffing library. The default supported
-library is [morphdom](https://github.com/patrick-steele-idem/morphdom). You can
-[hook in your own diffing/patching library](#composer-xdom-hooks) if desired.
-- [Controller.html()](docs/controller#html) is asynchronous. It
-passes your DOM element/HTML string off to the XDOM rendering system and doesn't
-update the Controller's [elements](docs/controller#elements) until
-rendering is complete. See the `Composer.html()` docs for ways to know when
-rendering is complete.
-- You can still make incremental updates to the DOM after rendering, however
-with XDOM it conceptually makes much more sense to just re-render your
-controller instead. So if you are used to writing non-XDOM controllers, this may
-be a bit of a paradigm shift in some cases (like when rendering forms, for
-instance). Re-rendering is (nearly) free, so it's much better to overuse it.
-
-### Composer.xdom.hooks :: function(options)
-
-If you don't want to use [morphdom](https://github.com/patrick-steele-idem/morphdom)
-(the default supported DOM diffing implementation) you are free to use your own
-by hooking it into Composer. Simply call `Composer.xdom.hooks`.
-
-`options` can contain the following items:
-
-- `diff` - A function (`function(from_element, to_element)`) that takes two DOM
-elements and returns a diff between them. The result of this function will be
-passed directly to `patch`:
-- `patch`- A function (`function(root_element, diff, options)`) that takes a
-root DOM element to apply the patch to, a diff created by the `diff` function,
-and a set of options (passed down from [Controller.html()](docs/controller#html)).
 
 ## Composer.find_parent :: function(selector, element)
 

@@ -3,6 +3,14 @@ Slick.definePseudo('docheader', function() {
 });
 
 var app = {
+	init_anchors: function()
+	{
+		document.getElements('a[href^="#"]').forEach(function(a) {
+			var href = a.get('href').split('#', 2);
+			a.set('href', window.location.pathname + '#' + href[1]);
+		});
+	},
+
 	init_toc: function()
 	{
 		var el = document.getElement('.show-toc');
@@ -41,7 +49,7 @@ var app = {
 			}
 			used_ids[id] = true;
 			h.id = id;
-			var a = '<a href="#'+id+'">'+no_attr+'</a>';
+			var a = '<a href="'+window.location.pathname+'#'+id+'">'+no_attr+'</a>';
 			var newlevel = parseInt(h.tagName.replace(/^h/i, ''));
 			var li = new Element('li').set('html', a);
 			if(newlevel > level && last_li)
@@ -97,6 +105,7 @@ var app = {
 };
 
 window.addEvent('domready', function() {
+	app.init_anchors();
 	app.init_toc();
 	app.init_eval();
 	app.init_highlight();
