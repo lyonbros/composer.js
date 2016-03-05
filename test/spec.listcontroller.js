@@ -248,7 +248,7 @@ describe('Composer.ListController', function() {
 					options: options
 				});
 			}.bind(this), {
-				fragment_on_reset: function() { return this.list_el; }.bind(this)
+				container: function() { return this.list_el; }.bind(this)
 			});
 		}
 	});

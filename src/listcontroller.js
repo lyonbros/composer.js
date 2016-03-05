@@ -21,9 +21,9 @@
 	"use strict";
 
 	/**
-	 * The controller class sits between views and your models/collections.
-	 * Controllers bind events to your data objects and update views when the data
-	 * changes. Controllers are also responsible for rendering views.
+	 * The ListController extends the Controller object to provide a way of
+	 * tracking a collection and keeping its models in-sync with a set of
+	 * controllers that are injected into the DOM.
 	 */
 	var ListController = Composer.Controller.extend({
 		/**
@@ -52,11 +52,6 @@
 			// passed into the collection's sort_index and sort_at functions
 			// when adding items
 			accurate_sort: false,
-
-			// if set, alerts the controller to render subcontrollers into a
-			// document fragment instead of inline. this parameter must be a
-			// function of 0 argumento
-			fragment_on_reset: false,
 
 			// points to the DOM element that all our subcontrollers will be
 			// placed into. this is set by options.container and although it's
@@ -131,10 +126,12 @@
 		 */
 		html: function(obj, options)
 		{
-			if(this.options.container)
+			var container = this.options.container;
+			if(container instanceof Function) container = container();
+			if(container)
 			{
 				var ignore_children = options.ignore_children || [];
-				ignore_children.push(this.options.container);
+				ignore_children.push(container);
 				options.ignore_children = ignore_children;
 			}
 			return this.parent.apply(this, arguments);
@@ -225,7 +222,7 @@
 
 			this._clear_subcontrollers();
 
-			var reset_fragment = this.options.container || this.options.fragment_on_reset;
+			var reset_fragment = this.options.container;
 			if(reset_fragment)
 			{
 				var fragment = document.createDocumentFragment();
@@ -240,11 +237,10 @@
 
 			if(reset_fragment && fragment.children && fragment.children.length > 0)
 			{
-				var container = this.options.container || reset_fragment;
-				var inject_to = container instanceof Function ?
-					container() :
-					container;
-				inject_to.appendChild(fragment);
+				var container = reset_fragment instanceof Function ?
+					reset_fragment() :
+					reset_fragment;
+				container.appendChild(fragment);
 			}
 		},
 
@@ -258,6 +254,7 @@
 			// add our container into the options (non-destructively)
 			options = Composer.object.clone(options);
 			options.container = this.options.container;
+			if(options.container instanceof Function) options.container = options.container();
 
 			var con = create_fn(model, options);
 			this._index_controller(model, con);
