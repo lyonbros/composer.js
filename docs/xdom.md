@@ -331,8 +331,8 @@ library is [morphdom](https://github.com/patrick-steele-idem/morphdom). You can
 - [Controller.html()](docs/controller#html) is asynchronous. It
 passes your DOM element/HTML string off to the xdom rendering system and doesn't
 update the Controller's [elements](docs/controller#elements) until
-rendering is complete. See the `Composer.html()` docs for ways to know when
-rendering is complete.
+rendering is complete. See the [xdom html() docs](#htmls-options-argument) for
+ways to know when rendering is complete.
 - You can still make incremental updates to the DOM after rendering, however
 with xdom it conceptually makes much more sense to just re-render your
 controller instead. So if you are used to writing non-xdom controllers, this may
