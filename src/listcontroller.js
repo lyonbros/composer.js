@@ -225,12 +225,13 @@
 
 			this._clear_subcontrollers();
 
-			var reset_fragment = this.options.fragment_on_reset;
+			var reset_fragment = this.options.container || this.options.fragment_on_reset;
 			if(reset_fragment)
 			{
 				var fragment = document.createDocumentFragment();
 				options = Composer.object.clone(options);
 				options.fragment = fragment;
+				options.container = fragment;
 			}
 
 			this._collection.each(function(model) {
@@ -240,8 +241,8 @@
 			if(reset_fragment && fragment.children && fragment.children.length > 0)
 			{
 				var container = this.options.container || reset_fragment;
-				var inject_to = reset_fragment instanceof Function ?
-					reset_fragment() :
+				var inject_to = container instanceof Function ?
+					container() :
 					container;
 				inject_to.appendChild(fragment);
 			}
