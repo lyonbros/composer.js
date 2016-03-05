@@ -84,6 +84,10 @@
 				if(!eq(a[i], b[i])) return false;
 			}
 		}
+		else if(a instanceof Date && b instanceof Date)
+		{
+			return a.getTime() == b.getTime();
+		}
 		else if(a instanceof Object)
 		{
 			for( var p in b )

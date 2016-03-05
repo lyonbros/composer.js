@@ -350,7 +350,9 @@ and can even supply your own DOM patching library if need be.
 second argument. Options can contain:
 
 - `complete` - A function of zero arguments that gets called when rendering has
-completed for this call of `html()`.
+completed for this call of `html()`. Note that when [Composer.promisify()](/docs/util#composer-promisify)
+is called, `html()` returns a promise that resolves when rendering is complete
+and `options.complete` is not needed.
 - `ignore_elements` - An array of existing DOM elements that will not be
 discarded by xdom should they not match the content being passed to `html()`.
 This is how the Controller preserves [subcontrollers](docs/controller#sub)

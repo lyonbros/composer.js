@@ -9,7 +9,9 @@ The controller is the piece that ties your view (generally HTML rendered in a
 browser) to your models/collections.
 
 It's main function is to listen to events from both the models (updating the
-view according to new data) and to the view (clicks, form posts, etc).
+view according to new data) and to the view (clicks, form posts, etc). It is
+the piece that coordinates between your view (the DOM) and your data layer
+(your models).
 
 It also provides a handful of utilities to make rendering views and cleaning
 things up a bit easier.
@@ -205,14 +207,15 @@ passed HTML.
 
 See [render](#render) for example usage.
 
+Also see the [xdom](docs/xdom) documentation for an overview of how to make
+`html` much faster and easier to use. Composer's xdom system runs patches
+against the DOM instead of completely replacing it (like `html` does by default)
+which can make managing your views much, much easier.
+
 Note that this function can take document fragments as of v1.1.12.
 
-`options` can contain the following items:
-
-- `complete` - Only used when [xdom](docs/xdom#xdom) is enabled, this function is called
-when batched rendering has completed. Note that when [Composer.promisify()](/docs/util#composer-promisify)
-is called, `html()` returns a promise that resolves when rendering is complete
-and `options.complete` is not needed.
+For an overview of what `options` can contain, [check out the html() section
+of the xdom docs](docs/xdom#htmls-options-argument).
 
 ### with_bind :: function(object, ev, fn, name)
 
