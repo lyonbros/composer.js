@@ -24,7 +24,10 @@ by using the following load order:
 
 ## Dependencies
 
-The full build of Composer requires [History.js](https://github.com/browserstate/history.js/).
+The full build of Composer requires [History.js](https://github.com/browserstate/history.js/),
+as well as [morphdom](https://github.com/patrick-steele-idem/morphdom) when
+using the [xdom rendering system](docs/xdom) (although it's possible to tie in
+your own DOM patching library if needed).
 
 Here is the breakdown of which components rely on which (in
 `Component: [Dep1, Dep2, ...]` format):
