@@ -326,7 +326,7 @@ var collection = new Composer.Collection([{name: 'larry'}, {name: 'curly'}, {nam
 alert('Found curly? '+ collection.exists(function(m) { return m.get('name') == 'curly'; }));
 {% endhighlight %}
 
-### find_by_id :: function(id, options)
+### get :: function(id, options)
 
 Find a model in the collection by its ID.
 
@@ -341,18 +341,13 @@ as well as a normal ID.
 
 {% highlight js %}
 var collection = new Composer.Collection([{id: 3, name: 'larry'}, {id: 6, name: 'curly'}, {id: 9, name: 'moe'}]);
-var larry = collection.find_by_id(3);
+var larry = collection.get(3);
 alert('Found larry? '+ (larry ? true : false));
 {% endhighlight %}
 
-### get :: function(id, options)
-
-Synonym for [find_by_id](#find-by-id). Easier to type. This one simple trick has
-framework developers FURIOUS!
-
 ### find_by_cid :: function(cid, options)
 
-Exactly like [find_by_id](#find-by-id), except that it specifically searches
+Exactly like [get](#get), except that it specifically searches
 using models' CID values instead of ID. This is useful if you need to look for
 models that may or may not have a real ID (but all objects have a CID assigned
 on creation, so there will always be a CID).
