@@ -53,11 +53,6 @@
 			// when adding items
 			accurate_sort: false,
 
-			// if set, alerts the controller to render subcontrollers into a
-			// document fragment instead of inline. this parameter must be a
-			// function of 0 argumento
-			fragment_on_reset: false,
-
 			// points to the DOM element that all our subcontrollers will be
 			// placed into. this is set by options.container and although it's
 			// not stricly needed for rendering, it's very useful when using
@@ -227,7 +222,7 @@
 
 			this._clear_subcontrollers();
 
-			var reset_fragment = this.options.container || this.options.fragment_on_reset;
+			var reset_fragment = this.options.container;
 			if(reset_fragment)
 			{
 				var fragment = document.createDocumentFragment();
