@@ -192,7 +192,7 @@
 		},
 
 		/**
-		 * injects to controller's element into the DOM.
+		 * injects the controller's element into the DOM.
 		 */
 		attach: function(options)
 		{
