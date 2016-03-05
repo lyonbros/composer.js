@@ -5,7 +5,7 @@ layout: documentation
 
 # List Controller
 
-The list controller is a wrapper around the [controller](docs/controller)
+The list controller is an extension of the [controller](docs/controller)
 that allows you to easily create subcontrollers that track a
 [collection](docs/collection) (or
 [filtercollection](docs/filtercollection)).
