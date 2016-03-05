@@ -228,6 +228,7 @@ var UsersController = Composer.ListController.extend({
                     model: model
                 });
             }.bind(this), {container: this.el_users});
+            this.inp_name.focus();
         }.bind(this)});
 
         // re-render when our model changes
@@ -238,11 +239,11 @@ var UsersController = Composer.ListController.extend({
     {
         var last_user = this.model.get('last')
         var html = [
-            (last_user ? '<p>Last user added was: '+ last_user +'</p>' : ''),
             '<form>',
             '   <input name="name" placeholder="Add a new user">',
             '   <input type="submit" value="Add">',
-            '<form>',
+                (last_user ? '<span>Last user added was: '+ last_user +'</span>' : ''),
+            '</form>',
             '<ul></ul>'
         ].join('\n');
         this.html(html, options);

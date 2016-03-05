@@ -2075,7 +2075,8 @@
 				},
 				onBeforeMorphElChildren: function(from, to) {
 					if(ignore_children.indexOf(from) >= 0) return false;
-				}
+				},
+				childrenOnly: options.children_only
 			});
 		},
 
@@ -2256,24 +2257,25 @@
 		html: function(obj, options)
 		{
 			options || (options = {});
-
 			if(!this.el) this._ensure_el();
 
-			var el = this.el;
-			if(xdom || this.xdom) el = el.cloneNode();
-
-			if(obj.appendChild)
+			var append = function(el, child)
 			{
-				el.innerHTML = '';
-				el.appendChild(obj);
-			}
-			else
-			{
-				el.innerHTML = obj;
-			}
+				if(typeof(child) == 'string')
+				{
+					el.innerHTML = child;
+				}
+				else
+				{
+					el.innerHTML = '';
+					el.appendChild(child);
+				}
+			};
 
 			if(xdom || this.xdom)
 			{
+				var el = document.createElement('div');
+				append(el, obj);
 				var cb = options.complete;
 				var ignore_elements = options.ignore_elements || [];
 				var ignore_children = options.ignore_children || [];
@@ -2283,6 +2285,7 @@
 						.filter(function(el) { return !!el; })
 				);
 				options.ignore_elements = ignore_elements;
+				options.children_only = true;
 				schedule_render(this.el, el, options, function() {
 					this.refresh_elements();
 					if(cb) cb();
@@ -2291,6 +2294,7 @@
 			}
 			else
 			{
+				append(this.el, obj);
 				this.refresh_elements();
 			}
 		},
@@ -2731,12 +2735,13 @@
 
 			this._clear_subcontrollers();
 
-			var reset_fragment = this.options.fragment_on_reset;
+			var reset_fragment = this.options.container || this.options.fragment_on_reset;
 			if(reset_fragment)
 			{
 				var fragment = document.createDocumentFragment();
 				options = Composer.object.clone(options);
 				options.fragment = fragment;
+				options.container = fragment;
 			}
 
 			this._collection.each(function(model) {
@@ -2746,8 +2751,8 @@
 			if(reset_fragment && fragment.children && fragment.children.length > 0)
 			{
 				var container = this.options.container || reset_fragment;
-				var inject_to = reset_fragment instanceof Function ?
-					reset_fragment() :
+				var inject_to = container instanceof Function ?
+					container() :
 					container;
 				inject_to.appendChild(fragment);
 			}
