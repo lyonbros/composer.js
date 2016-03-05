@@ -51,7 +51,7 @@ framework to function (however, to support older versions of IE, Mootools is
 reccommended). As of version 1.1.0, Composer's only external dependency is 
 [History.js](https://github.com/browserstate/history.js/) (and as of 1.2.0,
 Composer *suggests* [morhpdom](https://github.com/patrick-steele-idem/morphdom)
-for its [XDOM feature](docs/controller/#xdom).
+for its [xdom feature](docs/controller/#xdom).
 
 For the curious, read about [the differences between Composer and Backbone](pages/comparison).
 
@@ -60,7 +60,7 @@ Also see [apps using Composer in production &raquo;](pages/apps)
 ## Dependencies
 
 Composer's [router](docs/router) requires [History.js](https://github.com/browserstate/history.js/)
-to function properly. Composer's [XDOM system](docs/controller#dom)
+to function properly. Composer's [xdom system](docs/controller#dom)
 requires some form of DOM diffing/patching library
 ([morphdom](https://github.com/patrick-steele-idem/morphdom) is the supported
 default, although you can [provide your own](docs/controller#composer-xdom-hooks)).

@@ -1,11 +1,11 @@
 ---
-title: Examples | A form in an XDOM controller
+title: Examples | A form in an xdom controller
 layout: examples
 ---
 
-# A form in an XDOM controller
+# A form in an xdom controller
 
-Let's use XDOM to build a form that can re-render without losing its state.
+Let's use xdom to build a form that can re-render without losing its state.
 Notice how we re-render the the controller each time the dog's name changes,
 *however* the input element's state is not reset like it is in the [regular
 controller form example](examples/controller-form).
@@ -15,7 +15,7 @@ controller form example](examples/controller-form).
 {% highlight js %}
 // create a controller to show a dog in our view
 var ShowDogController = Composer.Controller.extend({
-    // enable XDOM
+    // enable xdom
     xdom: true,
 
     elements: {
