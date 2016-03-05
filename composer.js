@@ -1379,7 +1379,7 @@
 			// if we are passing raw data, create a new model from data
 			var model = data instanceof Composer.Model ? data : new this.model(data, options);
 
-			var existing = this.find_by_id(model.id(), options);
+			var existing = this.get(model.id(), options);
 			if(existing)
 			{
 				// reposition the model if necessary
@@ -1604,7 +1604,7 @@
 		/**
 		 * convenience function to find a model by id
 		 */
-		find_by_id: function(id, options)
+		get: function(id, options)
 		{
 			options || (options = {});
 			var model = this._id_idx[id];
@@ -1638,12 +1638,9 @@
 		},
 
 		/**
-		 * saves typing "find_by_id"
+		 * DEPRECATED. use get()
 		 */
-		get: function(_)
-		{
-			return this.find_by_id.apply(this, arguments);
-		},
+		find_by_id: function(_) { return this.get.apply(this, arguments); },
 
 		/**
 		 * get the index of an item in the list of models. useful for sorting items.
