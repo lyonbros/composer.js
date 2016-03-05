@@ -25,7 +25,7 @@ that have changed and leave everything else untouched.
     What this means is that with xdom, it's actually much better to re-render as
 much as possible. You don't have to apply classes to DOM elements directly. You
 don't have to worry about losing form field values. Just re-render and it all
-works. *All of your view state can now live in your templates*!
+works. *All of your view state can now live in your templates!*
 
 1.  xdom batches calls to [Controller.html()](docs/controller#html)
 so many changes at once are saved up and applied on the browser's animation
