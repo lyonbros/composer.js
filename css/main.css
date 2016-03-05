@@ -98,7 +98,7 @@ ul.doc-nav li:last-child a {border-bottom: 0;}
 .fade.enabled {background: #cfc;}
 
 .home {width: 80%; margin: 0 auto;}
-.intro {display: block; margin: 0 auto 64px auto; padding: 42px 24px; text-align: center; background: #fff; border-radius: 12px; box-shadow: 0 0 8px rgba(0, 0, 0, .05);}
+.intro {display: block; margin: 0 auto 64px auto; padding: 42px 24px; text-align: center; background: #fff; border-radius: 4px; box-shadow: 0 0 8px rgba(0, 0, 0, .05);}
 .intro h1 {font-size: 2.6em; font-weight: normal; color: #555;}
 .intro strong {font-size: 1.4em; font-weight: normal; color: #555;}
 .intro .button-row {margin-bottom: 0;}
@@ -106,6 +106,12 @@ ul.doc-nav li:last-child a {border-bottom: 0;}
 	background: #888; /* Old browsers */
 	background: linear-gradient(to bottom, #aaa 1%,#818181 100%);
 }
+
+.home .features {margin: 0 0 38px 0; padding: 0 0 22px 0; border-bottom: 1px solid #ddd;}
+.home .features ul {list-style: none; margin: 0; padding: 0; text-align: center;}
+.home .features ul li {display: inline-block; width: 31%; margin: 16px 0.75%; vertical-align: top;}
+.home .features ul li h3 {margin: 0 0 6px 0; font-size: 18px;}
+.home .features ul li a {display: block;}
 
 .button-row {margin: 32px 0;}
 .button-row .button {display: inline-block; margin: 0 8px;}
@@ -126,9 +132,8 @@ table th {padding: 4px 3px 4px 6px; color: #ddd; background: #232323;}
 table td {padding: 4px 3px 4px 6px;}
 
 /* apps */
-ul.apps {list-style: none; margin: 0 0 16px 0; padding: 0;}
-ul.apps li {display: block; float: left; width: 232px; height: 264px; margin: 0 6px 10px 0; padding: 4px; line-height: 1.3em; background: #fff; border: 1px solid #f0f0f0;}
-ul.apps li:nth-child(3n) {margin-right: 0;}
+ul.apps {list-style: none; margin: 0 0 16px 0; padding: 0; text-align: center;}
+ul.apps li {display: inline-block; width: 232px; height: 264px; margin: 0 3px 10px 3px; padding: 4px; line-height: 1.3em; text-align: left; background: #fff; border: 1px solid #f0f0f0;}
 ul.apps li h3,
 ul.apps li p {padding: 0 6px;}
 ul.apps li p {font-size: .9em;}

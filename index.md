@@ -20,38 +20,62 @@ layout: home
     </div>
 </div>
 
-Composer is a set of stackable libraries that follow the MVC pattern, providing
-a means to organize and scale complex single-page applications. On top of normal
-MVC, Composer provides
-
-- [An independent eventing module](docs/event) to encourage loose
-coupling between components.
-- [An efficient DOM diffing/patching/batching system](docs/controller#xdom)
-that lets you re-render your views often and without having to worry about
-losing form state or making incremental DOM updates.
-- [A simple routing system](docs/router) that lets you segment
-portions of your app by URL. It also has the ability to bind links in your pages
-and automatically route them correctly (without breaking ctrl/command+click like
-many others).
-- [Simple collection tracking](docs/listcontroller) which monitors
-your collections and updates your view accordingly.
-- [Filtered collections](docs/filtercollection) that act as views
-into your data based on arbitrary filters and sorting.
-- [First-class Promise integration](docs/util#composer-promisify)
-that makes asynchronous programming much simpler.
-- [A tiny base class system](docs/class) for making your own
-extendable modules.
-- [Controller event extension merging](docs/class#composer-merge-extend)
-so child Controllers can inherit DOM event tracking from parent Controllers.
-- [In-depth and understandable documentation](docs/) with lots of
-runnable examples sprinkled in.
+<div class="features">
+    <ul>
+        <li>
+            <h3><a href="docs/controller#xdom">DOM patching</a></h3>
+            Only renders the parts of your templates that have changed,
+            batching updates for efficiency.
+        </li>
+        <li>
+            <h3><a href="docs/listcontroller">List tracking</a></h3>
+            Mirrors a set of elements in the DOM from models in a collection,
+            preserving sort order.
+        </li>
+        <li>
+            <h3><a href="docs/event">Eventing</a></h3>
+            Loosely tie your app's systems together using the independent
+            eventing module.
+        </li>
+        <li>
+            <h3><a href="docs/util#composer-promisify">Promise integration</a></h3>
+            Include your favorite promise library, call one function, and
+            all async functions return promises.
+        </li>
+        <li>
+            <h3><a href="docs/router">Router</a></h3>
+            Easily segment portions of your app by URL. Automatically route
+            links in your app.
+        </li>
+        <li>
+            <h3><a href="docs/filtercollection">Filtered collections</a></h3>
+            Create collections that attach to other collections and apply
+            filters and sorting.
+        </li>
+        <li>
+            <h3><a href="docs/class">Class system</a></h3>
+            Use the tiny base class system for making your own extendable
+            modules.
+        </li>
+        <li>
+            <h3><a href="docs/class#composer-merge-extend">Controller event merging</a></h3>
+            Controllers inherit DOM event tracking from the controller they
+            extend.
+        </li>
+        <li>
+            <h3><a href="docs/">Documentation</a></h3>
+            Easy to understand docs with lots of runnable examples make learning
+            Composer easy.
+        </li>
+    </ul>
+</div>
 
 Composer is framework-agnostic: it does not require jQuery, Mootools, or any other
 framework to function (however, to support older versions of IE, Mootools is
 reccommended). As of version 1.1.0, Composer's only external dependency is 
 [History.js](https://github.com/browserstate/history.js/) (and as of 1.2.0,
-Composer *suggests* [morhpdom](https://github.com/patrick-steele-idem/morphdom)
-for its [xdom feature](docs/controller/#xdom).
+Composer uses [morhpdom](https://github.com/patrick-steele-idem/morphdom)
+for its optional [xdom feature](docs/controller/#xdom)).
 
 For the curious, read about [the differences between Composer and Backbone](pages/comparison).
 
@@ -63,7 +87,7 @@ Composer's [router](docs/router) requires [History.js](https://github.com/browse
 to function properly. Composer's [xdom system](docs/controller#dom)
 requires some form of DOM diffing/patching library
 ([morphdom](https://github.com/patrick-steele-idem/morphdom) is the supported
-default, although you can [provide your own](docs/controller#composer-xdom-hooks)).
+default, although you can [provide your own](docs/xdom#composer-xdom-hooks)).
 
 ## Browser support
 
