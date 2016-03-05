@@ -152,7 +152,7 @@ describe('Composer.Collection', function() {
 		col.add({id: 42});
 		col.add({id: 69});
 
-		var get = function(id) { return col.find_by_id(id); };
+		var get = function(id) { return col.get(id); };
 
 		var model1 = get(42);
 		var model2 = get(69);
@@ -220,7 +220,7 @@ describe('Composer.Collection', function() {
 		col.add({id: 42});
 		col.add({id: 69});
 
-		var get = function(id) { return col.find_by_id(id); };
+		var get = function(id) { return col.get(id); };
 
 		var model1 = get(42);
 		var model2 = get(69);
@@ -304,6 +304,7 @@ describe('Composer.Collection', function() {
 		var model = new Composer.Model({id: 17});
 		var col = new Composer.Collection([{id: 3}, model, {id: 6}]);
 		expect(col.find(function(m) { return m.id() == 17; })).toBe(model);
+		// test deprecated find_by_id
 		expect(col.find_by_id(17)).toBe(model);
 		expect(col.get(17)).toBe(model);
 		expect(col.find_by_cid(model.cid())).toBe(model);
