@@ -1,14 +1,14 @@
 ---
-title: Your first interface
+title: Your first interface | Composer Guide
 layout: guide
 ---
 
-# Your first interface
+# First interface
 
-Controllers are what define our interfaces and provide users of your app a way
-of viewing and interacting with the data driving your application. They tie the
-view and the data together, not only keeping them in sync, but allowing the
-modification of data from the interface.
+Controllers are what are responsible for loading our interaces and setting up
+data exchange between your models and your view (the browser DOM). For our
+simplest example, we don't have a data layer yet and we're just going to load a
+simple HTML template.
 
 ## A basic example
 
@@ -34,7 +34,7 @@ var BasicController = Composer.Controller.extend({
     render: function()
     {
         // here's where you'd use Handlebars et al. we're sticking with raw
-        // HTML because you hopefully knowit already
+        // HTML for simplicity
         var html = '<h3>Hello world!</h3>';
 
         // set our html into this controller's main element
@@ -58,22 +58,28 @@ I know what you're thinking. "Great, this guy just reinvented `div.innerHTML = '
 Don't lose hope yet, fellow front-end app developer! We'll start seeing the true
 power of the controller pattern shortly.
 
-## Getting more done
+## Connecting data to the view
 
-Let's tie a model into the controller, as well as listen for some DOM events to
-make things a bit more interesting.
+We're going to create a [model](docs/model) and have the controller listen to it
+and re-render on changes. We're also going to listen to events in our view to
+make changes to the model.
 
 <div id="guide-1"></div>
 
 {% highlight js %}
-var GettingStartedController = Composer.Controller.extend({
+var DataController = Composer.Controller.extend({
     inject: '#guide-1',
 
+    elements: {
+        // when html() updates the DOM, we find our input element and store it
+        // into the controller's scope under `this.inp_name`
+        'input[name=name]': 'inp_name'
+    },
+
     events: {
-        // listen for a "click" event on any button inside our controller's main
-        // element. if a click happens, run the controller's random_name()
-        // function
-        'click input[type=button]': 'random_name'
+        // listen for the 'input' event on our text box and when it happens,
+        // call `this.update_name`
+        'input input[name=name]': 'update_name'
     },
 
     model: null,
@@ -81,173 +87,71 @@ var GettingStartedController = Composer.Controller.extend({
     init: function()
     {
         // give this controller a dummy model if one wasn't passed in
-        if(!this.model) this.model = new Composer.Model();
-        this.render();
+        this.model = new Composer.Model();
+
+        // run an initial render. our html() call returns a promise that runs
+        // once the DOM has been updated with our HTML
+        this.render()
+            .then(function() {
+                // once our initial render is done, do any needed setup on our
+                // view. for now we just want to focus our input
+                this.inp_name.focus();
+            }.bind(this));
 
         // re-render this controller if any of our model's data changes
-        this.model.bind('change', this.render.bind(this));
-    },
-
-    render: function()
-    {
-        var html = '<h3>My name is '+ this.model.get('name', '[blank]') +'</h3>';
-        html += '<input type="button" value="Pick a random name">';
-
-        this.html(html);
-    },
-
-    random_name: function(e)
-    {
-        // grab a random name.
-
-        // note that this should actually live in the model (who's job is to
-        // handle data) but for this example, this is a fine place for it.
-        var names = ['Larry', 'Curly', 'Moe', 'Barry', 'Sandra', 'Lucy'];
-        var name = names[Math.floor(Math.random() * names.length)];
-
-        // set the name into our model
-        //
-        // the magic happens here. when we call model.set with new data, it
-        // fires a 'change' event (as well as 'change:name' in this case). when
-        // the 'change' event fires, the controller re-renders, showing us the
-        // new name.
-        this.model.set({name: name});
-    }
-});
-new GettingStartedController();
-{% endhighlight %}
-
-Cool, now we have a controller that displays itself and is also listening for
-any changes to data on its model. Give it a try! In fact, feel free to click
-`Try it` multiple times. You will see multiple controllers render, each with its
-own model and its own state. This demonstrates how controllers can be used to
-describe and show interfaces in a compartmentalized fashion.
-
-## Tightening some bolts
-
-So above, we're doing a few things wrong (some of which we addressed in the
-comments). Let's go over how to fix things in detail.
-
-### Use with_bind instead of direct binding
-
-The first thing we did wrong was in our controller's `init()` function
-when we called
-
-<div class="noeval">
-{% highlight js %}
-this.model.bind('change', this.render.bind(this));
-{% endhighlight %}
-</div>
-
-At first glance it looks fine, and works great as you can see above. When the
-model changes, we re-render, showing a new name. However, if the controller
-is [released](docs/controller#release-1), it is never actually
-garbage collected until the model is collected as well. This has the potential
-to create memory leaks in your app, especially when rendering more complex
-interfaces.
-
-What's happening is that we [bind](docs/event#bind) the `change`
-event to `render()`. This means that as long as that model exists, the reference
-to `render()` (and all the state it requires, including the entire controller)
-is kept alive.
-
-The best way to handle this is to use [Controller.with_bind](docs/controller#with-bind),
-which will automatically unbind itself from any bound events when the controller
-is released:
-
-<div class="noeval">
-{% highlight js %}
-this.with_bind(this.model, 'change', this.render.bind(this));
-{% endhighlight %}
-</div>
-
-### Handle data in a model
-
-In our controller's `random_name()` function, we're grabbing a random name from
-a set of data and putting it into the model. What we really need to do is build
-random name selection into the model itself:
-
-<div class="noeval">
-{% highlight js %}
-// notice we can extend the Composer.Model class to build custom models
-var Namer = Composer.Model.extend({
-    random_name: function()
-    {
-        var names = ['Larry', 'Curly', 'Moe', 'Barry', 'Sandra', 'Lucy'];
-        var name = names[Math.floor(Math.random() * names.length)];
-        this.set({name: name});
-    }
-});
-{% endhighlight %}
-</div>
-
-### Putting it together
-
-Great. Let's put it all together.
-
-<div id="guide-2"></div>
-
-{% highlight js %}
-var Namer = Composer.Model.extend({
-    random_name: function()
-    {
-        var names = ['Larry', 'Curly', 'Moe', 'Barry', 'Sandra', 'Lucy'];
-        var name = names[Math.floor(Math.random() * names.length)];
-        this.set({name: name});
-    }
-});
-
-var BetterController = Composer.Controller.extend({
-    inject: '#guide-2',
-
-    events: {
-        'click input[rel=name]': 'random_name',
-
-        // remember, release() is a built-in controller function that removes
-        // the controller from the DOM and performs any cleanup needed
-        'click input[rel=release]': 'release'
-    },
-
-    model: null,
-
-    init: function()
-    {
-        // create an instance of Namer instead of Composer.Model
-        if(!this.model) this.model = new Namer();
-        this.render();
-
-        // with_bind is a silent hero. things work great without it, but on a
-        // long enough timeline, your app will eat more memory than an Eclipse
-        // editor that's been open for a week
         this.with_bind(this.model, 'change', this.render.bind(this));
     },
 
     render: function()
     {
-        var html = '<h3>My name is '+ this.model.get('name', '[blank]') +'</h3>';
-        html += '<input type="button" rel="name" value="Pick a random name">';
-        // add a release button for good fun
-        html += '<input type="button" rel="release" value="Release">';
-        this.html(html);
+        var name = this.model.get('name', '');
+        var html = [
+            '<h3>My name is '+ (name ? name : '(enter your name)') +'</h3>',
+            '<input type="text" name="name" value="" placeholder="Name">'
+        ].join('\n');
+        return this.html(html);
     },
 
-    random_name: function(e)
+    update_name: function(e)
     {
-        // now we just call our model function
-        this.model.random_name();
+        // this.inp_name is bound by our `elements` definition above
+        var name = this.inp_name.value;
+
+        // update the model with this name. this triggers a 'change' event on
+        // the model, which our controller listens to and uses to re-render
+        this.model.set({name: name});
     }
 });
-new BetterController();
+new DataController();
 {% endhighlight %}
 
-Siiiick. We created our own model type (`Namer`) and also updated the controller
-to be smarter about how it binds to our model. These changes go great with the
-new `[release]` button we put in. Give it a try.
+So what's happening here?  Our controller creates a blank model and stores it in
+its scope. We then run our `render()` function and then call
+[with_bind](docs/controller#with-bind) on our model, which means whenever the
+data changes in the model we call `render()` again.
+
+Our [event bindings](docs/controller#events) listen for `input` events on our
+main text box, and when this happens, we update our model with the value from
+the text box.
+
+The interesting thing here is that even though we re-render each time the model
+changes, our input element keeps its focus and value even though we're not
+updating them after the render.
+
+Why is this? Composer's [xdom rendering system](docs/xdom) makes it so that when
+we call [Controller.html()](docs/controller#html), instead of replacing the
+entire `innerHTML` of our controller's main element, we actually patch the DOM
+and only change the bits that updated. This means that our DOM elements are
+preserved across renders.
+
+Thanks, xdom.
 
 ## Next up: models
 
 We've created some basic interfaces, and even seen how to use eventing to
 refresh interfaces based on model data. Next up, we're going to take a look at
 how models are not just good for storing data, but also for retreiving and
-saving it. [Let's continue &raquo;](guide/using-models).
+saving it.
+
+[Let's continue &raquo;](guide/using-models).
 

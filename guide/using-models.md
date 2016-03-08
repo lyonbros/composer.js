@@ -5,11 +5,10 @@ layout: guide
 
 # Using models for fun and profit
 
-Models are what drive the data portion of your app. They talk to your local
-browser databases, they talk to your API, and they talk to any other portion of
-your app that supplies or stores data.
-
-So how does this talking actually happen?
+Models are what drive the data portion of your app. They run any tranformations
+you need on your data, hey talk to your local browser databases, they talk to
+your API, and they talk to any other portion of your app that supplies, stores,
+or operates on data.
 
 ## Getting data into models
 
@@ -20,15 +19,18 @@ this data from somewhere.
 This is easy using the [Composer.sync](docs/util#composer-sync)
 function. This function is meant to be replaced by you, and is called whenever
 one of your models calls [fetch](docs/model#fetch),
-[save](docs/model#save), or [destroy](docs/model#destroy-1).
+[save](docs/model#save), or [destroy](docs/model#destroy-1). There are a few
+other places `Composer.sync` gets called, but lets focus on the model for now.
 
 It allows you to hook up the wiring between your models and your external data.
 
-Let's grab a list of users from our API and create a set of models from them:
+Let's grab a list of users from our API and create a set of models from them.
+We're going to grab our data using the [Sexhr library](https://github.com/lyonbros/sexhr),
+brought to you by the folks who made Composer:
 
 <div id="model-0"></div>
 {% highlight js %}
-// set up a sync function that uses Mootools' Request object to grab server data
+// set up a sync function that AJAX to grab our server data
 Composer.sync = function(method, model, options)
 {
     var http_method = 'get';
@@ -40,28 +42,21 @@ Composer.sync = function(method, model, options)
     case 'delete': http_method = 'DELETE'; break;
     }
 
-    if(['POST', 'PUT'].indexOf(http_method) >= 0)
-    {
-        var data = model.toJSON();
-    }
-    else
-    {
-        var data = {};
-    }
+    if(['POST', 'PUT'].indexOf(http_method) >= 0) var data = model.toJSON();
+    else var data = {};
 
-    // mootools ajax
-    new Request({
-        url: model.get_url(),
-        method: http_method,
-        data: data,
-        onSuccess: function(res) {
+    // run our request, and depending on the result call either options.success
+    // or options.error. these functions are supplied by composer and are meant
+    // to hand it either data or an error object.
+    Sexhr({ url: model.get_url(), method: http_method, data: data })
+        .spread(function(res, xhr) {
             options.success && options.success(JSON.parse(res));
-        },
-        onFailure: function(xhr) {
-            var err = JSON.decode(xhr.responseText);
+        })
+        .catch(function(err) {
+            console.log('err: ', err);
+            var err = JSON.decode(err.xhr.responseText);
             options.error && options.error(err);
-        }
-    }).send();
+        });
 };
 
 var User = Composer.Model.extend({});
