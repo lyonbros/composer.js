@@ -375,9 +375,9 @@ by hooking it into Composer. Simply call `Composer.xdom.hooks`.
 
 `options` can contain the following items:
 
-- `diff` - A function (`function(from_element, to_element)`) that takes two DOM
-elements and returns a diff between them. The result of this function will be
-passed directly to `patch`:
+- `diff` - A function (`function(from_element, to_element, options)`) that takes
+two DOM elements and returns a diff between them. The result of this function
+will be passed directly to `patch`. `options` is passed down from [Controller.html()](docs/controller#html).
 - `patch`- A function (`function(root_element, diff, options)`) that takes a
 root DOM element to apply the patch to, a diff created by the `diff` function,
 and a set of options (passed down from [Controller.html()](docs/controller#html)).
