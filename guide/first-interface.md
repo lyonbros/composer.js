@@ -86,7 +86,7 @@ var DataController = Composer.Controller.extend({
 
     init: function()
     {
-        // give this controller a dummy model if one wasn't passed in
+        // give this controller a dummy model
         this.model = new Composer.Model();
 
         // run an initial render. our html() call returns a promise that runs
