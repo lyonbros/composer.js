@@ -91,7 +91,7 @@ Composer and a few other projects.
     </tr>
     <tr>
         <td>Controller DOM diffing/patching/batching</td>
-        <td><a href="docs/controller#xdom">Yes</a> with <a href="https://github.com/patrick-steele-idem/morphdom">morphdom</a></td>
+        <td><a href="docs/xdom">Yes</a> with <a href="https://github.com/patrick-steele-idem/morphdom">morphdom</a></td>
         <td><a href="https://github.com/tiagorg/marionette-vdom">As a module w/ Marionette/VDOM</a></td>
     </tr>
     <tr>
