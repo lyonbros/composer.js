@@ -180,7 +180,9 @@ var FarmController = Composer.Controller.extend({
     {
         // create a simple farm model
         this.model = new Composer.Model({date: new Date().toISOString()});
-        this.render({complete: function() {
+
+        // Note that xdom:render is triggered whenever xdom actually updates the DOM
+        this.bind_once('xdom:render', function() {
             // when our render is complete, create two animal controllers
             this.sub('animal1', function() {
                 return new AnimalController({ inject: this.el_animal1 });
@@ -188,7 +190,7 @@ var FarmController = Composer.Controller.extend({
             this.sub('animal2', function() {
                 return new AnimalController({ inject: this.el_animal2 });
             }.bind(this));
-        }.bind(this)});
+        }.bind(this));
 
         // re-render on all model changes
         this.with_bind(this.model, 'change', this.render.bind(this));
