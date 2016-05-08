@@ -126,6 +126,7 @@
 		 */
 		html: function(obj, options)
 		{
+			options || (options = {});
 			var container = this.options.container;
 			if(container instanceof Function) container = container();
 			if(container)
