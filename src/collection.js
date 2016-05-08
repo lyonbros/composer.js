@@ -303,7 +303,7 @@
 		{
 			options || (options = {});
 
-			if(data == undefined) return;
+			if(data == undefined) return options.complete && options.complete();
 			if(!Composer.array.is(data)) data = [data];
 
 			data = data.slice(0);
