@@ -230,14 +230,13 @@
 
 		var convert = function(type, asyncs)
 		{
-			var extender = {};
-			Object.keys(asyncs).forEach(function(k) {
-				var spec = asyncs[k];
+			Object.keys(asyncs).forEach(function(key) {
+				var spec = asyncs[key];
 				var options_idx = spec.options_idx || 0;
 				var names = spec.names || ['success', 'error'];
-				extender[k] = function()
+				var _old = Composer[type].prototype[key];
+				Composer[type].prototype[key] = function()
 				{
-					var _old = this.$get_parent();
 					var args = Array.prototype.slice.call(arguments, 0);
 					if(args.length < options_idx)
 					{
@@ -261,8 +260,6 @@
 					});
 				};
 			});
-			var replacer_class = Composer[type].extend(extender);
-			Composer[type] = replacer_class;
 		};
 		convert('Model', {
 			fetch: {},
