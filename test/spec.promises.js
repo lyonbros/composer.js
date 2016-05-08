@@ -113,5 +113,11 @@ describe('Promises', function() {
 				done();
 			})
 	});
+
+	it('uses promisified functions in child classes', function() {
+		var list = new Composer.ListController();
+		var res = list.html('hello');
+		expect(res instanceof Promise).toBe(true);
+	});
 });
 
