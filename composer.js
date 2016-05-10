@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.2.4',
+		version: '1.2.5',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -3048,24 +3048,37 @@
 			var route = routematch.route;
 			var match = routematch.args;
 
-			var obj = route[0];
-			var action = route[1];
-			if (typeof(obj) != 'object') {
-				if(!global[obj])
-				{
-					return this.trigger('fail', {url: url, route: route, handler_exists: false, action_exists: false});
-				}
-				var obj = global[obj];
-			}
-			if(!obj[action] || typeof(obj[action]) != 'function')
+			var routefn;
+			if(route instanceof Function)
 			{
-				return this.trigger('fail', {url: url, route: route, handler_exists: true, action_exists: false});
+				routefn = route;
+			}
+			else if(typeof(route) == 'object')
+			{
+				var obj = route[0];
+				var action = route[1];
+				if (typeof(obj) != 'object') {
+					if(!global[obj])
+					{
+						return this.trigger('fail', {url: url, route: route, handler_exists: false, action_exists: false});
+					}
+					var obj = global[obj];
+				}
+				if(!obj[action] || typeof(obj[action]) != 'function')
+				{
+					return this.trigger('fail', {url: url, route: route, handler_exists: true, action_exists: false});
+				}
+				routefn = function() { return obj[action].apply(obj, arguments); };
+			}
+			else
+			{
+				return this.trigger('fail', {url: url, route: route, handler_exists: false, action_exists: false});
 			}
 			var args = match;
 			args.shift();
 			this._last_url = url;	// save the last successfully routed url
 			this.trigger('route-success', route);
-			obj[action].apply(obj, args);
+			routefn.apply(this, args);
 		},
 
 		/**
