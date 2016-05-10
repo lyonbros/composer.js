@@ -3,7 +3,7 @@ var handlers = {};
 describe('Composer.Router', function() {
 	var routes = {
 		'/': ['handlers', 'home'],
-		'/users': ['handlers', 'users'],
+		'/users': function() { handlers.users.apply(handlers, arguments); },
 		'/users/([0-9]+)': ['handlers', 'load_user']
 	};
 	var router = null;
