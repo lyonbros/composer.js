@@ -354,6 +354,9 @@
 				// don't run mailto links
 				if(a.href.match(/^mailto:/)) return;
 
+				// don't run tel links
+				if(a.href.match(/^tel:/)) return;
+
 				// this is an <a href="#"> link, ignore it
 				if(History.emulated.pushState && a.href.replace(/^.*?#/, '') == '') return;
 
