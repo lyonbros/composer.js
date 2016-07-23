@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.2.5',
+		version: '1.2.6',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -3193,6 +3193,9 @@
 
 				// don't run mailto links
 				if(a.href.match(/^mailto:/)) return;
+
+				// don't run tel links
+				if(a.href.match(/^tel:/)) return;
 
 				// this is an <a href="#"> link, ignore it
 				if(History.emulated.pushState && a.href.replace(/^.*?#/, '') == '') return;
