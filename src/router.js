@@ -204,9 +204,23 @@
 				return this.trigger('fail', {url: url, route: false, handler_exists: false, action_exists: false});
 			}
 
+			// pass the found route object (whatever it may be) and our matched
+			// arguments in verbatim to process_match
+			return this.process_match(routematch);
+		},
+
+		/**
+		 * when a matching route is found, it is passed here, regardless of its
+		 * format. this function will do its best to find a suitable function to
+		 * call given the matched route.
+		 *
+		 * note that this function can be overridden for custom routing
+		 * behavior.
+		 */
+		process_match: function(routematch)
+		{
 			var route = routematch.route;
 			var match = routematch.args;
-
 			var routefn;
 			if(route instanceof Function)
 			{
