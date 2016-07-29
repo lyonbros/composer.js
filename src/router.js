@@ -265,6 +265,7 @@
 			var route = false;
 			var match = [];
 			var regex = null;
+			var matched_re = null;
 			for(var re in routes)
 			{
 				regex = new RegExp('^' + re.replace(/\//g, '\\\/') + '$');
@@ -272,12 +273,13 @@
 				if(match)
 				{
 					route = routes[re];
+					matched_re = re;
 					break;
 				}
 			}
 			if(!route) return false;
 
-			return {route: route, args: match, regex: regex};
+			return {route: route, args: match, regex: regex, key: matched_re};
 		},
 
 		/**
