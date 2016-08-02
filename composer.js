@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.2.7',
+		version: '1.2.8',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -3047,7 +3047,7 @@
 
 			// pass the found route object (whatever it may be) and our matched
 			// arguments in verbatim to process_match
-			return this.process_match(routematch);
+			return this.process_match(url, routematch);
 		},
 
 		/**
@@ -3058,7 +3058,7 @@
 		 * note that this function can be overridden for custom routing
 		 * behavior.
 		 */
-		process_match: function(routematch)
+		process_match: function(url, routematch)
 		{
 			var route = routematch.route;
 			var match = routematch.args;
