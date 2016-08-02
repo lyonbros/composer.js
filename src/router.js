@@ -207,7 +207,7 @@
 
 			// pass the found route object (whatever it may be) and our matched
 			// arguments in verbatim to process_match
-			return this.process_match(routematch);
+			return this.process_match(url, routematch);
 		},
 
 		/**
@@ -218,7 +218,7 @@
 		 * note that this function can be overridden for custom routing
 		 * behavior.
 		 */
-		process_match: function(routematch)
+		process_match: function(url, routematch)
 		{
 			var route = routematch.route;
 			var match = routematch.args;
