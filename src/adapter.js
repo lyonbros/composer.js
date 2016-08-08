@@ -206,7 +206,7 @@
 			return morphdom(root, diff[1], {
 				// this callback preserves form input values (text, checkboxes,
 				// radios, textarea, selects)
-				onBeforeMorphEl: function(from, to) {
+				onBeforeElUpdated: function(from, to) {
 					if(options.reset_inputs) return;
 
 					var tag = from.tagName.toLowerCase();
@@ -225,7 +225,7 @@
 				onBeforeNodeDiscarded: function(node) {
 					if(ignore_elements.indexOf(node) >= 0) return false;
 				},
-				onBeforeMorphElChildren: function(from, to) {
+				onBeforeElChildrenUpdated: function(from, to) {
 					if(ignore_children.indexOf(from) >= 0) return false;
 				},
 				childrenOnly: options.children_only
