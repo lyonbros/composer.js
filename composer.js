@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.2.10',
+		version: '1.2.11',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -2298,7 +2298,7 @@
 
 			if(xdom || this.xdom)
 			{
-				var el = document.createElement('div');
+				var el = document.createElement(this.tag);
 				append(el, obj);
 				var cb = options.complete;
 				var ignore_elements = options.ignore_elements || [];
