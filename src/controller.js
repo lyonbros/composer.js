@@ -175,7 +175,7 @@
 
 			if(xdom || this.xdom)
 			{
-				var el = document.createElement('div');
+				var el = document.createElement(this.tag);
 				append(el, obj);
 				var cb = options.complete;
 				var ignore_elements = options.ignore_elements || [];
