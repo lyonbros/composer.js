@@ -305,6 +305,9 @@ selector can be *anything*, not just links. So "ul.trees li" would bind to any
 navigation. So a value of "nolink" would exclude any &lt;a class="nolink"&gt;
 elements from being bound. This option is ignored if the `selector` options is
 provided.
+- `rewrite` - An optional function that is given the final URL to be routed on
+by a link bound with `bind_links`. The value it returns is used as the new URL
+passed to [route](#route-1).
 
 `bind_links` has a few criteria it must meet before triggering a
 route/`History.pushState`:

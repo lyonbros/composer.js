@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.2.11',
+		version: '1.2.12',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -3239,6 +3239,9 @@
 					.replace(/^[#!\/]+/, '');
 				if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
 				href = '/'+href;
+
+				// if we have a rewrite function, apply it.
+				if(options.rewrite) href = options.rewrite(href);
 
 				this.route(href, {state: options.global_state});
 				return;
