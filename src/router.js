@@ -400,6 +400,9 @@
 				if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
 				href = '/'+href;
 
+				// if we have a rewrite function, apply it.
+				if(options.rewrite) href = options.rewrite(href);
+
 				this.route(href, {state: options.global_state});
 				return;
 			}.bind(this);
