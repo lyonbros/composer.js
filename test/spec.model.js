@@ -23,6 +23,10 @@ describe('Composer.Model', function() {
 		expect(model.get('name')).toBe(null);
 		expect(model.get('drives')).toBe(null);
 		expect(model.get('needs')).toBe(null);
+		model.set({name: 'andrew', age: 30});
+		model.reset({name: 'andrew'});
+		expect(model.get('name')).toBe('andrew');
+		expect(model.get('age')).toBe(null);
 	});
 
 	it('can be extended properly', function() {
@@ -88,6 +92,40 @@ describe('Composer.Model', function() {
 		expect(state.change).toBeUndefined();
 		expect(state.name).toBeUndefined();
 		expect(state.hair).toBe('wavy with layers');
+
+		// test resets
+		var model2 = new Composer.Model();
+		var change = 0;
+		var name = 0;
+		var age = 0;
+		model2.bind('change', function() { change++; });
+		model2.bind('change:name', function() { name++; });
+		model2.bind('change:age', function() { age++; });
+
+		model2.reset({name: 'eric', age: 14});
+		expect(change).toBe(1);
+		expect(name).toBe(1);
+		expect(age).toBe(1);
+
+		model2.reset({name: 'eric'});
+		expect(change).toBe(2);
+		expect(name).toBe(1);
+		expect(age).toBe(2);
+
+		model2.reset({age: 16});
+		expect(change).toBe(3);
+		expect(name).toBe(2);
+		expect(age).toBe(3);
+
+		model2.reset({name: 'eddy', age: 16});
+		expect(change).toBe(4);
+		expect(name).toBe(3);
+		expect(age).toBe(3);
+
+		model2.reset({name: 'eddy', age: 16});
+		expect(change).toBe(4);
+		expect(name).toBe(3);
+		expect(age).toBe(3);
 	});
 
 	it('can be serialized', function() {
