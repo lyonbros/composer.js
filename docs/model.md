@@ -242,7 +242,7 @@ model.unset('name');
 alert('Name? '+ model.get('name'));
 {% endhighlight %}
 
-### set :: function(data, options)
+### reset :: function(data, options)
 
 Like [set](#set), but removes any data from the model that is absent in `data`.
 Useful for replacing a model's entire data object. Sends out `change:<field>`
