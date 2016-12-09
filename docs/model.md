@@ -242,6 +242,26 @@ model.unset('name');
 alert('Name? '+ model.get('name'));
 {% endhighlight %}
 
+### set :: function(data, options)
+
+Like [set](#set), but removes any data from the model that is absent in `data`.
+Useful for replacing a model's entire data object. Sends out `change:<field>`
+events for any removed/changed fields.
+
+Note that `options` can contain [silencing directives](docs/event#silencing).
+
+This function fires both the [change:&lt;field&gt;](#change-field) and [change](#change)
+events.
+
+{% highlight js %}
+var model = new Composer.Model();
+model.set({name: 'testy', age: 19});
+model.bind('change:age', function(model, dogs) {
+    alert('Age changed: '+model.get('name')+'/'+model.get('age'));
+});
+model.reset({name: 'testy'});
+{% endhighlight %}
+
 ### clear :: function(options)
 
 Clear all data from the model. 

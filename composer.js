@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.2.12',
+		version: '1.2.13',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -963,6 +963,44 @@
 			this.fire_event('change:'+key, options, this, void 0, options);
 			this.fire_event('change', options, this, options);
 			this._changed = false;
+			return this;
+		},
+
+		/**
+		 * Reset ALL data in the model with the given object. This function will
+		 * fire change:* events for all added/removed/changed data (but not for
+		 * data that remains the same).
+		 */
+		reset: function(data, options)
+		{
+			options || (options = {});
+
+			if(!options.silent && !this.perform_validation(data, options)) return false;
+
+			var already_changing = this.changing;
+			this.changing = true;
+			var old = this.data;
+			// fire change for removed data
+			Composer.object.each(old, function(_, key) {
+				if(data.hasOwnProperty(key)) return;
+				delete this.data[key];
+				this._changed = true;
+				this.fire_event('change:'+key, options, this, void 0, options);
+			}.bind(this));
+			Composer.object.each(data, function(val, key) {
+				if(Composer.eq(val, old[key])) return;
+				this.data[key] = val;
+				this._changed = true;
+				this.fire_event('change:'+key, options, this, val, options);
+			}.bind(this));
+
+			if(!already_changing && this._changed)
+			{
+				this.fire_event('change', options, this, options, data);
+				this._changed = false;
+			}
+
+			this.changing = false;
 			return this;
 		},
 
