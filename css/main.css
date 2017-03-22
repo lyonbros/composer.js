@@ -1,0 +1,158 @@
+html {overflow-y: scroll; overflow-x: auto;}
+body {font-family: 'arial'; font-size: 14px; line-height: 1.6em; color: #232323; background: #f6f6f6;}
+
+.clear:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.clear {display: inline-block;}
+/* hide IE mac \*/
+* html .clear {height: 1%;}
+.clear {display: block;}
+/* */
+
+#main {max-width: 1024px; margin: 0 auto;}
+
+header {margin: 1px 0 64px 0;}
+header h1 {float: left;}
+header h1 a {display: inline-block; width: 224px; height: 52px; background: url(../images/logo.png) 0 0 no-repeat; background-size: contain;}
+header h1 a span {display: none;}
+header ul {float: left; margin: 14px 0 0 32px; padding: 10px 0 12px 7px; list-style: none; border-left: 1px solid #e0e0e0;}
+header ul li {display: inline-block; margin: 0 0 0 24px;}
+header ul li a {font-size: 0.85em; font-weight: bold; color: #dc291e; text-transform: uppercase; text-decoration: none; letter-spacing: .03em;}
+@media only screen and (max-device-width: 750px) {
+	header {margin-bottom: 24px;}
+	header h1 {float: none; margin: 4px 0 0 0; padding: 0; text-align: center;}
+	header ul {float: none; margin-left: 0; padding-left: 0; text-align: center; border: 0;}
+	header ul li {margin-left: 8px;}
+}
+
+body.body-get-composer header {margin-bottom: 42px;}
+body.body-get-composer header h1 {float: none; padding: 22px 12px 12px 0; text-align: center;}
+body.body-get-composer header h1 a {width: 550px; max-width: 100%; height: 127px;}
+body.body-get-composer header ul {float: none; display: block; margin: 12px 0 32px 0; padding: 0; text-align: center; border: 0;}
+@media only screen and (max-device-width: 750px) {
+	body.body-get-composer header {margin-bottom: 16px;}
+	body.body-get-composer header h1 {padding-top: 0;}
+	body.body-get-composer header h1 a {width: 224px; height: 52px;}
+}
+
+content {padding: 64px 0 0 0;}
+content .home p {font-size: 1.15em; line-height: 1.6em;}
+content .page {}
+
+footer {margin: 64px 0 32px 0; padding: 6px 0 0 0; font-size: .85em; border-top: 1px solid #ccc;}
+footer ul {display: inline-block; list-style: none; margin: 0; padding: 0;}
+footer ul li {display: inline-block; margin-right: 32px;}
+footer p {float: right;}
+
+/* content styles */
+a {color: #3173C4; color: #dc291e; text-decoration: none;}
+a:hover {text-decoration: underline;}
+h1, h2, h3, h4 {/*font-family: 'roboto';*/ margin: .1em 0 .6em 0; font-weight: 600; color: #444;}
+h1, h2 {margin-left: -4px;}
+h1 code, h2 code, h3 code {margin-left: 8px; font-size: 12px;}
+h1 {font-size: 2.0em;}
+h2 {font-size: 1.5em;}
+h3 {margin-top: .8em; font-size: 1.2em;}
+h4 {margin-top: .6em; font-size: 1em;}
+ol, ul {margin: 0 0 16px 32px;}
+ul ul, ol ol, ol ul, ul ol {margin-bottom: 0;}
+p {padding: 0 0 16px 0;}
+strong {font-weight: bold;}
+em {font-style: italic;}
+code {margin: 0 2px; padding: 2px 5px; white-space: nowrap; font-family: Consolas, "Liberation Mono", Courier, monospace; background: #edebdd; border-radius: 3px;}
+pre code {color: #c9bf9f; white-space: pre; background: none;}
+em code, strong code {font-style: normal; font-weight: normal;}
+
+.highlight {position: relative; margin: 0 0 24px 0;}
+.highlight input[type=button] {position: absolute; top: 10px; right: 10px; opacity: .6;}
+.highlight input[type=button]:hover {opacity: 1;}
+.noeval .highlight input[type=button] {display: none;}
+.highlight pre {white-space: pre; background-color:#fff; border: 1px solid #ccc; font-size: 13px; line-height: 19px; overflow: auto; padding: 6px 10px; border-radius: 3px;}
+.highlight pre code {background: none !important;}
+
+ul.doc-nav {display: block; float: left; width: 148px; margin: 0 0 0 0; padding: 0; list-style: none; background: none; border-right: 1px solid #e0e0e0;}
+ul.doc-nav li {display: block;}
+ul.doc-nav li a {display: block; padding: 4px 18px 4px 6px; font-size: 1.1em; color: #dc291e; text-align: right; border-bottom: 1px solid #e0e0e0;}
+ul.doc-nav li.sep a {border-bottom-color: #bbb;}
+ul.doc-nav li:last-child a {border-bottom: 0;}
+.documentation {float: right; width: 83%;}
+@media only screen and (max-device-width: 900px) {
+	.documentation {width: 79%;}
+}
+@media only screen and (max-device-width: 750px) {
+	ul.doc-nav {float: none; margin-bottom: 16px; text-align: center;}
+	ul.doc-nav li {display: inline-block; margin-right: 8px;}
+	ul.doc-nav li a {padding: 3px 4px; border: 0;}
+	.documentation {float: none; width: auto; padding: 0 12px;}
+}
+
+.toc {position: relative; z-index: 2; width: 184px; float: right; margin: 0 0 0 16px; padding: 10px 16px 10px 32px; background: #fff; border-radius: 4px; box-shadow: 0 0 8px rgba(0, 0, 0, .05);}
+.toc ul {margin: 0; padding: 0; list-style: disc; color: #444;}
+.toc ul ul {margin-left: 16px;}
+@media only screen and (max-device-width: 750px) {
+	.toc {float: none; width: 60%; margin: 0 auto 16px auto;}
+}
+
+.example {margin: 0 0 8px 0; padding: 6px;}
+.fade {transition: background 1s;}
+.fade.enabled {background: #cfc;}
+
+.home {width: 80%; margin: 0 auto;}
+.intro {display: block; margin: 0 auto 64px auto; padding: 42px 24px; text-align: center; background: #fff; border-radius: 12px; box-shadow: 0 0 8px rgba(0, 0, 0, .05);}
+.intro h1 {font-size: 2.6em; font-weight: normal; color: #555;}
+.intro strong {font-size: 1.4em; font-weight: normal; color: #555;}
+.intro .button-row {margin-bottom: 0;}
+.intro .button.dev a {
+	background: #888; /* Old browsers */
+	background: linear-gradient(to bottom, #aaa 1%,#818181 100%);
+}
+
+.button-row {margin: 32px 0;}
+.button-row .button {display: inline-block; margin: 0 8px;}
+.button-row .button a {display: inline-block; margin: 0; padding: 10px 16px 10px 16px; text-align: center; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); border-radius: 5px; opacity: .90; transition: opacity .3s;}
+.button-row .button a:hover {opacity: 1;}
+.button-row .button a {
+	background: #659324;
+	/*background: linear-gradient(to bottom, #81bc2e 1%,#659324 100%);*/
+	background: linear-gradient(to bottom, #fa3c32 1%,#dc291e 100%);
+}
+.button-row .button a:hover {text-decoration: none;}
+.button-row .button a h2 {margin: 0; font-size: 1.3em; font-weight: normal; color: #fff;}
+
+/* tables */
+table {width: 100%; margin: 16px 0 32px 0; text-align: left;}
+table tr {}
+table th {padding: 4px 3px 4px 6px; color: #ddd; background: #232323;}
+table td {padding: 4px 3px 4px 6px;}
+
+/* apps */
+ul.apps {list-style: none; margin: 0 0 16px 0; padding: 0;}
+ul.apps li {display: block; float: left; width: 232px; height: 264px; margin: 0 6px 10px 0; padding: 4px; line-height: 1.3em; background: #fff; border: 1px solid #f0f0f0;}
+ul.apps li:nth-child(3n) {margin-right: 0;}
+ul.apps li h3,
+ul.apps li p {padding: 0 6px;}
+ul.apps li p {font-size: .9em;}
+
+/* filter collection example */
+#filter-example {margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
+#filter-example .full {float: left; width: 45%;}
+#filter-example .filter {float: right; width: 45%;}
+
+/* todo app */
+#todo-container {width: 500px; margin: 0 auto 32px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.2) 0 5px 6px 0;}
+#todo-container h1 {font-size: 32px; margin: 0 0 16px 0; text-align: center;}
+#todo-container form.add input[type=text] {width: 488px; font-size: 20px; padding: 5px;}
+#todo-container form.add input[type=submit] {display: none;}
+#todo-container ul.todos {padding: 16px 0; list-style: none;}
+#todo-container ul.todos li {padding: 5px 3px; margin-bottom: 5px; border-bottom: 1px dashed #bbb;}
+#todo-container ul.todos li input[type=checkbox] {float: left; margin: 8px 10px 0 0;}
+#todo-container ul.todos li h3 {float: left; width: 80%; font-size: 20px; margin: 0;}
+#todo-container ul.todos li.complete h3 {text-decoration: line-through;}
+#todo-container ul.todos li .actions {float: right; display: block;}
+#todo-container ul.todos li .actions a.delete {color: #a00; font-weight: bold; text-decoration: none;}
+#todo-container ul.todos li:hover .actions {display: block;}
+#todo-container ul.todos li form.edit {float: left; width: 80%;}
+#todo-container ul.todos li form.edit input[type=text] {width: 100%; font-size: 20px;}
+#todo-container ul.todos li form.edit input[type=submit] {display: none;}
+#todo-container .info .left {float: left;}
+#todo-container .info .clear-complete {float: right;}
+
