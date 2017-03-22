@@ -97,7 +97,7 @@
 		get: function(key, def)
 		{
 			if(typeof(def) == 'undefined') def = null;
-			if(typeof(this.data[key]) == 'undefined')
+			if(!this.data[key])
 			{
 				return def;
 			}
