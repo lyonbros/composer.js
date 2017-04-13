@@ -221,6 +221,10 @@
 						to.value = from.value;
 						break;
 					}
+					if(options.before_update instanceof Function)
+					{
+						options.before_update(from, to);
+					}
 				},
 				onBeforeNodeDiscarded: function(node) {
 					if(ignore_elements.indexOf(node) >= 0) return false;
