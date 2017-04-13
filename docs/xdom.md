@@ -368,6 +368,20 @@ You can supply your own elements as well (which will be appended to by `html`).
 `.value` and `.checked` attributes reset to the form default. The default
 mode of operation is to leave form element values/focus untouched, but there
 may be cases where you also want a hard reset of the form/template.
+- `before_update` - a function of the format `function(from_element, to_element)`
+that is run just before xdom merges two elements. This is very useful if, say,
+you have a textarea on your page. The user drags the textarea, expanding it. The
+next time you render, the `style="width: 100px; height: 50px"` info will be
+lost. If you want to preserve it, do something like:
+
+    ```
+    before_update: function(from, to) {
+        if(from.tagName.toLowerCase() == 'textarea') {
+            to.style.width = from.style.width;
+            to.style.height = from.style.height;
+        }
+    }
+    ```
 
 ### Composer.xdom.hooks :: function(options)
 
