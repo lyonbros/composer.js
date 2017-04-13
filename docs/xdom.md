@@ -374,14 +374,14 @@ you have a textarea on your page. The user drags the textarea, expanding it. The
 next time you render, the `style="width: 100px; height: 50px"` info will be
 lost. If you want to preserve it, do something like:
 
-    ```
+    {% highlight js %}
     before_update: function(from, to) {
         if(from.tagName.toLowerCase() == 'textarea') {
             to.style.width = from.style.width;
             to.style.height = from.style.height;
         }
     }
-    ```
+    {% endhighlight %}
 
 ### Composer.xdom.hooks :: function(options)
 
