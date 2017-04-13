@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.2.13',
+		version: '1.2.14',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -2121,6 +2121,10 @@
 					case 'select':
 						to.value = from.value;
 						break;
+					}
+					if(options.before_update instanceof Function)
+					{
+						options.before_update(from, to);
 					}
 				},
 				onBeforeNodeDiscarded: function(node) {
