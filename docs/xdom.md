@@ -355,12 +355,6 @@ second argument. Options can contain:
 completed for this call of `html()`. Note that when [Composer.promisify()](/docs/util#composer-promisify)
 is called, `html()` returns a promise that resolves when rendering is complete
 and `options.complete` is not needed.
-- `immediate` - A boolean. If set to `true`, the call to `html()` will *not* be
-queued through `requestAnimationFrame`, but will instead run the DOM diff and
-*immediately* apply the changes to the DOM. Defaults to `false`, although defaults
-to `true` for ListControllers (and must be explicitely set to `false` if
-rendering via an animation frame is desired) in order to not break the `list:empty`
-and `list:notempty` events.
 - `ignore_elements` - An array of existing DOM elements that will not be
 discarded by xdom should they not match the content being passed to `html()`.
 This is how the Controller preserves [subcontrollers](docs/controller#sub)
