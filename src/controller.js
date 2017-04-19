@@ -40,7 +40,7 @@
 			diffs.push([from, Composer.xdom.diff(from, to, options), options, callback]);
 			if(scheduled) return;
 			scheduled = true;
-			var apply_diff = function() {
+			Composer.frame(function() {
 				scheduled = false;
 				var diff_clone = diffs.slice(0);
 				diffs = [];
@@ -55,9 +55,7 @@
 				});
 				// run our callbacks after we run our DOM updates
 				cbs.forEach(function(cb) { cb(); });
-			};
-			if(options.immediate) apply_diff();
-			else Composer.frame(apply_diff);
+			});
 		};
 	})();
 
