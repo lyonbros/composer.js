@@ -122,7 +122,12 @@
 		 * instances options.container into the XDOM ignore-children list so the
 		 * subcontrollers' DOM elements are preserved on render. this allows us
 		 * to call html() until the cows come home without having to re-init our
-		 * list controller
+		 * list controller.
+		 *
+		 * Also, since it's possible we want to render immediately on list:empty
+		 * and list:notempty, we set {immediate: true] into our options. This
+		 * can be overriden either way by setting the value directly in the
+		 * caller (we only default to true if it's not specified in options).
 		 */
 		html: function(obj, options)
 		{
@@ -135,6 +140,7 @@
 				ignore_children.push(container);
 				options.ignore_children = ignore_children;
 			}
+			if(typeof(options.immediate) == 'undefined') options.immediate = true;
 			return this.parent.apply(this, arguments);
 		},
 
