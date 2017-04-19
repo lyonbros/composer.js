@@ -25,7 +25,7 @@ describe('Composer.ListController.xdom', function() {
 					fragment_on_reset: true
 				});
 			}.bind(this)}, {
-				container: function() { return this.el_list; }.bind(this)
+				container: this.el_list
 			});
 			this.with_bind(this.model, 'change', this.render.bind(this));
 		},
@@ -33,7 +33,6 @@ describe('Composer.ListController.xdom', function() {
 		render: function(options)
 		{
 			var complete = options.complete;
-			options.immediate = false;
 			this.html('<h1>'+this.model.get('title')+'</h1><ul></ul>', options);
 		}
 	});
@@ -51,6 +50,7 @@ describe('Composer.ListController.xdom', function() {
 		con.bind_once('xdom:render', function() {
 			expect(con.el_list.childNodes.length).toBe(3);
 			expect(con_renders).toBe(1);
+			model.set({title: 'omg lol wtf'});
 			con.bind_once('xdom:render', function() {
 				expect(con.el_list.childNodes.length).toBe(3);
 				expect(con_renders).toBe(2);
@@ -58,7 +58,6 @@ describe('Composer.ListController.xdom', function() {
 				expect(con.el_list.childNodes.length).toBe(2);
 				done();
 			});
-			model.set({title: 'omg lol wtf'});
 		});
 	});
 });

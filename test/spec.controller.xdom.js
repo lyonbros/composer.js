@@ -278,44 +278,5 @@ describe('Composer.Controller.xdom', function() {
 			});
 		});
 	});
-
-	it('renders immediately with using immesiate:true', function(done) {
-		var Renderer = Composer.Controller.extend({
-			xdom: true,
-			immediate: false,
-
-			init: function() {},
-
-			render: function() {
-				this.html('<h1>hai</h1>', {immediate: this.immediate});
-			}
-		});
-		var renders_immediate = 0;
-		var renders_deferred = 0;
-
-		var ren1 = new Renderer({immediate: true});
-		var ren2 = new Renderer();
-		ren1.bind('xdom:render', function() { renders_immediate++; });
-		ren2.bind('xdom:render', function() { renders_deferred++; });
-
-		ren1.render();
-		ren1.render();
-		ren1.render();
-
-		expect(renders_immediate).toBe(3);
-
-		ren2.render();
-		ren2.render();
-		ren2.render();
-
-		expect(renders_deferred).toBe(0);
-		ren2.bind_once('xdom:render', function() {
-			setTimeout(function() {
-				expect(renders_immediate).toBe(3);
-				expect(renders_deferred).toBe(3);
-				done();
-			});
-		});
-	});
 });
 
