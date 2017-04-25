@@ -81,14 +81,9 @@ alert('Name: '+ new MyModel().get('name'));
 Tells the model where to look for the ID when calling [id](#id)
 or other ID-related functions.
 
-### url :: attribute(false)
-
-Tells the model what *exact* URL endpoint to use for [get_url](#get-url)
-when using the syncing functions. It's more pragmatic to use [base_url](#base-url)
-instead, but this can be a useful override in some instances.
-
 ### base_url :: attribute(false)
 
+DEPRECATED. Just use [url()][#url] instead.
 Prepended to the model's ID when doing syncing calls. See
 [get_url](#get-url).
 
@@ -376,7 +371,30 @@ alert('Data '+ JSON.stringify(model.toJSON()));
 Validate data passed to the model. This happens whenever dat in the model
 changes. Return `false` from this function to signify a *success*.
 
+### url :: function()
+
+Called by Composer before [fetch](#fetch)/[save](#save)/[destroy](#destroy-1)
+and builds a URL for this model:
+
+{% highlight js %}
+var Doge = Composer.Model.extend({
+    url: function() {
+        var base = '/top-doge';
+        if(!this.is_new()) base += '/'+this.id();
+        return base;
+    }
+});
+Composer.sync = function(action, model, options) {
+    alert('Our URL is: '+model.get_url());
+    options.success({doge_id: 1, top_doge: true, avatar: 'https://yt3.ggpht.com/-dt2AThCWCfQ/AAAAAAAAAAI/AAAAAAAAAAA/1g2E-fl-b6I/s900-c-k-no-mo-rj-c0xffffff/photo.jpg'});
+}
+var doge = new Doge();
+doge.fetch();
+{% endhighlight %}
+
 ### get_url :: function()
+
+DEPRECATED. Use [url()](#url) instead.
 
 Returns the model's URL, as it relates to your API. Uses `Model.base_url` to
 determine the base, and then appends the ID from there (if it exists).
