@@ -55,20 +55,16 @@
 			sort_event: false			// if true, fires a 'sort' event instead of 'reset' when sorting
 		},
 
-		initialize: function(master, options)
-		{
+		initialize: function(master, options) {
 			options || (options = {});
 
 			var optkeys = Object.keys(this.options);
 			Object.keys(options).forEach(function(k) {
 				var v = options[k];
 				if(typeof(v) == 'function') v = v.bind(this);
-				if(optkeys.indexOf(k) >= 0)
-				{
+				if(optkeys.indexOf(k) >= 0) {
 					this.options[k] = v;
-				}
-				else
-				{
+				} else {
 					this[k] = v;
 				}
 			}.bind(this));
@@ -88,8 +84,7 @@
 		/**
 		 * bind our events to the master collection and start filtering
 		 */
-		attach: function()
-		{
+		attach: function() {
 			this.master.bind('all', this.match_action.bind(this), 'filtercollection:'+this.cid()+':all');
 			this.bind('reset', function(options) {
 				options || (options = {});
@@ -101,8 +96,7 @@
 		/**
 		 * detach from the master collection (stop listening and filtering)
 		 */
-		detach: function()
-		{
+		detach: function() {
 			this.master.unbind('all', 'filtercollection:'+this.cid()+':all');
 			this.unbind('reset', 'filtercollection:reset');
 		},
@@ -110,25 +104,23 @@
 		/**
 		 * internal function used to match events from the master collection.
 		 */
-		match_action: function(event, model)
-		{
+		match_action: function(event, model) {
 			var args = Array.prototype.slice.call(arguments, 0);
-			switch(event)
-			{
-			case 'add':
-				this.add_event(model, {from_event: true}); break;
-			case 'reset':
-				this.refresh(); break;
-			case 'clear':
-				this.clear(); break;
-			case 'remove':
-				this.remove_event(model, {from_event: true}); break;
-			case 'change':
-				this.change_event(model, {}, args); break;
-			case 'sort':
-				this.refresh(); break;
-			default:
-				this.forward_event(event, model, args); break;
+			switch(event) {
+				case 'add':
+					this.add_event(model, {from_event: true}); break;
+				case 'reset':
+					this.refresh(); break;
+				case 'clear':
+					this.clear(); break;
+				case 'remove':
+					this.remove_event(model, {from_event: true}); break;
+				case 'change':
+					this.change_event(model, {}, args); break;
+				case 'sort':
+					this.refresh(); break;
+				default:
+					this.forward_event(event, model, args); break;
 			}
 		},
 
@@ -141,12 +133,10 @@
 		 *
 		 * also performs sorting/limiting.
 		 */
-		refresh: function(options)
-		{
+		refresh: function(options) {
 			options || (options = {});
 
-			if(options.diff_events)
-			{
+			if(options.diff_events) {
 				var old_models = this._models;
 			}
 			this._models = this.master._models.filter(function(model) {
@@ -154,8 +144,7 @@
 			}.bind(this));
 			this.sort({silent: true});
 			if(this.limit) this._models.splice(this.limit, this._models.length);
-			if(options.diff_events)
-			{
+			if(options.diff_events) {
 				var arrdiff = function(arr1, arr2) { return arr1.filter(function(el) { return arr2.indexOf(el) < 0; }); };
 
 				arrdiff(old_models, this._models).forEach(function(model) {
@@ -174,8 +163,7 @@
 		 * the model still meets the filtercollection's criteria so we call
 		 * tihs.filter on it to see if it "fits in."
 		 */
-		change_event: function(model, options, forward_args)
-		{
+		change_event: function(model, options, forward_args) {
 			options || (options = {});
 
 			// see if this model even belongs to this collection
@@ -186,24 +174,18 @@
 			// track the current number of items and reloda the data
 			var num_items = this._models.length;
 
-			if(this.options.refresh_on_change)
-			{
+			if(this.options.refresh_on_change) {
 				// the brute force option (re-sort everything, re-filter everything)
 				// VERY expensive
 				this.refresh({silent: true});
-			}
-			else
-			{
+			} else {
 				// a more tactful approach
 				var new_index = this.sort_index(model);
 
-				if(cur_index == -1 && filters)
-				{
+				if(cur_index == -1 && filters) {
 					// welcome to the team!
 					this.add(model, options);
-				}
-				else if(cur_index > -1 && !filters)
-				{
+				} else if(cur_index > -1 && !filters) {
 					// we feel that your interests no longer align with the team's
 					// ...we're going to have to let you go.
 					//
@@ -214,17 +196,12 @@
 					// to think of it, so is your severance). Think of this as a
 					// new beginning! Now get out of my office.
 					this.remove(model, options);
-				}
-				else if(cur_index != new_index)
-				{
+				} else if(cur_index != new_index) {
 					// sort order changed
-					if(this.options.sort_event)
-					{
+					if(this.options.sort_event) {
 						this.sort(Composer.object.merge({}, options, {silent: true}));
 						this.fire_event('sort', options);
-					}
-					else
-					{
+					} else {
 						this.sort(options);
 					}
 				}
@@ -234,14 +211,11 @@
 			// standard "change" event (with the forwarded args), otherwise the
 			// change triggered a membership change...in this case, the
 			// add/remove events should cover the change.
-			if(this._models.length == num_items)
-			{
+			if(this._models.length == num_items) {
 				forward_args.shift();
 				var args = ['change', options].concat(forward_args);
 				this.fire_event.apply(this, args);
-			}
-			else if(this.options.refresh_on_change)
-			{
+			} else if(this.options.refresh_on_change) {
 				this.fire_event('reset', options);
 			}
 		},
@@ -251,10 +225,8 @@
 		 * filter test, and also adds the model into the master collection
 		 * instead of the filtercollection's models dircetly.
 		 */
-		add: function(data, options)
-		{
-			if (Composer.array.is(data))
-			{
+		add: function(data, options) {
+			if (Composer.array.is(data)) {
 				return Composer.object.each(data, function(model) { this.add(model, options); }, this);
 			}
 			
@@ -264,21 +236,18 @@
 			// if we are passing raw data, create a new model from data
 			var model = data.__composer_type == 'model' ? data : new this.master.model(data, options);
 
-			if(this.transform && options.transform)
-			{
+			if(this.transform && options.transform) {
 				model = this.transform.call(this, model, 'add');
 			}
 
 			// model doesn't match filter. NICE TRY
 			if(!this.filter(model, this)) return false;
 
-			if(typeof(options.at) == 'number')
-			{
+			if(typeof(options.at) == 'number') {
 				// find the correct insertion point in the master it options.at is set.
 				var current = this.at(options.at);
 				var master_idx = this.master.index_of(current);
-				if(master_idx !== false)
-				{
+				if(master_idx !== false) {
 					options.at = master_idx;
 				}
 			}
@@ -287,12 +256,9 @@
 			// _do_add method, which manually adds, sorts, and limits for us.
 			// otherwise, we just call master.add() and the model will be added
 			// here via our wonderful events
-			if(this.master.index_of(model))
-			{
+			if(this.master.index_of(model)) {
 				this._do_add(model, options);
-			}
-			else
-			{
+			} else {
 				this.master.add(model, options);
 				if(this.limit) this._models.splice(this.limit);
 			}
@@ -302,8 +268,7 @@
 		/**
 		 * Manually add a model to this collection. Sorts and limits as well.
 		 */
-		_do_add: function(model, options)
-		{
+		_do_add: function(model, options) {
 			// master already has item, so we don't need to add it to
 			// master (it will just fire "upsert"). what we need is to
 			// add the model to this collection's models, sorted, and
@@ -315,19 +280,14 @@
 			if(this.limit) this._models.splice(this.limit);
 			// after sort/limit, model may not actually be in the FC, so
 			// check before wildly firing add/sort events
-			if(this.index_of(model) >= 0)
-			{
+			if(this.index_of(model) >= 0) {
 				// model was actually added, fire "add" event
 				this.fire_event('add', options, model, this, options);
-				if(old_idx != new_idx)
-				{
+				if(old_idx != new_idx) {
 					// sort changed! fire appropriate event
-					if(this.options.sort_event)
-					{
+					if(this.options.sort_event) {
 						this.fire_event('sort', options);
-					}
-					else
-					{
+					} else {
 						this.fire_event('reset', options);
 					}
 				}
@@ -338,10 +298,8 @@
 		 * extension of Colleciton.remove that removes the model from the
 		 * collection but only if it exists
 		 */
-		remove: function(model, options)
-		{
-			if (Composer.array.is(model))
-			{
+		remove: function(model, options) {
+			if (Composer.array.is(model)) {
 				return Composer.object.each(model, function(m) { this.remove(m); }, this);
 			}
 			
@@ -350,8 +308,7 @@
 
 			if(this._models.indexOf(model) < 0) return false;
 
-			if(this.transform && options.transform)
-			{
+			if(this.transform && options.transform) {
 				model = this.transform.call(this, model, 'remove');
 			}
 
@@ -364,30 +321,26 @@
 			this._remove_reference(model);
 		},
 
-		add_event: function(model, options)
-		{
+		add_event: function(model, options) {
 			if(!this.filter(model, this)) return false;
 			this.refresh({silent: true});
 			if(this.options.sort_event) this.fire_event('sort', options);
 			this.fire_event('add', options, model, this, options);
 		},
 
-		remove_event: function(model, options)
-		{
+		remove_event: function(model, options) {
 			if(this._models.indexOf(model) < 0) return false;
 			this.refresh({silent: true});
 			this.fire_event('remove', options, model);
 		},
 
-		forward_event: function(event, model, args)
-		{
+		forward_event: function(event, model, args) {
 			// return if not forwarding events
 			if(!this.options.forward_all_events) return false;
 
 			// we're forwarding events, but we're not about to forward them for
 			// a model that doesn't "fit in" around here
-			if(model && model.__composer_type == 'model' && !this.filter(model, this))
-			{
+			if(model && model.__composer_type == 'model' && !this.filter(model, this)) {
 				return false;
 			}
 			this.trigger.apply(this, args);

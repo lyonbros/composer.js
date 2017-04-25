@@ -22,8 +22,7 @@
 	/**
 	 * like typeof, but returns if it's an array or null
 	 */
-	var typeOf = function(obj)
-	{
+	var typeOf = function(obj) {
 		if(obj == null) return 'null';
 		var type = typeof(obj);
 		if(type != 'object') return type;
@@ -34,13 +33,11 @@
 	/**
 	 * Merge object `from` into `into`
 	 */
-	var merge = function(into, from, options)
-	{
+	var merge = function(into, from, options) {
 		options || (options = {});
 		var keys = Object.keys(from);
 		var transform = options.transform;
-		for(var i = 0, n = keys.length; i < n; i++)
-		{
+		for(var i = 0, n = keys.length; i < n; i++) {
 			var k = keys[i];
 			if(transform) transform(into, from, k);
 			into[k] = from[k];
@@ -51,20 +48,15 @@
 	/**
 	 * Given an object, copy the subobjects/subarrays recursively
 	 */
-	var copy = function(obj)
-	{
+	var copy = function(obj) {
 		// we can't do Object.keys or hasOwnProperty here because we actually
 		// want to look at all inherited objects as well as owned objects.
-		for(var k in obj)
-		{
+		for(var k in obj) {
 			var val = obj[k];
 			var type = typeOf(val);
-			if(type == 'object')
-			{
+			if(type == 'object') {
 				obj[k] = copy(merge({}, val));
-			}
-			else if(type == 'array')
-			{
+			} else if(type == 'array') {
 				obj[k] = val.map(copy);
 			}
 		}
@@ -74,15 +66,11 @@
 	/**
 	 * Create a new class prototype from the given base class.
 	 */
-	var create = function(base)
-	{
-		if('create' in Object)
-		{
+	var create = function(base) {
+		if('create' in Object) {
 			// create the new object from the prototype
 			var prototype = Object.create(base.prototype);
-		}
-		else
-		{
+		} else {
 			// of we won't have Object.create, then we need to let the object
 			// know we want a bare instance (without initializing it)
 			base.$initializing = true;
@@ -90,8 +78,7 @@
 			delete base.$initializing;
 		}
 
-		var cls = function Omni()
-		{
+		var cls = function Omni() {
 			// don't run the ctor if we're just trying to get a prototype
 			if(cls.$initializing) return this;
 
@@ -107,8 +94,7 @@
 			// the class.
 			copy(this);
 			this.$state = {parents: {}, fn: []};
-			if(this.initialize) return this.initialize.apply(this, arguments);
-			else return this;
+			return this.initialize ?  this.initialize.apply(this, arguments) : this;
 		};
 		cls.$constructor = prototype.$constructor = cls;
 		cls.prototype = prototype;
@@ -121,10 +107,8 @@
 	 * Wraps an overriding method to track its state so get_parent() can pull
 	 * out the right function.
 	 */
-	var extend_parent = function(to, from, k)
-	{
-		return function()
-		{
+	var extend_parent = function(to, from, k) {
+		return function() {
 			if(!this.$state.parents[k]) this.$state.parents[k] = [];
 			this.$state.parents[k].push(from);
 			this.$state.fn.push(k);
@@ -138,8 +122,7 @@
 	/**
 	 * Takes care of "parentizing" overridden methods when merging prototypes
 	 */
-	var do_extend = function(to_prototype, from_prototype)
-	{
+	var do_extend = function(to_prototype, from_prototype) {
 		return merge(to_prototype, from_prototype, {
 			transform: function(into, from, k) {
 				if(typeof into[k] != 'function' || into[k].prototype.$parent || typeof from[k] != 'function' || from[k].prototype.$parent) return false;
@@ -157,23 +140,20 @@
 	/**
 	 * Main extension method, creates a new class from the given object
 	 */
-	Base.extend = function(obj)
-	{
+	Base.extend = function(obj) {
 		var base = this;
 		var cls = create(base);
 		do_extend(cls.prototype, obj);
 		cls.extend = Base.extend;
 
-		cls.prototype.$get_parent = function()
-		{
+		cls.prototype.$get_parent = function() {
 			var k = this.$state.fn[this.$state.fn.length - 1];
 			if(!k) return false;
 			var parents = this.$state.parents[k];
 			var parent = parents[parents.length - 1];
 			return parent || false;
 		};
-		cls.prototype.parent = function()
-		{
+		cls.prototype.parent = function() {
 			var fn = this.$get_parent();
 			if(fn) return fn.apply(this, arguments);
 			throw 'Class.js: Bad parent method: '+ this.$state.fn[this.$state.fn.length - 1];

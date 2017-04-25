@@ -43,8 +43,7 @@
 		/**
 		 * CTOR, assigns our CID
 		 */
-		initialize: function()
-		{
+		initialize: function() {
 			// assign the unique app id
 			this._cid = Composer.cid();
 		},
@@ -52,16 +51,14 @@
 		/**
 		 * Pull out the object's unique Composer ID
 		 */
-		cid: function()
-		{
+		cid: function() {
 			return this._cid;
 		},
 
 		/**
 		 * Convenience function to set options easily
 		 */
-		set_options: function(options)
-		{
+		set_options: function(options) {
 			options || (options = {});
 
 			Object.keys(options).forEach(function(key) {
@@ -74,8 +71,7 @@
 		 * name, the passed-in options, and any arbitrary number of arguments,
 		 * determine whether or not the given event should be triggered.
 		 */
-		fire_event: function()
-		{
+		fire_event: function() {
 			var args = Array.prototype.slice.call(arguments, 0);
 			var evname = args.shift();
 			var options = args.shift();
@@ -84,26 +80,21 @@
 
 			// add event name back into the beginning of args
 			args.unshift(evname);
-			if(!options.silent && !options.not_silent)
-			{
+			if(!options.silent && !options.not_silent) {
 				// not silent, fire the event
 				return this.trigger.apply(this, args);
-			}
-			else if(
+			} else if(
 				options.not_silent &&
 				(options.not_silent == evname ||
 				 (options.not_silent.indexOf && options.not_silent.indexOf(evname) >= 0))
-			)
-			{
+			) {
 				// silent, BUT the given event is allowed. fire it.
 				return this.trigger.apply(this, args);
-			}
-			else if(
+			} else if(
 				options.silent &&
 				((typeof(options.silent) == 'string' && options.silent != evname) ||
 				 (options.silent.indexOf && !(options.silent.indexOf(evname) >= 0)))
-			)
-			{
+			) {
 				// the current event is not marked to be silent, fire it
 				return this.trigger.apply(this, args);
 			}

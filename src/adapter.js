@@ -25,18 +25,13 @@
 	var has_jquery = !!global.jQuery;
 	var has_slick = !!global.Slick;
 
-	var which_adapter = function(types)
-	{
-		var wrap = function(fn)
-		{
+	var which_adapter = function(types) {
+		var wrap = function(fn) {
 			return function(context, selector) {
 				context || (context = document);
-				if(types.native && context instanceof window.DocumentFragment)
-				{
+				if(types.native && context instanceof window.DocumentFragment) {
 					return types.native(context, selector);
-				}
-				else
-				{
+				} else {
 					return fn(context, selector);
 				}
 			};
@@ -49,16 +44,13 @@
 	};
 
 	var find = which_adapter({
-		slick: function(context, selector)
-		{
+		slick: function(context, selector) {
 			return Slick.find(context, selector);
 		},
-		sizzle: function(context, selector)
-		{
+		sizzle: function(context, selector) {
 			return Sizzle.select(selector, context)[0];
 		},
-		jquery: function(context, selector)
-		{
+		jquery: function(context, selector) {
 			return jQuery(context).find(selector)[0];
 		},
 		native: (function() {
@@ -74,20 +66,16 @@
 	});
 
 	var match = which_adapter({
-		slick: function(context, selector)
-		{
+		slick: function(context, selector) {
 			return Slick.match(context, selector);
 		},
-		sizzle: function(context, selector)
-		{
+		sizzle: function(context, selector) {
 			return Sizzle.matchesSelector(context, selector);
 		},
-		jquery: function(context, selector)
-		{
+		jquery: function(context, selector) {
 			return jQuery(context).is(selector);
 		},
-		native: function(context, selector)
-		{
+		native: function(context, selector) {
 			if('matches' in context) var domatch = context.matches;
 			if('msMatchesSelector' in context) var domatch = context.msMatchesSelector;
 			if('mozMatchesSelector' in context) var domatch = context.mozMatchesSelector;
@@ -103,29 +91,23 @@
 	var add_event = (function() {
 		return function(el, ev, fn, selector) {
 			var capture = captured_events[ev] || false;
-			if(selector)
-			{
+			if(selector) {
 				el.addEventListener(ev, function(event) {
 					// if we have a mootools event class, wrap the event in it
 					if(event && window.MooTools && window.DOMEvent) event = new DOMEvent(event);
 					var target = event.target || event.srcElement;
-					while(target)
-					{
-						if(match(target, selector))
-						{
+					while(target) {
+						if(match(target, selector)) {
 							fn.apply(this, [event].concat(event.params || []));
 							break;
 						}
 						target = target.parentNode;
-						if(target == el.parentNode || target == document.body.parentNode)
-						{
+						if(target == el.parentNode || target == document.body.parentNode) {
 							target = false;
 						}
 					}
 				}, capture);
-			}
-			else
-			{
+			} else {
 				el.addEventListener(ev, function(event) {
 					// if we have a mootools event class, wrap the event in it
 					if(event && window.MooTools && window.DOMEvent) event = new DOMEvent(event);
@@ -155,8 +137,7 @@
 		return function(el, type, options) {
 			options || (options = {});
 
-			if(type == 'click' && el.click)
-			{
+			if(type == 'click' && el.click) {
 				return el.click();
 			}
 
@@ -165,8 +146,7 @@
 		};
 	})();
 
-	var find_parent = function(selector, element, stop)
-	{
+	var find_parent = function(selector, element, stop) {
 		if(!element) return false;
 		if(element == stop) return false;
 		if(match(element, selector)) return element;
@@ -187,8 +167,7 @@
 		 * anything here, but other DOM patching libs may have discrete steps so
 		 * we want to have a hook for it.
 		 */
-		diff: function(from, to, options)
-		{
+		diff: function(from, to, options) {
 			return [from, to];
 		},
 
@@ -196,8 +175,7 @@
 		 * patch the DOM! uses morphdom by default. takes a root DOM node to
 		 * patch and a patch to apply to it.
 		 */
-		patch: function(root, diff, options)
-		{
+		patch: function(root, diff, options) {
 			options || (options = {});
 
 			if(!root || !diff[1]) return;
@@ -210,19 +188,17 @@
 					if(options.reset_inputs) return;
 
 					var tag = from.tagName.toLowerCase();
-					switch(tag)
-					{
-					case 'input':
-					case 'textarea':
-						to.checked = from.checked;
-						to.value = from.value;
-						break;
-					case 'select':
-						to.value = from.value;
-						break;
+					switch(tag) {
+						case 'input':
+						case 'textarea':
+							to.checked = from.checked;
+							to.value = from.value;
+							break;
+						case 'select':
+							to.value = from.value;
+							break;
 					}
-					if(options.before_update instanceof Function)
-					{
+					if(options.before_update instanceof Function) {
 						options.before_update(from, to);
 					}
 				},
@@ -239,8 +215,7 @@
 		/**
 		 * allows hooking in your own DOM diffing/patching library
 		 */
-		hooks: function(options)
-		{
+		hooks: function(options) {
 			options || (options = {});
 			var diff = options.diff;
 			var patch = options.patch;

@@ -64,8 +64,7 @@
 		/**
 		 * CTOR, allows passing in of data to set that data into the model.
 		 */
-		initialize: function(data, options)
-		{
+		initialize: function(data, options) {
 			data || (data = {});
 			var _data = {};
 
@@ -93,11 +92,9 @@
 		 * wrapper to get data out of the model. it's bad form to access model.data
 		 * directly, you must always go through model.get('mykey')
 		 */
-		get: function(key, def)
-		{
+		get: function(key, def) {
 			if(typeof(def) == 'undefined') def = null;
-			if(typeof(this.data[key]) == 'undefined')
-			{
+			if(typeof(this.data[key]) == 'undefined') {
 				return def;
 			}
 			return this.data[key];
@@ -106,11 +103,9 @@
 		/**
 		 * like Model.get(), but if the data is a string, escape it for HTML output.
 		 */
-		escape: function(key)
-		{
+		escape: function(key) {
 			var data = this.get(key);
-			if(data == null || typeof(data) != 'string')
-			{
+			if(data == null || typeof(data) != 'string') {
 				return data;
 			}
 
@@ -127,8 +122,7 @@
 		/**
 		 * whether or not a key exists in this.data
 		 */
-		has: function(key)
-		{
+		has: function(key) {
 			return this.data[key] != null;
 		},
 
@@ -149,8 +143,7 @@
 		 * collection as well, so as to notify the collection of any display changes
 		 * needed.
 		 */
-		set: function(data, options)
-		{
+		set: function(data, options) {
 			options || (options = {});
 
 			if(!options.silent && !this.perform_validation(data, options)) return false;
@@ -158,16 +151,14 @@
 			var already_changing = this.changing;
 			this.changing = true;
 			Composer.object.each(data, function(val, key) {
-				if(!Composer.eq(val, this.data[key]))
-				{
+				if(!Composer.eq(val, this.data[key])) {
 					this.data[key] = val;
 					this._changed = true;
 					this.fire_event('change:'+key, options, this, val, options);
 				}
 			}.bind(this));
 
-			if(!already_changing && this._changed)
-			{
+			if(!already_changing && this._changed) {
 				this.fire_event('change', options, this, options, data);
 				this._changed = false;
 			}
@@ -179,8 +170,7 @@
 		/**
 		 * unset a key from the model's data, triggering change events if needed.
 		 */
-		unset: function(key, options)
-		{
+		unset: function(key, options) {
 			if(!(key in this.data)) return this;
 			options || (options = {});
 
@@ -201,8 +191,7 @@
 		 * fire change:* events for all added/removed/changed data (but not for
 		 * data that remains the same).
 		 */
-		reset: function(data, options)
-		{
+		reset: function(data, options) {
 			options || (options = {});
 
 			if(!options.silent && !this.perform_validation(data, options)) return false;
@@ -224,8 +213,7 @@
 				this.fire_event('change:'+key, options, this, val, options);
 			}.bind(this));
 
-			if(!already_changing && this._changed)
-			{
+			if(!already_changing && this._changed) {
 				this.fire_event('change', options, this, options, data);
 				this._changed = false;
 			}
@@ -237,8 +225,7 @@
 		/**
 		 * clear all data out of a model, triggering change events if needed.
 		 */
-		clear: function(options)
-		{
+		clear: function(options) {
 			options || (options = {});
 
 			var old = this.data;
@@ -247,16 +234,13 @@
 			if(!options.silent && !this.perform_validation(obj, options)) return false;
 
 			this.data = {};
-			if(!options.silent)
-			{
-				for(var key in old)
-				{
+			if(!options.silent) {
+				for(var key in old) {
 					this._changed = true;
 					this.fire_event('change'+key, options, this, void 0, options);
 				}
 
-				if(this._changed)
-				{
+				if(this._changed) {
 					this.fire_event('change', options, this, options);
 					this._changed = false;
 				}
@@ -267,13 +251,11 @@
 		/**
 		 * fetch this model from the server, via its id.
 		 */
-		fetch: function(options)
-		{
+		fetch: function(options) {
 			options || (options = {});
 
 			var success = options.success;
-			options.success = function(res)
-			{
+			options.success = function(res) {
 				this.set(this.parse(res), options);
 				if(success) success(this, res);
 			}.bind(this);
@@ -285,15 +267,13 @@
 		 * save this model to the server (update if exists, add if doesn't exist (uses
 		 * id to detemrine if exists or note).
 		 */
-		save: function(options)
-		{
+		save: function(options) {
 			options || (options = {});
 
 			if(!this.perform_validation(this.data, options)) return false;
 
 			var success = options.success;
-			options.success = function(res)
-			{
+			options.success = function(res) {
 				if(!this.set(this.parse(res), options)) return false;
 				if(success) success(this, res);
 			}.bind(this);
@@ -304,13 +284,11 @@
 		/**
 		 * delete this item from the server
 		 */
-		destroy: function(options)
-		{
+		destroy: function(options) {
 			options || (options = {});
 
 			var success = options.success;
-			options.success = function(res)
-			{
+			options.success = function(res) {
 				this.fire_event('destroy', options, this, this.collections, options);
 				if(success) success(this, res);
 			}.bind(this);
@@ -327,16 +305,14 @@
 		 * server. use it to perform any needed transformations before setting data
 		 * into the model.
 		 */
-		parse: function(data)
-		{
+		parse: function(data) {
 			return data;
 		},
 
 		/**
 		 * get this model's id. if it doesn't exist, return the cid instead.
 		 */
-		id: function(no_cid)
-		{
+		id: function(no_cid) {
 			if(typeof(no_cid) != 'boolean') no_cid = false;
 
 			var id = this.get(this.id_key);
@@ -348,43 +324,35 @@
 		/**
 		 * test whether or not the model is new (checks if it has an id)
 		 */
-		is_new: function()
-		{
+		is_new: function() {
 			return !this.id(true);
 		},
 
 		/**
 		 * create a new model with this models data and return it
 		 */
-		clone: function()
-		{
+		clone: function() {
 			return new this.$constructor(this.toJSON());
 		},
 
 		/**
 		 * return the raw data for this model (cloned, not referenced).
 		 */
-		toJSON: function()
-		{
+		toJSON: function() {
 			return Composer.object.clone(this.data, {deep: true});
 		},
 
 		/**
 		 * validate the model using its validation function (if it exists)
 		 */
-		perform_validation: function(data, options)
-		{
+		perform_validation: function(data, options) {
 			if(typeof(this.validate) != 'function') return true;
 
 			var error = this.validate(data, options);
-			if(error)
-			{
-				if(options.error)
-				{
+			if(error) {
+				if(options.error) {
 					options.error(this, error, options);
-				}
-				else
-				{
+				} else {
 					this.fire_event('error', options, this, error, options);
 				}
 				return false;
@@ -396,8 +364,7 @@
 		 * loops over the collections this model belongs to and gets the highest
 		 * priority one. makes for easier url extraction during syncing.
 		 */
-		highest_priority_collection: function()
-		{
+		highest_priority_collection: function() {
 			var collections = this.collections.slice(0);
 			collections.sort( function(a, b) { return b.priority - a.priority; } );
 			return collections.length ? collections[0] : false;
@@ -415,8 +382,7 @@
 		/**
 		 * get the endpoint url for this model.
 		 */
-		get_url: function()
-		{
+		get_url: function() {
 			if(this.url) {
 				if(this.url instanceof Function) {
 					return this.url.call(this);
@@ -426,23 +392,22 @@
 
 			// pull from either overridden "base_url" param, or just use the highest
 			// priority collection's url for the base.
-			if (this.base_url)
+			if (this.base_url) {
 				var base_url = this.base_url;
-			else
-			{
+			} else {
 				var collection = this.highest_priority_collection();
 
 				// We need to check that there actually IS a collection...
-				if (collection)
+				if (collection) {
 					var base_url = collection.get_url();
-				else
+				} else {
 					var base_url = '';
+				}
 			}
 
 			// create a /[base url]/[model id] url.
 			var id = this.id(true);
-			if(id) id = '/'+id;
-			else id = '';
+			id = id ? '/'+id : '';
 			var url = base_url ? '/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + id : id;
 			return url;
 		}
