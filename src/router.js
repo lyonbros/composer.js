@@ -40,7 +40,7 @@
 
 		last_path:	false,
 		_last_url:	null,
-		routes:		{},
+		routes: {},
 
 		options: {
 			suppress_initial_route: false,
@@ -55,8 +55,7 @@
 		 * function that exists in the router, since it takes care of everything for
 		 * you after instantiation.
 		 */
-		initialize: function(routes, options)
-		{
+		initialize: function(routes, options) {
 			this.set_options(options);
 
 			this.routes = routes;
@@ -82,8 +81,7 @@
 				this.trigger('statechange', url, force);
 			}.bind(this));
 
-			if(!this.options.suppress_initial_route)
-			{
+			if(!this.options.suppress_initial_route) {
 				// run the initial route
 				History.Adapter.trigger(global, 'statechange', [this.cur_path()]);
 			}
@@ -94,16 +92,13 @@
 		 * this is called, the router can no longer be used and a new one must
 		 * be created.
 		 */
-		destroy: function()
-		{
+		destroy: function() {
 			this.trigger('destroy');
 			this.unbind();
 		},
 
-		debasify: function(path)
-		{
-			if(this.options.base && path.indexOf(this.options.base) == 0)
-			{
+		debasify: function(path) {
+			if(this.options.base && path.indexOf(this.options.base) == 0) {
 				path = path.substr(this.options.base.length);
 			}
 			return path;
@@ -112,14 +107,10 @@
 		/**
 		 * get the current url path
 		 */
-		cur_path: function()
-		{
-			if(History.emulated.pushState)
-			{
+		cur_path: function() {
+			if(History.emulated.pushState) {
 				var path = '/' + new String(global.location.hash).toString().replace(/^[#!\/]+/, '');
-			}
-			else
-			{
+			} else {
 				var path = global.location.pathname+global.location.search;
 			}
 			return this.debasify(decodeURIComponent(path));
@@ -128,8 +119,7 @@
 		/**
 		 * Get a value (by key) out of the current query string
 		 */
-		get_param: function(search, key)
-		{
+		get_param: function(search, key) {
 			key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 			var regex = new RegExp("[\\?&]" + key + "=([^&#]*)");
 			var results = regex.exec(search);
@@ -144,8 +134,7 @@
 		 *
 		 * Note that the latter isn't necessary, but it provides a useful abstraction.
 		 */
-		route: function(url, options)
-		{
+		route: function(url, options) {
 			url || (url = this.cur_path());
 			options || (options = {});
 			options.state || (options.state = {});
@@ -156,12 +145,9 @@
 			var href = base + '/' + newpath;
 			var old = base + this.cur_path();
 			var title = options.title || (this.options.default_title || '');
-			if(old == href)
-			{
+			if(old == href) {
 				this.trigger('statechange', href, true);
-			}
-			else if(History.emulated.pushState)
-			{
+			} else if(History.emulated.pushState) {
 				// we're using hashbangs, which are async (if we use
 				// History.pushState). we really want sync behavior so let's
 				// fool History into thinking it already routed this hash (so it
@@ -169,15 +155,10 @@
 				History.saveHash(url);		// makes History.js not fire on hash
 				window.location.hash = '#'+href;
 				this.trigger('statechange', href, true);
-			}
-			else
-			{
-				if(options.replace_state)
-				{
+			} else {
+				if(options.replace_state) {
 					History.replaceState(options.state, title, href);
-				}
-				else
-				{
+				} else {
 					History.pushState(options.state, title, href);
 				}
 			}
@@ -189,10 +170,8 @@
 		 *
 		 * *internal only* =]
 		 */
-		_do_route: function(url, routes)
-		{
-			if(!this.options.enable_cb(url))
-			{
+		_do_route: function(url, routes) {
+			if(!this.options.enable_cb(url)) {
 				return false;
 			}
 
@@ -200,8 +179,7 @@
 			routes || (routes = this.routes);
 
 			var routematch = this.find_matching_route(url, routes);
-			if(!routematch)
-			{
+			if(!routematch) {
 				return this.trigger('fail', {url: url, route: false, handler_exists: false, action_exists: false});
 			}
 
@@ -218,34 +196,26 @@
 		 * note that this function can be overridden for custom routing
 		 * behavior.
 		 */
-		process_match: function(url, routematch)
-		{
+		process_match: function(url, routematch) {
 			var route = routematch.route;
 			var match = routematch.args;
 			var routefn;
-			if(route instanceof Function)
-			{
+			if(route instanceof Function) {
 				routefn = route;
-			}
-			else if(typeof(route) == 'object')
-			{
+			} else if(typeof(route) == 'object') {
 				var obj = route[0];
 				var action = route[1];
 				if (typeof(obj) != 'object') {
-					if(!global[obj])
-					{
+					if(!global[obj]) {
 						return this.trigger('fail', {url: url, route: route, handler_exists: false, action_exists: false});
 					}
 					var obj = global[obj];
 				}
-				if(!obj[action] || typeof(obj[action]) != 'function')
-				{
+				if(!obj[action] || typeof(obj[action]) != 'function') {
 					return this.trigger('fail', {url: url, route: route, handler_exists: true, action_exists: false});
 				}
 				routefn = function() { return obj[action].apply(obj, arguments); };
-			}
-			else
-			{
+			} else {
 				return this.trigger('fail', {url: url, route: route, handler_exists: false, action_exists: false});
 			}
 			var args = match;
@@ -259,19 +229,16 @@
 		 * Stateless function for finding the best matching route for a URL and given
 		 * set of routes.
 		 */
-		find_matching_route: function(url, routes)
-		{
+		find_matching_route: function(url, routes) {
 			var url = '/' + url.replace(/^!?\//g, '');
 			var route = false;
 			var match = [];
 			var regex = null;
 			var matched_re = null;
-			for(var re in routes)
-			{
+			for(var re in routes) {
 				regex = new RegExp('^' + re.replace(/\//g, '\\\/') + '$');
 				match = regex.exec(url);
-				if(match)
-				{
+				if(match) {
 					route = routes[re];
 					matched_re = re;
 					break;
@@ -286,8 +253,7 @@
 		 * attached to the pushState event. fires the `route` event on success
 		 * which in turns runs any attached handlers.
 		 */
-		state_change: function(path, force)
-		{
+		state_change: function(path, force) {
 			if(path && path.stop != undefined) path = false;
 			if(path) path = this.debasify(path);
 			if(!path) path = this.cur_path();
@@ -295,8 +261,7 @@
 
 			// check if we are routing to the same exact page. if we are, return
 			// (unless we force the route)
-			if(this.last_path == path && !force)
-			{
+			if(this.last_path == path && !force) {
 				// no need to reload
 				return false;
 			}
@@ -320,8 +285,7 @@
 		 * Returns the full, last successfully routed URL that the Router found
 		 * a match for.
 		 */
-		last_url: function()
-		{
+		last_url: function() {
 			return this._last_url;
 		},
 
@@ -329,19 +293,15 @@
 		 * Bind the pushState to any links that don't have the options.exclude_class
 		 * className in them.
 		 */
-		bind_links: function(options)
-		{
+		bind_links: function(options) {
 			options || (options = {});
 
 			// bind all <a>'s
 			var selector = 'a';
-			if(options.selector)
-			{
+			if(options.selector) {
 				// use specified selector
 				selector = options.selector;
-			}
-			else if(options.exclude_class)
-			{
+			} else if(options.exclude_class) {
 				// exclude <a> tags with given classname
 				selector = 'a:not([class~="'+options.exclude_class+'"])';
 			}
@@ -352,8 +312,7 @@
 			// hopefully be that LAST event called for any <a> tag because it's
 			// so high up the DOM chain. this means if a composer event wants to
 			// override this action, it can just call event.stop().
-			var route_link = function(e)
-			{
+			var route_link = function(e) {
 				if(e.defaultPrevented) return;
 				if(e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
 

@@ -69,8 +69,7 @@
 		 * must return an instantiated controller (this is used to create the
 		 * actual subcontrollers that are tracked).
 		 */
-		track: function(collection, create_fn, options)
-		{
+		track: function(collection, create_fn, options) {
 			options || (options = {});
 			this.set_options(options);
 			this._collection = collection;
@@ -95,8 +94,7 @@
 			this.with_bind(collection, 'remove', function(model) {
 				this._remove_subcontroller(model);
 			}.bind(this));
-			if(options.bind_reset)
-			{
+			if(options.bind_reset) {
 				this.with_bind(collection, 'reset', function(options) {
 					this._reset_subcontrollers(create_fn, options);
 				}.bind(this));
@@ -105,8 +103,7 @@
 			this._reset_subcontrollers(create_fn);
 		},
 
-		release: function()
-		{
+		release: function() {
 			// move the el to a fragment, which keeps a bunch of reflows from
 			// happening on release
 			var fragment = document.createDocumentFragment();
@@ -124,13 +121,11 @@
 		 * to call html() until the cows come home without having to re-init our
 		 * list controller
 		 */
-		html: function(obj, options)
-		{
+		html: function(obj, options) {
 			options || (options = {});
 			var container = this.options.container;
 			if(container instanceof Function) container = container();
-			if(container)
-			{
+			if(container) {
 				var ignore_children = options.ignore_children || [];
 				ignore_children.push(container);
 				options.ignore_children = ignore_children;
@@ -141,8 +136,7 @@
 		/**
 		 * Index a controller so it can be looked up by the model is wraps
 		 */
-		_index_controller: function(model, controller)
-		{
+		_index_controller: function(model, controller) {
 			if(!model) return false;
 			this._subcontroller_idx[model.cid()] = controller;
 			this._subcontroller_list.push(controller);
@@ -151,8 +145,7 @@
 		/**
 		 * Unindex a model -> controller lookup
 		 */
-		_unindex_controller: function(model, controller)
-		{
+		_unindex_controller: function(model, controller) {
 			if(!model) return false;
 			delete this._subcontroller_idx[model.cid()];
 			this._subcontroller_list = this._subcontroller_list.filter(function(c) {
@@ -163,8 +156,7 @@
 		/**
 		 * Lookup a controller by its model
 		 */
-		_lookup_controller: function(model)
-		{
+		_lookup_controller: function(model) {
 			if(!model) return false;
 			return this._subcontroller_idx[model.cid()];
 		},
@@ -172,29 +164,24 @@
 		/**
 		 * Untrack all subcontrollers, releasing each one
 		 */
-		_clear_subcontrollers: function(options)
-		{
+		_clear_subcontrollers: function(options) {
 			options || (options = {});
 
 			// we allow an async option here, which clears out subcontrollers
 			// in batches. this is more favorable than doing it sync because we
 			// don't have to block the interface while removing all our subs.
-			if(options.async)
-			{
+			if(options.async) {
 				// clone the subcon list in case someone else makes mods to it
 				// while we're clearing.
 				var subs = this._subcontroller_list.slice(0);
 				var batch = 10;
 				var idx = 0;
-				var next = function()
-				{
-					for(var i = 0; i < batch; i++)
-					{
+				var next = function() {
+					for(var i = 0; i < batch; i++) {
 						var con = subs[idx];
 						if(!con) return;
 						idx++;
-						try
-						{
+						try {
 							con.release();
 						}
 						catch(e) {}
@@ -202,9 +189,7 @@
 					setTimeout(next);
 				}.bind(this);
 				setTimeout(next);
-			}
-			else
-			{
+			} else {
 				this._subcontroller_list.forEach(function(con) {
 					con.release();
 				});
@@ -217,15 +202,13 @@
 		 * Sync the tracked subcontrollers with the items in the wrapped
 		 * collection
 		 */
-		_reset_subcontrollers: function(create_fn, options)
-		{
+		_reset_subcontrollers: function(create_fn, options) {
 			options || (options = {});
 
 			this._clear_subcontrollers();
 
 			var reset_fragment = this.options.container;
-			if(reset_fragment)
-			{
+			if(reset_fragment) {
 				var fragment = document.createDocumentFragment();
 				options = Composer.object.clone(options);
 				options.fragment = fragment;
@@ -236,8 +219,7 @@
 				this._add_subcontroller(model, create_fn, options);
 			}, this);
 
-			if(reset_fragment && fragment.children && fragment.children.length > 0)
-			{
+			if(reset_fragment && fragment.children && fragment.children.length > 0) {
 				var container = reset_fragment instanceof Function ?
 					reset_fragment() :
 					reset_fragment;
@@ -250,8 +232,7 @@
 		 * subcontroller at the correct spot in the DOM (based on the model's
 		 * sort order).
 		 */
-		_add_subcontroller: function(model, create_fn, options)
-		{
+		_add_subcontroller: function(model, create_fn, options) {
 			// add our container into the options (non-destructively)
 			options = Composer.object.clone(options);
 			options.container = this.options.container;
@@ -275,16 +256,11 @@
 			// place the subcontroller into the right place in the DOM base on
 			// its model's sort order
 			var parent = con.el.parentNode;
-			if(sort_idx == 0)
-			{
+			if(sort_idx == 0) {
 				parent.insertBefore(con.el, parent.firstChild);
-			}
-			else if(before_con && before_con.el.parentNode == parent)
-			{
+			} else if(before_con && before_con.el.parentNode == parent) {
 				parent.insertBefore(con.el, before_con.el.nextSibling);
-			}
-			else
-			{
+			} else {
 				parent.appendChild(con.el);
 			}
 		},
@@ -293,8 +269,7 @@
 		 * Given a model, lookup the subcontroller that wraps it and release it,
 		 * also untracking that subcontroller.
 		 */
-		_remove_subcontroller: function(model)
-		{
+		_remove_subcontroller: function(model) {
 			var con = this._lookup_controller(model);
 			if(!con) return false;
 			con.release();

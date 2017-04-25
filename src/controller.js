@@ -33,8 +33,7 @@
 	var schedule_render = (function() {
 		var diffs = [];
 		var scheduled = false;
-		return function(from, to, options, callback)
-		{
+		return function(from, to, options, callback) {
 			options || (options = {});
 
 			diffs.push([from, Composer.xdom.diff(from, to, options), options, callback]);
@@ -107,12 +106,10 @@
 		 * CTOR. instantiate main container element (this.el), setup events and
 		 * elements, and call init()
 		 */
-		initialize: function(params, options)
-		{
+		initialize: function(params, options) {
 			options || (options = {});
 
-			for(var x in params)
-			{
+			for(var x in params) {
 				this[x] = params[x];
 			}
 
@@ -122,16 +119,12 @@
 			// make sure we have an el
 			this._ensure_el();
 
-			if(this.inject)
-			{
-				this.attach(options);
-			}
+			if(this.inject) this.attach(options);
 
 			// backwards compat
 			if(this.className) this.class_name = this.className;
-			if(this.class_name)
-			{
-				this.el.className += ' ' + this.class_name;
+			if(this.class_name) {
+				this.el.className += ' '+this.class_name;
 			}
 
 			this.refresh_elements();
@@ -155,26 +148,20 @@
 		 * replace this.el's html with the given test, also refresh the controllers
 		 * elements.
 		 */
-		html: function(obj, options)
-		{
+		html: function(obj, options) {
 			options || (options = {});
 			if(!this.el) this._ensure_el();
 
-			var append = function(el, child)
-			{
-				if(typeof(child) == 'string')
-				{
+			var append = function(el, child) {
+				if(typeof(child) == 'string') {
 					el.innerHTML = child;
-				}
-				else
-				{
+				} else {
 					el.innerHTML = '';
 					el.appendChild(child);
 				}
 			};
 
-			if(xdom || this.xdom)
-			{
+			if(xdom || this.xdom) {
 				var el = document.createElement(this.tag);
 				append(el, obj);
 				var cb = options.complete;
@@ -192,9 +179,7 @@
 					if(cb) cb();
 					this.trigger('xdom:render');
 				}.bind(this));
-			}
-			else
-			{
+			} else {
 				append(this.el, obj);
 				this.refresh_elements();
 			}
@@ -203,8 +188,7 @@
 		/**
 		 * injects the controller's element into the DOM.
 		 */
-		attach: function(options)
-		{
+		attach: function(options) {
 			options || (options = {});
 
 			// make sure we have an el
@@ -222,11 +206,9 @@
 		/**
 		 * legwork function what runs the actual bind
 		 */
-		_with_binder: function(bind_fn, object, ev, fn, name)
-		{
+		_with_binder: function(bind_fn, object, ev, fn, name) {
 			name || (name = false);
-			var wrapped = function()
-			{
+			var wrapped = function() {
 				if(this._released) return;
 				fn.apply(this, arguments);
 			}.bind(this);
@@ -237,8 +219,7 @@
 		/**
 		 * bind an event that the controller tracks and unbinds on release
 		 */
-		with_bind: function(object, ev, fn, name)
-		{
+		with_bind: function(object, ev, fn, name) {
 			return this._with_binder(object.bind, object, ev, fn, name);
 		},
 
@@ -246,8 +227,7 @@
 		 * bind a event that the controller tracks and unbinds on release or
 		 * that unbinds itself once it fires once
 		 */
-		with_bind_once: function(object, ev, fn, name)
-		{
+		with_bind_once: function(object, ev, fn, name) {
 			return this._with_binder(object.bind_once, object, ev, fn, name);
 		},
 
@@ -256,8 +236,7 @@
 		 * does. If no creation function given, return the subcontroller under
 		 * the given name.
 		 */
-		sub: function(name, create_fn)
-		{
+		sub: function(name, create_fn) {
 			if(!create_fn) return this._subcontrollers[name] || false;
 
 			// if we have an existing controller with the same name, release and
@@ -275,8 +254,7 @@
 		/**
 		 * remove a subcontroller from tracking and (by default) release it
 		 */
-		remove: function(name, options)
-		{
+		remove: function(name, options) {
 			options || (options = {});
 			if(!this._subcontrollers[name]) return
 			if(!options.skip_release) this._subcontrollers[name].release();
@@ -299,8 +277,7 @@
 			// element the selector refers to exists, but this.el will be updated upon
 			// instantiation of the controller (presumably when the DOM object DOES
 			// exist).
-			if(typeof(this.el) == 'string')
-			{
+			if(typeof(this.el) == 'string') {
 				this.el = Composer.find(document, this.el);
 			}
 
@@ -312,8 +289,7 @@
 		/**
 		 * remove the controller from the DOM and trigger its release event
 		 */
-		release: function(options)
-		{
+		release: function(options) {
 			options || (options = {});
 			if(this.el && this.el.parentNode) this.el.parentNode.removeChild(this.el);
 			this.el = false;
@@ -344,8 +320,7 @@
 		 * replace this controller's container element (this.el) with another element.
 		 * also refreshes the events/elements associated with the controller
 		 */
-		replace: function(element)
-		{
+		replace: function(element) {
 			if(this.el.parentNode) this.el.parentNode.replaceChild(element, this.el);
 			this.el = element;
 
@@ -359,14 +334,11 @@
 		 * set up the events (by delegation) to this controller (events are stored
 		 * under this.events).
 		 */
-		delegate_events: function()
-		{
+		delegate_events: function() {
 			// setup the events given
-			for(var ev in this.events)
-			{
+			for(var ev in this.events) {
 				var fn = this[this.events[ev]];
-				if(typeof(fn) != 'function')
-				{
+				if(typeof(fn) != 'function') {
 					// easy, easy, whoa, you gotta calm down there, chuck
 					continue;
 				}
@@ -376,13 +348,10 @@
 				var evname = match[1].trim();
 				var selector = match[2].trim();
 
-				if(selector == '')
-				{
+				if(selector == '') {
 					Composer.remove_event(this.el, evname, fn);
 					Composer.add_event(this.el, evname, fn);
-				}
-				else
-				{
+				} else {
 					Composer.add_event(this.el, evname, fn, selector);
 				}
 			}
@@ -391,8 +360,7 @@
 		/**
 		 * re-init the elements into the scope of the controller (uses this.elements)
 		 */
-		refresh_elements: function()
-		{
+		refresh_elements: function() {
 			// setup given elements as instance variables
 			if(!this.elements) return false;
 			Object.keys(this.elements).forEach(function(key) {

@@ -27,8 +27,7 @@
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
-		exp0rt: function(obj)
-		{
+		exp0rt: function(obj) {
 			Object.keys(obj).forEach(function(key) {
 				global.Composer[key] = obj[key];
 			});
@@ -48,16 +47,11 @@
 	})();
 
 	// wraps error callbacks for syncing functions
-	var wrap_error = function(callback, model, options)
-	{
-		return function(resp)
-		{
-			if(callback)
-			{
+	var wrap_error = function(callback, model, options) {
+		return function(resp) {
+			if(callback) {
 				callback(model, resp, options);
-			}
-			else
-			{
+			} else {
 				this.fire_event('error', options, model, resp, options);
 			}
 		};
@@ -66,45 +60,34 @@
 	// Composer equality function. Does deep-inpection and is able to tell the
 	// difference between {key: 3} and {key: 3, key2: 4} (_.eq had problems with
 	// this back in the day).
-	var eq = function(a, b)
-	{
+	var eq = function(a, b) {
 		if ( a === b ) return true;
 		if(a instanceof Function) return false;
 		if(typeof(a) != typeof(b)) return false;
 		if((a && a.constructor) && !b || !b.constructor) return false;
 		if((b && b.constructor) && !a || !a.constructor) return false;
 		if(a && b && a.constructor != b.constructor) return false;
-		if(a instanceof Array || Object.prototype.toString.call(a) === '[object Array]')
-		{
+		if(a instanceof Array || Object.prototype.toString.call(a) === '[object Array]') {
 			if(a.length != b.length) return false;
 			// TODO: check if array indexes are always sequential
-			for(var i = 0, n = a.length; i < n; i++)
-			{
+			for(var i = 0, n = a.length; i < n; i++) {
 				if(!b.hasOwnProperty(i)) return false;
 				if(!eq(a[i], b[i])) return false;
 			}
-		}
-		else if(a instanceof Date && b instanceof Date)
-		{
+		} else if(a instanceof Date && b instanceof Date) {
 			return a.getTime() == b.getTime();
-		}
-		else if(a instanceof Object)
-		{
-			for( var p in b )
-			{
+		} else if(a instanceof Object) {
+			for( var p in b ) {
 				if( b.hasOwnProperty(p) && ! a.hasOwnProperty(p) ) return false;
 			}
-			for( var p in a )
-			{
+			for( var p in a ) {
 				if ( ! a.hasOwnProperty( p ) ) continue;
 				if ( ! b.hasOwnProperty( p ) ) return false;
 				if ( a[ p ] === b[ p ] ) continue;
 				if ( typeof( a[ p ] ) !== "object" ) return false;
 				if ( ! eq( a[ p ],  b[ p ] ) ) return false;
 			}
-		}
-		else if(a != b)
-		{
+		} else if(a != b) {
 			return false;
 		}
 		return true;
@@ -112,11 +95,9 @@
 
 	// create an extension function that merges specific properties from
 	// inherited objects
-	var merge_extend = function(cls, properties)
-	{
+	var merge_extend = function(cls, properties) {
 		var _extend = cls.extend;
-		cls.extend = function(def, base)
-		{
+		cls.extend = function(def, base) {
 			base || (base = this);
 			var attr = base.prototype;
 
@@ -132,10 +113,8 @@
 
 	// some Mootools-reminiscent object utilities Composer uses
 	var array = {
-		erase: function(arr, item)
-		{
-			for(var i = arr.length - 1; i >= 0; i--)
-			{
+		erase: function(arr, item) {
+			for(var i = arr.length - 1; i >= 0; i--) {
 				if(arr[i] === item) arr.splice(i, 1);
 			}
 		},
@@ -149,16 +128,14 @@
 		})()
 	};
 	var object = {
-		each: function(obj, fn, bind)
-		{
+		each: function(obj, fn, bind) {
 			if(!obj) return;
 			bind || (bind = this);
 			Object.keys(obj).forEach(function(key) {
 				(fn.bind(bind))(obj[key], key)
 			});
 		},
-		clone: function(obj, options)
-		{
+		clone: function(obj, options) {
 			options || (options = {});
 			if(options.deep) return JSON.parse(JSON.stringify(obj));
 
@@ -168,8 +145,7 @@
 			});
 			return clone;
 		},
-		merge: function(to, _)
-		{
+		merge: function(to, _) {
 			var args = Array.prototype.slice.call(arguments, 1);
 			args.forEach(function(obj) {
 				if(!obj) return;
@@ -179,43 +155,34 @@
 			});
 			return to;
 		},
-		set: function(object, key, value)
-		{
+		set: function(object, key, value) {
 			object || (object = {});
 			var paths = key.split('.');
 			var obj = object;
-			for(var i = 0, n = paths.length; i < n; i++)
-			{
+			for(var i = 0, n = paths.length; i < n; i++) {
 				var path = paths[i];
-				if(i == n - 1)
-				{
+				if(i == n - 1) {
 					obj[path] = value;
 					break;
 				}
 
-				if(!obj[path])
-				{
+				if(!obj[path]) {
 					obj[path] = {};
-				}
-				else if(typeof(obj) != 'object' || Composer.array.is(obj))
-				{
+				} else if(typeof(obj) != 'object' || Composer.array.is(obj)) {
 					obj[path] = {};
 				}
 				obj = obj[path];
 			}
 			return object;
 		},
-		get: function(object, key)
-		{
+		get: function(object, key) {
 			object || (object = {});
 			var paths = key.split('.');
 			var obj = object;
-			for(var i = 0, n = paths.length; i < n; i++)
-			{
+			for(var i = 0, n = paths.length; i < n; i++) {
 				var path = paths[i];
 				var type = typeof(obj[path]);
-				if(type == 'undefined')
-				{
+				if(type == 'undefined') {
 					return obj[path];
 				}
 				obj = obj[path];
@@ -224,22 +191,18 @@
 		}
 	};
 
-	var promisify = function(poptions)
-	{
+	var promisify = function(poptions) {
 		poptions || (poptions = {});
 
-		var convert = function(type, asyncs)
-		{
+		var convert = function(type, asyncs) {
 			Object.keys(asyncs).forEach(function(key) {
 				var spec = asyncs[key];
 				var options_idx = spec.options_idx || 0;
 				var names = spec.names || ['success', 'error'];
 				var _old = Composer[type].prototype[key];
-				Composer[type].prototype[key] = function()
-				{
+				Composer[type].prototype[key] = function() {
 					var args = Array.prototype.slice.call(arguments, 0);
-					if(args.length < options_idx)
-					{
+					if(args.length < options_idx) {
 						var _tmp = new Array(options_idx);
 						args.forEach(function(item, i) { _tmp[i] = item; });
 						args = _tmp;
@@ -248,8 +211,7 @@
 					var _self = this;
 					var options = args[options_idx];
 					if(options.promisified) return _old.apply(_self, args);
-					if(poptions.warn && (options[names[0]] || options[names[1]]))
-					{
+					if(poptions.warn && (options[names[0]] || options[names[1]])) {
 						console.warn('Composer: promisify: attempting to pass callbacks to promisified function: ', type, key);
 					}
 					return new Promise(function(resolve, reject) {

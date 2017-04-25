@@ -19,8 +19,7 @@
 (function(global, undefined) {
 	"use strict";
 
-	var make_lookup_name = function(event_name, bind_name)
-	{
+	var make_lookup_name = function(event_name, bind_name) {
 		return event_name + '@' + bind_name;
 	};
 
@@ -33,10 +32,8 @@
 		 * it can be removed later on without the reference to the bound
 		 * function.
 		 */
-		bind: function(event_name, fn, bind_name)
-		{
-			if(Composer.array.is(event_name))
-			{
+		bind: function(event_name, fn, bind_name) {
+			if(Composer.array.is(event_name)) {
 				event_name.forEach(function(ev) {
 					this.bind(ev, fn, bind_name);
 				}.bind(this));
@@ -48,8 +45,7 @@
 			var eventhandlers = this._handlers[event_name];
 			eventhandlers.push(fn);
 
-			if(bind_name)
-			{
+			if(bind_name) {
 				this._handler_names[make_lookup_name(event_name, bind_name)] = fn;
 			}
 			return this;
@@ -59,12 +55,10 @@
 		 * Bind a function to an event, but clear the binding out once the event
 		 * has been triggered once.
 		 */
-		bind_once: function(event_name, fn, bind_name)
-		{
+		bind_once: function(event_name, fn, bind_name) {
 			bind_name || (bind_name = null);
 
-			var wrapped_function = function()
-			{
+			var wrapped_function = function() {
 				this.unbind(event_name, wrapped_function)
 				fn.apply(this, arguments);
 			}.bind(this);
@@ -78,11 +72,9 @@
 		 * by `bind_name` in the bind function) which can be nice when the
 		 * original function is no longer in scope.
 		 */
-		unbind: function(event_name, function_or_name)
-		{
+		unbind: function(event_name, function_or_name) {
 			if(!event_name) return this.wipe();
-			if(Composer.array.is(event_name))
-			{
+			if(Composer.array.is(event_name)) {
 				event_name.forEach(function(ev) {
 					this.unbind(ev, function_or_name);
 				}.bind(this));
@@ -107,8 +99,7 @@
 		/**
 		 * Unbind all handlers for the given event name.
 		 */
-		unbind_all: function(event_name)
-		{
+		unbind_all: function(event_name) {
 			delete this._handlers[event_name];
 			return this;
 		},
@@ -116,8 +107,7 @@
 		/**
 		 * Wipe out all handlers for a dispatch object.
 		 */
-		wipe: function(options)
-		{
+		wipe: function(options) {
 			options || (options = {});
 
 			this._handlers = {};
@@ -129,8 +119,7 @@
 		/**
 		 * Trigger an event.
 		 */
-		trigger: function(event_name, _)
-		{
+		trigger: function(event_name, _) {
 			var args = Array.prototype.slice.call(arguments, 0);
 			var handlers = this._handlers[event_name] || [];
 			var catch_all = this._handlers['all'] || [];
@@ -139,8 +128,7 @@
 			// handler array
 			var handlers_copy = handlers.slice(0);
 			var handlers_args = args.slice(1);
-			for(var i = 0, n = handlers_copy.length; i < n; i++)
-			{
+			for(var i = 0, n = handlers_copy.length; i < n; i++) {
 				handlers_copy[i].apply(this, handlers_args);
 			}
 
@@ -148,8 +136,7 @@
 			// handler array
 			var catchall_copy = catch_all.slice(0);
 			var catchall_args = args.slice(0);
-			for(var i = 0, n = catchall_copy.length; i < n; i++)
-			{
+			for(var i = 0, n = catchall_copy.length; i < n; i++) {
 				catchall_copy[i].apply(this, catchall_args);
 			}
 

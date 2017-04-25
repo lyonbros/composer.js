@@ -65,11 +65,9 @@
 		 * allow the passing in of an array of data to instantiate a collection with a
 		 * pre-set number of models. models will be created via this.model.
 		 */
-		initialize: function(models, params, options)
-		{
+		initialize: function(models, params, options) {
 			params || (params = {});
-			for(var x in params)
-			{
+			for(var x in params) {
 				this[x] = params[x];
 			}
 
@@ -83,8 +81,7 @@
 			// NOTE: this happens before the initial reset =]
 			this.model = typeof(this.model) == 'string' ? global[this.model] : this.model;
 
-			if(models)
-			{
+			if(models) {
 				this.reset(models, options);
 			}
 
@@ -100,8 +97,7 @@
 		 * for each model in this collection, get its raw data, then return all of the
 		 * raw data in an array
 		 */
-		toJSON: function()
-		{
+		toJSON: function() {
 			return this.models().map( function(model) { return model.toJSON(); } );
 		},
 
@@ -109,16 +105,14 @@
 		 * wrapper to get the models under this collection for direct selection (often
 		 * via MooTools' array helper/selection functions)
 		 */
-		models: function()
-		{
+		models: function() {
 			return this._models;
 		},
 
 		/**
 		 * get the number of models in the collection
 		 */
-		size: function()
-		{
+		size: function() {
 			return this.models().length;
 		},
 
@@ -126,10 +120,8 @@
 		 * add a model to this collection, and hook up the correct wire in doing so
 		 * (events and setting the model's collection).
 		 */
-		add: function(data, options)
-		{
-			if(Composer.array.is(data))
-			{
+		add: function(data, options) {
+			if(Composer.array.is(data)) {
 				return data.forEach(function(model) { this.add(model, options); }.bind(this));
 			}
 
@@ -139,25 +131,22 @@
 			var model = data instanceof Composer.Model ? data : new this.model(data, options);
 
 			// reference this collection to the model
-			if(model.collections.indexOf(this) == -1)
-			{
+			if(model.collections.indexOf(this) == -1) {
 				model.collections.push(this);
 				options.is_new = true;
 			}
 
-			if(this.sortfn)
-			{
+			if(this.sortfn) {
 				// if we have a sorting function, get the index the model should exist at
 				// and add it to that position
 				var index = options.at ? parseInt(options.at) : this.sort_index(model, options);
 				this._models.splice(index, 0, model);
-			}
-			else
-			{
-				if (typeof(options.at) == 'number')
+			} else {
+				if (typeof(options.at) == 'number') {
 					this._models.splice(options.at, 0, model);
-				else
+				} else {
 					this._models.push(model);
+				}
 			}
 
 			// listen to the model's events so we can propogate them
@@ -174,10 +163,8 @@
 		/**
 		 * remove a model(s) from the collection, unhooking all necessary wires (events, etc)
 		 */
-		remove: function(model, options)
-		{
-			if(Composer.array.is(model))
-			{
+		remove: function(model, options) {
+			if(Composer.array.is(model)) {
 				return model.slice(0).forEach(function(m) { this.remove(m, options); }.bind(this));
 			}
 			if(!model) return;
@@ -197,8 +184,7 @@
 			this._remove_reference(model);
 
 			// if the number actually change, trigger our change event
-			if(this._models.length != num_rec)
-			{
+			if(this._models.length != num_rec) {
 				this.fire_event('remove', options, model);
 			}
 		},
@@ -207,10 +193,8 @@
 		 * given a model, check if its ID is already in this collection. if so,
 		 * replace is with the given model, otherwise add the model to the collection.
 		 */
-		upsert: function(data, options)
-		{
-			if(Composer.array.is(data))
-			{
+		upsert: function(data, options) {
+			if(Composer.array.is(data)) {
 				return data.forEach(function(model) { this.upsert(model, options); }.bind(this));
 			}
 
@@ -220,12 +204,10 @@
 			var model = data instanceof Composer.Model ? data : new this.model(data, options);
 
 			var existing = this.get(model.id(), options);
-			if(existing)
-			{
+			if(existing) {
 				// reposition the model if necessary
 				var existing_idx = this.index_of(existing);
-				if(typeof(options.at) == 'number' && existing_idx != options.at)
-				{
+				if(typeof(options.at) == 'number' && existing_idx != options.at) {
 					this._models.splice(existing_idx, 1);
 					this._models.splice(options.at, 0, existing);
 					this.fire_event('sort', options);
@@ -246,8 +228,7 @@
 		/**
 		 * remove all the models from the collection
 		 */
-		clear: function(options)
-		{
+		clear: function(options) {
 			options || (options = {});
 
 			// save to trigger change event if needed
@@ -259,8 +240,7 @@
 			this._models = [];
 
 			// if the number actually change, trigger our change event
-			if(this._models.length != num_rec)
-			{
+			if(this._models.length != num_rec) {
 				this.fire_event('clear', options, options);
 			}
 		},
@@ -269,17 +249,13 @@
 		 * reset the collection with all new data. it can also be appended to the
 		 * current set of models if specified in the options (via "append").
 		 */
-		reset: function(data, options)
-		{
+		reset: function(data, options) {
 			options || (options = {});
 
 			if(!options.append && !options.upsert) this.clear(options);
-			if(options.upsert)
-			{
+			if(options.upsert) {
 				this.upsert(data, options);
-			}
-			else
-			{
+			} else {
 				this.add(data, options);
 			}
 
@@ -299,8 +275,7 @@
 		 * when ALL models have been added, this function calls the
 		 * options.complete callback.
 		 */
-		reset_async: function(data, options)
-		{
+		reset_async: function(data, options) {
 			options || (options = {});
 
 			if(data == undefined) return options.complete && options.complete();
@@ -309,21 +284,16 @@
 			data = data.slice(0);
 
 			if(!options.append && !options.upsert) this.clear();
-			if(data.length > 0)
-			{
+			if(data.length > 0) {
 				var batch = options.batch || 1;
 				var slice = data.splice(0, batch);
-				if(options.upsert)
-				{
+				if(options.upsert) {
 					this.upsert(slice, options);
-				}
-				else
-				{
+				} else {
 					this.add(slice, options);
 				}
 			}
-			if(data.length == 0)
-			{
+			if(data.length == 0) {
 				this.fire_event('reset', options, options);
 				if(options.complete) options.complete()
 				return;
@@ -344,8 +314,7 @@
 		 *
 		 * mycollection.bind('change:sort_order', mycollection.sort.bind(mycollection))
 		 */
-		sort: function(options)
-		{
+		sort: function(options) {
 			if(!this.sortfn) return false;
 
 			this._models.sort(this.sortfn);
@@ -356,13 +325,11 @@
 		 * given the current sort function and a model passecd in, determine the
 		 * index the model should exist at in the collection's model list.
 		 */
-		sort_index: function(model, options)
-		{
+		sort_index: function(model, options) {
 			options || (options = {});
 			if(this._models.length == 0) return 0;
 
-			if(!this.sortfn)
-			{
+			if(!this.sortfn) {
 				var idx = this.index_of(model);
 				if(idx === false || idx < 0) return this.size();
 				return idx;
@@ -371,8 +338,7 @@
 			var sorted = this._models;
 			if(options.accurate_sort) sorted = sorted.slice(0).sort(this.sortfn);
 
-			for(var i = 0; i < sorted.length; i++)
-			{
+			for(var i = 0; i < sorted.length; i++) {
 				if(model == sorted[i]) return i;
 				if(this.sortfn(sorted[i], model) > 0) return i;
 			}
@@ -384,16 +350,14 @@
 		/**
 		 * overridable function called when the collection is synced with the server
 		 */
-		parse: function(data)
-		{
+		parse: function(data) {
 			return data;
 		},
 
 		/**
 		 * convenience function to loop over collection's models
 		 */
-		each: function(cb, bind)
-		{
+		each: function(cb, bind) {
 			bind || (bind = this);
 			this.models().forEach(cb.bind(bind));
 		},
@@ -401,8 +365,7 @@
 		/**
 		 * convenience function to execute a function on a collection's models
 		 */
-		map: function(cb, bind)
-		{
+		map: function(cb, bind) {
 			bind || (bind = this);
 			return this.models().map(cb.bind(bind));
 		},
@@ -412,16 +375,13 @@
 		 * can be passed in to order the results of the find, which uses the usual
 		 * fn(a,b){return (-1|0|1);} syntax.
 		 */
-		find: function(callback, sortfn)
-		{
+		find: function(callback, sortfn) {
 			var models = this.models();
 			if(sortfn) models = models.slice(0).sort(sortfn);
 
-			for(var i = 0; i < models.length; i++)
-			{
+			for(var i = 0; i < models.length; i++) {
 				var rec = models[i];
-				if(callback(rec))
-				{
+				if(callback(rec)) {
 					return rec;
 				}
 			}
@@ -432,10 +392,8 @@
 		 * given a callback, returns whether or not at least one of the models
 		 * satisfies that callback.
 		 */
-		exists: function(callback)
-		{
-			for(var i = 0; i < this.size(); i++)
-			{
+		exists: function(callback) {
+			for(var i = 0; i < this.size(); i++) {
 				if(callback(this.models()[i])) return true;
 			}
 			return false;
@@ -444,18 +402,15 @@
 		/**
 		 * convenience function to find a model by id
 		 */
-		get: function(id, options)
-		{
+		get: function(id, options) {
 			options || (options = {});
 			var model = this._id_idx[id];
 			if(options.fast) return model || false;
 			return model || this.find(function(model) {
-				if(model.id(options.strict) == id)
-				{
+				if(model.id(options.strict) == id) {
 					return true;
 				}
-				if(options.allow_cid && model.cid() == id)
-				{
+				if(options.allow_cid && model.cid() == id) {
 					return true;
 				}
 			});
@@ -464,14 +419,12 @@
 		/**
 		 * convenience function to find a model by cid
 		 */
-		find_by_cid: function(cid, options)
-		{
+		find_by_cid: function(cid, options) {
 			options || (options = {});
 			var model = this._cid_idx[cid];
 			if(options.fast) return model || false;
 			return model || this.find(function(model) {
-				if(model.cid() == cid)
-				{
+				if(model.cid() == cid) {
 					return true;
 				}
 			});
@@ -485,13 +438,10 @@
 		/**
 		 * get the index of an item in the list of models. useful for sorting items.
 		 */
-		index_of: function(model_or_id)
-		{
+		index_of: function(model_or_id) {
 			var id = model_or_id.__composer_type == 'model' ? model_or_id.id() : model_or_id;
-			for(var i = 0; i < this._models.length; i++)
-			{
-				if(this._models[i].id() == id)
-				{
+			for(var i = 0; i < this._models.length; i++) {
+				if(this._models[i].id() == id) {
 					return i;
 				}
 			}
@@ -502,8 +452,7 @@
 		 * Filter this collection's models by the given callback. Works just
 		 * like Array.filter in JS.
 		 */
-		filter: function(callback, bind)
-		{
+		filter: function(callback, bind) {
 			bind || (bind = this);
 			return this._models.filter(callback.bind(bind));
 		},
@@ -513,8 +462,7 @@
 		 * match. takes either a function OR a key-value object for matching:
 		 *
 		 * mycol.select(function(data) {
-		 *		if(data.get('name') == 'andrew' && data.get('age') == 24)
-		 *		{
+		 *		if(data.get('name') == 'andrew' && data.get('age') == 24) {
 		 *			return true
 		 *		}
 		 * });
@@ -530,15 +478,12 @@
 		 * but with a lot less functionality. the only selection is direct value
 		 * matching. still nice, though.
 		 */
-		select: function(selector)
-		{
-			if(typeof(selector) == 'object')
-			{
+		select: function(selector) {
+			if(typeof(selector) == 'object') {
 				var params = selector;
 				var keys = Object.keys(params);
 				selector = function(model) {
-					for(var i = 0; i < keys.length; i++)
-					{
+					for(var i = 0; i < keys.length; i++) {
 						var key = keys[i];
 						var compare = params[key];
 						if(model.get(key) !== compare) return false;
@@ -552,8 +497,7 @@
 		/**
 		 *	Convenience functon to just select one model from a collection
 		 */
-		select_one: function(selector)
-		{
+		select_one: function(selector) {
 			var result = this.select(selector);
 
 			if(result.length) return result[0];
@@ -565,8 +509,7 @@
 		 * return the first model in the collection. if n is specified, return the
 		 * first n models.
 		 */
-		first: function(n)
-		{
+		first: function(n) {
 			var models = this.models();
 			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? models.slice(0, n) : models[0];
 		},
@@ -575,8 +518,7 @@
 		 * returns the last model in the collection. if n is specified, returns the
 		 * last n models.
 		 */
-		last: function(n)
-		{
+		last: function(n) {
 			var models = this.models();
 			return (typeof(n) != 'undefined' && parseInt(n) != 0) ? models.slice(models.length - n) : models[models.length - 1];
 		},
@@ -585,8 +527,7 @@
 		 * returns the model at the specified index. if there is no model there,
 		 * return false
 		 */
-		at: function(n)
-		{
+		at: function(n) {
 			var model = this._models[n];
 			return (model || false);
 		},
@@ -594,8 +535,7 @@
 		/**
 		 * given the current sort function, find the model at the given position
 		 */
-		sort_at: function(n, options)
-		{
+		sort_at: function(n, options) {
 			options || (options = {});
 			if(!this.sortfn) return false;
 
@@ -607,13 +547,11 @@
 		/**
 		 * sync the collection with the server.
 		 */
-		fetch: function(options)
-		{
+		fetch: function(options) {
 			options || (options = {});
 
 			var success = options.success;
-			options.success = function(res)
-			{
+			options.success = function(res) {
 				this.reset(this.parse(res), options);
 				if(success) success(this, res);
 			}.bind(this);
@@ -624,19 +562,16 @@
 		/**
 		 * simple wrapper to get the collection's url
 		 */
-		get_url: function()
-		{
+		get_url: function() {
 			return this.url;
 		},
 
 		/**
 		 * Index a model by its id/cid
 		 */
-		_index_model: function(model)
-		{
+		_index_model: function(model) {
 			var id = model.id(true);
-			if(id)
-			{
+			if(id) {
 				this._unindex_model(model);
 				// index the new, and track the ids
 				this._id_idx[id] = model;
@@ -645,8 +580,7 @@
 			this._cid_idx[model.cid()] = model;
 		},
 
-		_unindex_model: function(model)
-		{
+		_unindex_model: function(model) {
 			// unindex old ids
 			if(!model._tracked_ids) model._tracked_ids = [];
 			model._tracked_ids.forEach(function(id) {
@@ -658,8 +592,7 @@
 		/**
 		 * remove all ties between this colleciton and a model
 		 */
-		_remove_reference: function(model)
-		{
+		_remove_reference: function(model) {
 			// unindex the model
 			this._unindex_model(model);
 
@@ -673,8 +606,7 @@
 		/**
 		 * bound to every model's "all" event, propagates or reacts to certain events.
 		 */
-		_model_event: function(model, ev, _)
-		{
+		_model_event: function(model, ev, _) {
 			// reindex the model if its id changed
 			if(ev == 'change:'+ model.id_key) this._index_model(model);
 			if(ev == 'destroy') this.remove(model, arguments[4]);
