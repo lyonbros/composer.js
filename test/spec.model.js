@@ -187,5 +187,31 @@ describe('Composer.Model', function() {
 		expect(last_method).toBe('delete');
 		Composer.sync = _sync;
 	});
+
+	it('properly generates URLs for its save()/destroy()/fetch() methods', function() {
+		var Dog = Composer.Model.extend({
+			base_url: '/doge'
+		});
+		var dog = new Dog();
+		expect(dog.get_url()).toBe('/doge');
+		dog.set({id: '6969'});
+		expect(dog.get_url()).toBe('/doge/6969');
+
+		var dog = new Dog();
+		dog.url = '/top-doge';
+		expect(dog.get_url()).toBe('/top-doge');
+		dog.set({id: '6969'});
+		expect(dog.get_url()).toBe('/top-doge');
+
+		var dog = new Dog();
+		dog.url = function() {
+			var base = this.base_url.replace(/\/doge/, '/top-doge/harrrrr');
+			if(!this.is_new()) base += '/'+this.id();
+			return base;
+		};
+		expect(dog.get_url()).toBe('/top-doge/harrrrr');
+		dog.set({id: '6969'});
+		expect(dog.get_url()).toBe('/top-doge/harrrrr/6969');
+	});
 });
 
