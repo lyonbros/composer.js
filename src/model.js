@@ -51,10 +51,9 @@
 		// what key to look under the data for the primary id for the object
 		id_key: 'id',
 
-		// can be used to overwrite all url generation for syncing (if you have a url
-		// that doesn't fit into the "/[collection url]/[model id]" scheme.
-		url: false,
-
+		// DEPRECATED
+		// use this.url() instead
+		//
 		// can be used to manually set a base url for this model (in the case it
 		// doesn't have a collection or the url needs to change manually).
 		base_url: false,
@@ -405,13 +404,25 @@
 		},
 
 		/**
+		 * Function of 0 args. This is set to false for backwards compat, but
+		 * if you need to use a custom URL scheme with fetch()/save()/destroy(),
+		 * this is where you'd do it!
+		 *
+		 * Override me!
+		 */
+		url: false,
+
+		/**
 		 * get the endpoint url for this model.
 		 */
 		get_url: function()
 		{
-			if(this.url)
-				// we are overriding the url generation.
+			if(this.url) {
+				if(this.url instanceof Function) {
+					return this.url.call(this);
+				}
 				return this.url;
+			}
 
 			// pull from either overridden "base_url" param, or just use the highest
 			// priority collection's url for the base.
@@ -434,7 +445,6 @@
 			else id = '';
 			var url = base_url ? '/' + base_url.replace(/^\/+/, '').replace(/\/+$/, '') + id : id;
 			return url;
-
 		}
 	});
 
