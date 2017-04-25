@@ -83,7 +83,7 @@ or other ID-related functions.
 
 ### base_url :: attribute(false)
 
-DEPRECATED. Just use [url()][#url] instead.
+DEPRECATED. Just use [url()](#url) instead.
 Prepended to the model's ID when doing syncing calls. See
 [get_url](#get-url).
 
@@ -388,7 +388,7 @@ Composer.sync = function(action, model, options) {
     alert('Our URL is: '+model.get_url());
     options.success({doge_id: 1, top_doge: true, avatar: 'https://yt3.ggpht.com/-dt2AThCWCfQ/AAAAAAAAAAI/AAAAAAAAAAA/1g2E-fl-b6I/s900-c-k-no-mo-rj-c0xffffff/photo.jpg'});
 }
-var doge = new Doge();
+var doge = new Doge({id: 1});
 doge.fetch();
 {% endhighlight %}
 
