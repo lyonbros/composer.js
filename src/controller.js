@@ -175,6 +175,9 @@
 				options.ignore_elements = ignore_elements;
 				options.children_only = true;
 				schedule_render(this.el, el, options, function() {
+					// if we released mid-render (yes, this happens) then skip
+					// the rest of the render
+					if(this._released) return;
 					this.refresh_elements();
 					if(cb) cb();
 					this.trigger('xdom:render');
