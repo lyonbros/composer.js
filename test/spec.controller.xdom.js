@@ -278,5 +278,25 @@ describe('Composer.Controller.xdom', function() {
 			});
 		});
 	});
+
+	it('cancels a render if released mid-render', function(done) {
+		var render_completes = 0;
+		var Doge = Composer.Controller.extend({
+			xdom: true,
+			init: function() {
+				this.bind_once('xdom:render', function() { render_completes++; });
+			},
+			render: function() {
+				return this.html('<p>hai</p>');
+			},
+		});
+		var doge = new Doge();
+		doge.render();
+		doge.release();
+		setTimeout(function() {
+			expect(render_completes).toBe(0);
+			done();
+		}, 200);
+	});
 });
 
