@@ -197,6 +197,13 @@
 						case 'select':
 							to.value = from.value;
 							break;
+						case 'option':
+							if(from.selected) {
+								to.setAttribute('selected', 'selected');
+							} else {
+								to.removeAttribute('selected');
+							}
+							break;
 					}
 					if(options.before_update instanceof Function) {
 						options.before_update(from, to);
