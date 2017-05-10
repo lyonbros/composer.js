@@ -104,7 +104,8 @@ describe('Composer.Controller.xdom', function() {
 				'select': 'inp_select',
 				'input[name=checky]': 'inp_check',
 				'input#rad1': 'inp_radio1',
-				'input#rad2': 'inp_radio2'
+				'input#rad2': 'inp_radio2',
+				'option.pickme': 'inp_option',
 			},
 
 			render: function()
@@ -113,9 +114,9 @@ describe('Composer.Controller.xdom', function() {
 					'<input name="name" type="text">', 
 					'<textarea name="body"></textarea>',
 					'<select name="choice">',
-					'	<option value="1">hmm this simply won\'t do</option>',
+					'	<option value="1" selected>hmm this simply won\'t do</option>',
 					'	<option value="2">no, certainly not this one</option>',
-					'	<option value="3">definitely not!!</option>',
+					'	<option class="pickme" value="3">definitely not!!</option>',
 					'	<option value="4">yes, this pile of sawdust is perfect!</option>',
 					'</select>',
 					'<input type="checkbox" name="checky">',
@@ -130,12 +131,15 @@ describe('Composer.Controller.xdom', function() {
 			var inp1 = con.inp_name;
 			var txt1 = con.inp_body;
 			var sel1 = con.inp_select;
+			var opt1 = con.inp_option;
 			var chk1 = con.inp_check;
 			var rad1 = con.inp_radio1;
 			var rad2 = con.inp_radio2;
+			expect(opt1.selected).toBe(false);
 			inp1.value = 'omg lol';
 			txt1.value = 'wtf';
 			sel1.value = '3';
+			expect(opt1.selected).toBe(true);
 			chk1.checked = true;
 			rad2.checked = true;
 			con.bind_once('xdom:render', function() {
@@ -148,6 +152,7 @@ describe('Composer.Controller.xdom', function() {
 				expect(inp1.value).toBe('omg lol');
 				expect(txt1.value).toBe('wtf');
 				expect(sel1.value).toBe('3');
+				expect(opt1.selected).toBe(true);
 				expect(inp1.value).toBe(inp2.value);
 				expect(txt1.value).toBe(txt2.value);
 				expect(sel1.value).toBe(sel2.value);
