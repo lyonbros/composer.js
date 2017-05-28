@@ -105,6 +105,7 @@ describe('Composer.Controller.xdom', function() {
 				'input[name=checky]': 'inp_check',
 				'input#rad1': 'inp_radio1',
 				'input#rad2': 'inp_radio2',
+				'input[name=fily]': 'inp_file',
 				'option.pickme': 'inp_option',
 			},
 
@@ -119,6 +120,7 @@ describe('Composer.Controller.xdom', function() {
 					'	<option class="pickme" value="3">definitely not!!</option>',
 					'	<option value="4">yes, this pile of sawdust is perfect!</option>',
 					'</select>',
+					'<input type="file" name="fily" class="bogart">',
 					'<input type="checkbox" name="checky">',
 					'<input id="rad1" type="radio" name="radbrahhhhhh" value="1">',
 					'<input id="rad2" type="radio" name="radbrahhhhhh" value="2">'
@@ -135,6 +137,7 @@ describe('Composer.Controller.xdom', function() {
 			var chk1 = con.inp_check;
 			var rad1 = con.inp_radio1;
 			var rad2 = con.inp_radio2;
+			var file = con.inp_file;
 			expect(opt1.selected).toBe(false);
 			inp1.value = 'omg lol';
 			txt1.value = 'wtf';
@@ -142,6 +145,7 @@ describe('Composer.Controller.xdom', function() {
 			expect(opt1.selected).toBe(true);
 			chk1.checked = true;
 			rad2.checked = true;
+			file.className = 'harrr';
 			con.bind_once('xdom:render', function() {
 				var inp2 = con.inp_name;
 				var txt2 = con.inp_body;
@@ -149,6 +153,7 @@ describe('Composer.Controller.xdom', function() {
 				var chk2 = con.inp_check;
 				var rad3 = con.inp_radio1;
 				var rad4 = con.inp_radio2;
+				var file = con.inp_file;
 				expect(inp1.value).toBe('omg lol');
 				expect(txt1.value).toBe('wtf');
 				expect(sel1.value).toBe('3');
@@ -165,6 +170,7 @@ describe('Composer.Controller.xdom', function() {
 				expect(chk1).toBe(chk2);
 				expect(rad1).toBe(rad3);
 				expect(rad2).toBe(rad4);
+				expect(file.className).toBe('bogart');
 				done();
 			});
 			con.render();
