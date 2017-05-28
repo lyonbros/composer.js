@@ -23,7 +23,7 @@
 
 	var global = this;
 	if(!global.Composer) global.Composer = {
-		version: '1.2.20',
+		version: '1.2.21',
 
 		// note: this used to be "export" but IE is a whiny little bitch, so now
 		// we're sup3r 1337 h4x0r5
@@ -1916,25 +1916,43 @@
 					if(options.reset_inputs) return;
 
 					var tag = from.tagName.toLowerCase();
-					switch(tag) {
-						case 'input':
-						case 'textarea':
-							to.checked = from.checked;
-							to.value = from.value;
-							break;
-						case 'select':
-							to.value = from.value;
-							break;
-						case 'option':
-							if(from.selected) {
-								to.setAttribute('selected', 'selected');
-							} else {
-								to.removeAttribute('selected');
+					var from_type = from.getAttribute('type');
+					var to_tag = to.tagName.toLowerCase();
+					var to_type = to.getAttribute('type');
+					// we treat files differently, because you cannot
+					// programmatically set the value of a file input. so
+					// instead, we copy all the attributes from the `to`
+					// element into the `from` (except `value`, obvis) and
+					// then block morphdom from updating the from el by
+					// returning false.
+					if(to_tag == 'input' && to_type == 'file') {
+						if(tag == 'input' && from_type == 'file') {
+							// copy traits from to -> from
+							var attrs = to.attributes;
+							for(var i = 0, n = attrs.length; i < n; i++) {
+								var key = attrs.item(i).name;
+								// don't copy the value
+								if(key == 'value') continue;
+								from.setAttribute(key, to.getAttribute(key));
 							}
-							break;
+							// block the update
+							return false;
+						}
+						// to is a file, from isn't. don't bother trying to
+						// preserve anything, just let the change happen
+						return;
 					}
-					if(options.before_update instanceof Function) {
-						options.before_update(from, to);
+
+					switch(tag)
+					{
+					case 'input':
+					case 'textarea':
+						to.checked = from.checked;
+						to.value = from.value;
+						break;
+					case 'select':
+						to.value = from.value;
+						break;
 					}
 				},
 				onBeforeNodeDiscarded: function(node) {
