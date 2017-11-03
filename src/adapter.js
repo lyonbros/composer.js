@@ -18,7 +18,7 @@
  */
 (function() {
 	"use strict";
-
+	var Composer = this.Composer;
 	var global = this;
 
 	var has_sizzle = !!global.Sizzle;
@@ -250,7 +250,7 @@
 		}
 	};
 
-	this.Composer.exp0rt({
+	Composer.exp0rt({
 		find: find,
 		match: match,
 		add_event: add_event,

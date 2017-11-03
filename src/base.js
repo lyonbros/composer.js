@@ -18,6 +18,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * The base class is inherited by models, collections, and controllers. It
@@ -102,6 +103,6 @@
 		}
 	});
 
-	this.Composer.exp0rt({ Base: Base });
+	Composer.exp0rt({ Base: Base });
 }).apply((typeof exports != 'undefined') ? exports : this);
 

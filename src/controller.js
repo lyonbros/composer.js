@@ -18,6 +18,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	// whether or not to enable xdom rendering
 	var xdom = false;
@@ -375,8 +376,7 @@
 
 	Controller.xdomify = function() { xdom = true; };
 
-	this.Composer.merge_extend(Controller, ['events', 'elements']);
-
-	this.Composer.exp0rt({ Controller: Controller });
+	Composer.merge_extend(Controller, ['events', 'elements']);
+	Composer.exp0rt({ Controller: Controller });
 }).apply((typeof exports != 'undefined') ? exports : this);
 

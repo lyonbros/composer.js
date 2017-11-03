@@ -18,7 +18,7 @@
  */
 (function() {
 	"use strict";
-
+	var Composer = this.Composer;
 	var global = this;
 
 	var RelationalModel = Composer.Model.extend({
@@ -239,9 +239,8 @@
 		}
 	});
 
-	this.Composer.merge_extend(RelationalModel, ['relations']);
-
-	this.Composer.exp0rt({
+	Composer.merge_extend(RelationalModel, ['relations']);
+	Composer.exp0rt({
 		HasOne: -1,		// no longer used but needed for backwards compat
 		HasMany: -1,	// " "
 		RelationalModel: RelationalModel

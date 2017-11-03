@@ -16,8 +16,9 @@
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
  */
-(function(global, undefined) {
+(function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	var make_lookup_name = function(event_name, bind_name) {
 		return event_name + '@' + bind_name;
@@ -145,6 +146,6 @@
 	});
 
 	Event._make_lookup_name = make_lookup_name;
-	this.Composer.exp0rt({ Event: Event });
+	Composer.exp0rt({ Event: Event });
 }).apply((typeof exports != 'undefined') ? exports : this);
 

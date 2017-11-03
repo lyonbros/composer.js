@@ -19,6 +19,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * Collection that exists solely to be a "materialized view" of another
@@ -347,6 +348,6 @@
 		}
 	});
 
-	this.Composer.exp0rt({ FilterCollection: FilterCollection });
+	Composer.exp0rt({ FilterCollection: FilterCollection });
 }).apply((typeof exports != 'undefined') ? exports : this);
 

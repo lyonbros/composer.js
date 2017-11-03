@@ -18,7 +18,7 @@
  */
 (function() {
 	"use strict";
-
+	var Composer = this.Composer;
 	var global = this;
 
 	/**
@@ -616,6 +616,6 @@
 			this.trigger.apply(this, args);
 		}
 	});
-	this.Composer.exp0rt({ Collection: Collection });
+	Composer.exp0rt({ Collection: Collection });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
