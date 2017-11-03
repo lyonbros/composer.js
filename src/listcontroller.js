@@ -19,6 +19,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * The ListController extends the Controller object to provide a way of
@@ -276,6 +277,6 @@
 			this._unindex_controller(model, con);
 		}
 	});
-	this.Composer.exp0rt({ ListController: ListController });
+	Composer.exp0rt({ ListController: ListController });
 }).apply((typeof exports != 'undefined') ? exports : this);
 

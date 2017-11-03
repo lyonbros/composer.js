@@ -18,6 +18,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * Models are the data class. They deal with loading and manipulating data from
@@ -413,6 +414,6 @@
 		}
 	});
 
-	this.Composer.exp0rt({ Model: Model });
+	Composer.exp0rt({ Model: Model });
 }).apply((typeof exports != 'undefined') ? exports : this);
 

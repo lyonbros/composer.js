@@ -21,18 +21,20 @@
 (function() {
 	"use strict";
 
-	var global = this;
-	if(!global.Composer) global.Composer = {
-		version: 'GITHEAD',
+	if(!this.Composer) {
+		var Composer = {
+			version: 'GITHEAD',
 
-		// note: this used to be "export" but IE is a whiny little bitch, so now
-		// we're sup3r 1337 h4x0r5
-		exp0rt: function(obj) {
-			Object.keys(obj).forEach(function(key) {
-				global.Composer[key] = obj[key];
-			});
-		}
-	};
+			// note: this used to be "export" but IE is a whiny little bitch, so now
+			// we're sup3r 1337 h4x0r5
+			exp0rt: function(obj) {
+				Object.keys(obj).forEach(function(key) {
+					Composer[key] = obj[key];
+				});
+			}
+		};
+		this.Composer = Composer;
+	}
 
 	/**
 	 * You must override this function in your app.
@@ -106,7 +108,7 @@
 			});
 
 			var cls = _extend.call(base, def);
-			global.Composer.merge_extend(cls, properties);
+			Composer.merge_extend(cls, properties);
 			return cls;
 		}
 	};

@@ -18,6 +18,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * like typeof, but returns if it's an array or null
@@ -166,7 +167,7 @@
 	function Class(obj) { return Base.extend(obj); };
 	Class.extend = Class;
 
-	this.Composer.exp0rt({ Class: Class });
+	Composer.exp0rt({ Class: Class });
 
 }).apply((typeof exports != 'undefined') ? exports : this);
 

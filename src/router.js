@@ -18,7 +18,7 @@
  */
 (function(global, undefined) {
 	"use strict";
-
+	var Composer = this.Composer;
 	var global = this;
 
 	/**
@@ -370,6 +370,6 @@
 		}
 	});
 
-	this.Composer.exp0rt({ Router: Router });
+	Composer.exp0rt({ Router: Router });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
