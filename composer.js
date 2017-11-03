@@ -21,18 +21,20 @@
 (function() {
 	"use strict";
 
-	var global = this;
-	if(!global.Composer) global.Composer = {
-		version: '1.2.21',
+	if(!this.Composer) {
+		var Composer = {
+			version: '1.2.22',
 
-		// note: this used to be "export" but IE is a whiny little bitch, so now
-		// we're sup3r 1337 h4x0r5
-		exp0rt: function(obj) {
-			Object.keys(obj).forEach(function(key) {
-				global.Composer[key] = obj[key];
-			});
-		}
-	};
+			// note: this used to be "export" but IE is a whiny little bitch, so now
+			// we're sup3r 1337 h4x0r5
+			exp0rt: function(obj) {
+				Object.keys(obj).forEach(function(key) {
+					Composer[key] = obj[key];
+				});
+			}
+		};
+		this.Composer = Composer;
+	}
 
 	/**
 	 * You must override this function in your app.
@@ -106,7 +108,7 @@
 			});
 
 			var cls = _extend.call(base, def);
-			global.Composer.merge_extend(cls, properties);
+			Composer.merge_extend(cls, properties);
 			return cls;
 		}
 	};
@@ -278,6 +280,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * like typeof, but returns if it's an array or null
@@ -426,7 +429,7 @@
 	function Class(obj) { return Base.extend(obj); };
 	Class.extend = Class;
 
-	this.Composer.exp0rt({ Class: Class });
+	Composer.exp0rt({ Class: Class });
 
 }).apply((typeof exports != 'undefined') ? exports : this);
 
@@ -448,8 +451,9 @@
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
  */
-(function(global, undefined) {
+(function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	var make_lookup_name = function(event_name, bind_name) {
 		return event_name + '@' + bind_name;
@@ -577,7 +581,7 @@
 	});
 
 	Event._make_lookup_name = make_lookup_name;
-	this.Composer.exp0rt({ Event: Event });
+	Composer.exp0rt({ Event: Event });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -600,6 +604,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * The base class is inherited by models, collections, and controllers. It
@@ -684,7 +689,7 @@
 		}
 	});
 
-	this.Composer.exp0rt({ Base: Base });
+	Composer.exp0rt({ Base: Base });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -707,6 +712,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * Models are the data class. They deal with loading and manipulating data from
@@ -1102,7 +1108,7 @@
 		}
 	});
 
-	this.Composer.exp0rt({ Model: Model });
+	Composer.exp0rt({ Model: Model });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -1125,7 +1131,7 @@
  */
 (function() {
 	"use strict";
-
+	var Composer = this.Composer;
 	var global = this;
 
 	/**
@@ -1723,7 +1729,7 @@
 			this.trigger.apply(this, args);
 		}
 	});
-	this.Composer.exp0rt({ Collection: Collection });
+	Composer.exp0rt({ Collection: Collection });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -1746,7 +1752,7 @@
  */
 (function() {
 	"use strict";
-
+	var Composer = this.Composer;
 	var global = this;
 
 	var has_sizzle = !!global.Sizzle;
@@ -1978,7 +1984,7 @@
 		}
 	};
 
-	this.Composer.exp0rt({
+	Composer.exp0rt({
 		find: find,
 		match: match,
 		add_event: add_event,
@@ -2010,6 +2016,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	// whether or not to enable xdom rendering
 	var xdom = false;
@@ -2367,9 +2374,8 @@
 
 	Controller.xdomify = function() { xdom = true; };
 
-	this.Composer.merge_extend(Controller, ['events', 'elements']);
-
-	this.Composer.exp0rt({ Controller: Controller });
+	Composer.merge_extend(Controller, ['events', 'elements']);
+	Composer.exp0rt({ Controller: Controller });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -2393,6 +2399,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * The ListController extends the Controller object to provide a way of
@@ -2650,7 +2657,7 @@
 			this._unindex_controller(model, con);
 		}
 	});
-	this.Composer.exp0rt({ ListController: ListController });
+	Composer.exp0rt({ ListController: ListController });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -2673,7 +2680,7 @@
  */
 (function(global, undefined) {
 	"use strict";
-
+	var Composer = this.Composer;
 	var global = this;
 
 	/**
@@ -3025,7 +3032,7 @@
 		}
 	});
 
-	this.Composer.exp0rt({ Router: Router });
+	Composer.exp0rt({ Router: Router });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
@@ -3048,7 +3055,7 @@
  */
 (function() {
 	"use strict";
-
+	var Composer = this.Composer;
 	var global = this;
 
 	var RelationalModel = Composer.Model.extend({
@@ -3269,9 +3276,8 @@
 		}
 	});
 
-	this.Composer.merge_extend(RelationalModel, ['relations']);
-
-	this.Composer.exp0rt({
+	Composer.merge_extend(RelationalModel, ['relations']);
+	Composer.exp0rt({
 		HasOne: -1,		// no longer used but needed for backwards compat
 		HasMany: -1,	// " "
 		RelationalModel: RelationalModel
@@ -3299,6 +3305,7 @@
  */
 (function() {
 	"use strict";
+	var Composer = this.Composer;
 
 	/**
 	 * Collection that exists solely to be a "materialized view" of another
@@ -3627,6 +3634,6 @@
 		}
 	});
 
-	this.Composer.exp0rt({ FilterCollection: FilterCollection });
+	Composer.exp0rt({ FilterCollection: FilterCollection });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
