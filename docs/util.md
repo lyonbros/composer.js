@@ -59,6 +59,17 @@ Composer.sync = function(method, model, options)
 {% endhighlight %}
 </div>
 
+## Composer.set_sync :: function(syncfn)
+
+A helper function to set the [Composer.sync](#composer-sync) function. Not super
+useful in a browser setting, but helpful if running Composer in Node.js.
+
+{% highlight js %}
+Composer.set_sync(function(method, model, options) {
+    // ...
+});
+{% endhighlight %}
+
 ## Composer.cid :: function()
 
 A function that generates client-ids for every object instantiated by Composer.

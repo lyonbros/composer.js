@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: '1.2.22',
+			version: '1.2.23',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
@@ -40,6 +40,9 @@
 	 * You must override this function in your app.
 	 */
 	var sync = function(method, model, options) { return options.success(); };
+
+	// Used to override the default sync function.
+	var set_sync = function(syncfn) { this.Composer.sync = syncfn; }.bind(this);
 
 	// a closure that returns incrementing integers. these will be unique across
 	// the entire app since only one counter is instantiated
@@ -250,6 +253,7 @@
 
 	this.Composer.exp0rt({
 		sync: sync,
+		set_sync: set_sync,
 		cid: cid,
 		wrap_error: wrap_error,
 		eq: eq,
