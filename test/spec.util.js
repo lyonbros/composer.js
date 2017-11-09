@@ -3,6 +3,7 @@ describe('Composer', function() {
 		// Composer.*
 		var main_exports = [
 			'sync',
+			'set_sync',
 			'cid',
 			'eq',
 			'promisify',
@@ -45,6 +46,15 @@ describe('Composer', function() {
 
 	it('is awesome', function() {
 		expect(typeof window.Composer != 'undefined').toBe(true);
+	});
+
+	it('sets sync', function() {
+		var oldsync = Composer.sync;
+		var newsync = function() { console.log('nomnomnom'); };
+		expect(Composer.sync == newsync).toBe(false);
+		Composer.set_sync(newsync);
+		expect(Composer.sync == newsync).toBe(true);
+		Composer.set_sync(oldsync);
 	});
 
 	it('has a working eq function', function() {

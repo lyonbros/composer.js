@@ -41,6 +41,9 @@
 	 */
 	var sync = function(method, model, options) { return options.success(); };
 
+	// Used to override the default sync function.
+	var set_sync = function(syncfn) { this.Composer.sync = syncfn; }.bind(this);
+
 	// a closure that returns incrementing integers. these will be unique across
 	// the entire app since only one counter is instantiated
 	var cid = (function() {
@@ -250,6 +253,7 @@
 
 	this.Composer.exp0rt({
 		sync: sync,
+		set_sync: set_sync,
 		cid: cid,
 		wrap_error: wrap_error,
 		eq: eq,
