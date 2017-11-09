@@ -201,6 +201,7 @@
 		poptions || (poptions = {});
 
 		var convert = function(type, asyncs) {
+			if(!Composer[type]) return;
 			Object.keys(asyncs).forEach(function(key) {
 				var spec = asyncs[key];
 				var options_idx = spec.options_idx || 0;
