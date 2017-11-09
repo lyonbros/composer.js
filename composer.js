@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: '1.2.23',
+			version: '1.2.24',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
@@ -201,6 +201,7 @@
 		poptions || (poptions = {});
 
 		var convert = function(type, asyncs) {
+			if(!Composer[type]) return;
 			Object.keys(asyncs).forEach(function(key) {
 				var spec = asyncs[key];
 				var options_idx = spec.options_idx || 0;
