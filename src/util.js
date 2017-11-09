@@ -35,6 +35,7 @@
 		};
 		this.Composer = Composer;
 	}
+	var Composer = this.Composer;
 
 	/**
 	 * You must override this function in your app.
