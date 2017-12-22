@@ -28,6 +28,28 @@ describe('Composer.Controller.xdom', function() {
 		}
 	});
 
+	var InputDoge = Composer.Controller.extend({
+		xdom: true,
+		elements: {
+			'input': 'inp',
+		},
+		render: function(options) {
+			return new Promise(function(resolve) {
+				var opts = Composer.object.merge({}, options, {complete: resolve});
+				this.html('<div><input id="input-doge-'+this.cid()+'" type="text" value="" name="gffft"></div>', opts);
+			}.bind(this));
+		},
+		val: function(val) {
+			if(!this.inp) return false;
+			if(typeof(val) == 'undefined') {
+				return this.inp.value;
+			} else {
+				this.inp.value = val;
+				return val;
+			}
+		}
+	});
+
 	it('can be instantiated properly (and inits elements properly)', function(done) {
 		var con = new MyController({param1: 'omg'});
 		expect(con.cid().match(/^c[0-9]+/)).toBeTruthy();
@@ -308,6 +330,41 @@ describe('Composer.Controller.xdom', function() {
 			expect(render_completes).toBe(0);
 			done();
 		}, 200);
+	});
+
+	it('resets form elements if told to do so', function(done) {
+		var doge = new InputDoge();
+		doge.render()
+			.then(function() {
+				expect(doge.val()).toBe('');
+				doge.val('hai');
+				return doge.render();
+			})
+			.then(function() {
+				expect(doge.val()).toBe('hai');
+				return doge.render({reset_inputs: true});
+			})
+			.then(function() {
+				expect(doge.val()).toBe('');
+			})
+			.finally(done);
+	});
+
+	it('allows pre-render element transformations', function(done) {
+		var doge = new InputDoge();
+		var ran_transform = false;
+		doge.render()
+			.then(function() {
+				return doge.render({
+					before_update: function(from, to) {
+						ran_transform = true;
+					}
+				});
+			})
+			.finally(function() {
+				expect(ran_transform).toBe(true);
+			})
+			.finally(done);
 	});
 });
 
