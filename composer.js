@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: '1.2.24',
+			version: '1.2.25',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
@@ -1926,6 +1926,10 @@
 				// radios, textarea, selects)
 				onBeforeElUpdated: function(from, to) {
 					if(options.reset_inputs) return;
+
+					if(options.before_update instanceof Function) {
+						options.before_update(from, to);
+					}
 
 					var tag = from.tagName.toLowerCase();
 					var from_type = from.getAttribute('type');
