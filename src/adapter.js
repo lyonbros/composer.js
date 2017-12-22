@@ -187,6 +187,10 @@
 				onBeforeElUpdated: function(from, to) {
 					if(options.reset_inputs) return;
 
+					if(options.before_update instanceof Function) {
+						options.before_update(from, to);
+					}
+
 					var tag = from.tagName.toLowerCase();
 					var from_type = from.getAttribute('type');
 					var to_tag = to.tagName.toLowerCase();
