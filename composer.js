@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: '1.2.25',
+			version: '1.2.26',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
@@ -3144,13 +3144,7 @@
 			return data;
 		},
 
-		/**
-		 * extension of Model.set which creates sub-models/collections from the
-		 * given data if specified by our relations
-		 */
-		set: function(data, options) {
-			options || (options = {});
-
+		_set_impl: function(data, options) {
 			if(this.relations && !options.skip_relational) {
 				Composer.object.each(this.relations, function(relation, k) {
 					var d = Composer.object.get(data, k);
@@ -3161,8 +3155,29 @@
 					var obj = this._create_obj(relation, k, options_copy);
 				}, this);
 			}
+		},
+
+		/**
+		 * extension of Model.set which creates sub-models/collections from the
+		 * given data if specified by our relations
+		 */
+		set: function(data, options) {
+			options || (options = {});
+
+			this._set_impl(data, options);
 
 			// call Model.set()
+			return this.parent(data, options);
+		},
+
+		reset: function(data, options) {
+			options || (options = {});
+
+			var options_copy = Composer.object.clone(options);
+			options_copy.relational_reset = true;
+			this._set_impl(data, options_copy);
+
+			// call Model.reset()
 			return this.parent(data, options);
 		},
 
@@ -3262,7 +3277,13 @@
 					case 'model':
 						obj || (obj = new relation.model());
 						if(options.set_parent) this.set_parent(this, obj);	// NOTE: happens BEFORE setting data
-						if(_data) obj.set(_data, options);
+						if(_data) {
+							if(options.relational_reset) {
+								obj.reset(_data, options);
+							} else {
+								obj.set(_data, options);
+							}
+						}
 						break;
 					case 'collection':
 						if(!obj) {
