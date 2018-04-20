@@ -151,11 +151,15 @@ describe('Composer.Collection', function() {
 
 		col.add({id: 42});
 		col.add({id: 69});
+		col.add({id: 12});		// should be REMOVED
 
 		var get = function(id) { return col.get(id); };
 
 		var model1 = get(42);
 		var model2 = get(69);
+
+		var removes = 0;
+		col.bind('remove', function() { removes++; });
 
 		col.reset([
 			{id: 42, name: 'barry'},
@@ -163,9 +167,11 @@ describe('Composer.Collection', function() {
 			{id: 11, name: 'larry sko sko outdoor outdoor outdoor shutup parker'}
 		], {upsert: true});
 
+		expect(removes).toBe(1);
 		expect(col.size()).toBe(3);
 		expect(model1 == get(42)).toBe(true);
 		expect(model2 == get(69)).toBe(true);
+		expect(get(12)).toBeFalsy();
 		expect(get(42).get('name')).toBe('barry');
 		expect(get(69).get('name')).toBe('harry');
 		expect(get(11).get('name')).toBe('larry sko sko outdoor outdoor outdoor shutup parker');

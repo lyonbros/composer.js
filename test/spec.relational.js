@@ -126,7 +126,10 @@ describe('Composer.RelationalModel', function() {
 		person.set({name: 'ruth', pet: {dog: {name: 'timmy', toys: [{id: 1, name: 'ropey'}, {id: 2, name: 'bally'}]}}});
 		expect(person.toJSON().pet.dog.toys[1].name).toBe('bally');
 		person.set({pet: {dog: {toys: [{id: 2, name: 'sticky'}]}}}, {upsert: true});
-		expect(person.toJSON().pet.dog.toys[1].name).toBe('sticky');
+		var dog = person.get('pet').dog;
+		expect(dog.get('toys').size()).toBe(1);
+		expect(dog.get('toys').first().id()).toBe(2);
+		expect(person.toJSON().pet.dog.toys[0].name).toBe('sticky');
 	});
 
 	it('replaces relational model data on reset', function() {
