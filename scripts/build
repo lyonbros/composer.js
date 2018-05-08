@@ -1,31 +1,60 @@
 #!/bin/bash
 
-echo "Remember to run me *after* changing version in _config.yml"
+target=$1
+
+if [ "${target}" == "" ]; then
+	target="browser"
+fi
+
+case "${target}" in
+	"browser")
+		out=composer.js
+		buildlist=(
+			util.js
+			class.js
+			event.js
+			base.js
+			model.js
+			collection.js
+			adapter.js
+			controller.js
+			listcontroller.js
+			router.js
+			relational.js
+			filtercollection.js
+		)
+		min="yes"
+		;;
+	"node")
+		out=loader.js
+		buildlist=(
+			util.js
+			class.js
+			event.js
+			base.js
+			model.js
+			collection.js
+			relational.js
+			filtercollection.js
+		)
+		;;
+esac
+
+if [ "${out}" == "" ]; then
+	echo "Usage: $0 <browser|node>"
+	exit 1
+fi
+
+echo "Remember to run me *after* changing version in package.json AND _config.yml"
 sleep 1
+version=$(cat package.json | grep '"version":' | awk '{print $2}' | sed 's|[^0-9a-z\._-]||g')
 
-BUILDLIST=(
-	util.js
-	class.js
-	event.js
-	base.js
-	model.js
-	collection.js
-	adapter.js
-	controller.js
-	listcontroller.js
-	router.js
-	relational.js
-	filtercollection.js
-);
-
-echo -n '' > composer.js
-for file in "${BUILDLIST[@]}"; do
-	cat src/$file >> composer.js
+echo -n '' > "${out}"
+for file in "${buildlist[@]}"; do
+	cat src/$file >> "${out}"
 done
-
-VERSION=$(cat _config.yml | grep 'version:' | sed 's|.*: \+||')
-echo "Setting version => ${VERSION}"
-sed -i "s|version: 'GITHEAD'|version: '${VERSION}'|" composer.js
+echo "Setting version => ${version}"
+sed -i "s|version: 'GITHEAD'|version: '${version}'|" ${out}
 
 read -r -d '' COPYRIGHT <<EOFLOL
 /*
@@ -35,9 +64,9 @@ read -r -d '' COPYRIGHT <<EOFLOL
  * Redistributions of files must retain the above copyright notice.
  */
 EOFLOL
-
-echo -n "$COPYRIGHT" > composer.min.js
-cat composer.js | jsmin >> composer.min.js
-
-echo "Done building composer.js / composer.min.js"
+if [ "${min}" == "yes" ]; then
+	minfile="$(basename "${out}" .js).min.js"
+	echo -n "$COPYRIGHT" > "${minfile}"
+	cat "${out}" | jsmin >> "${minfile}"
+fi
 
