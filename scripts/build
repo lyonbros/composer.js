@@ -1,24 +1,51 @@
 #!/bin/bash
 
-BUILDLIST=(
-	util.js
-	class.js
-	event.js
-	base.js
-	model.js
-	collection.js
-	adapter.js
-	controller.js
-	listcontroller.js
-	router.js
-	relational.js
-	filtercollection.js
-);
+target=$1
 
-echo -n '' > composer.js
-for file in "${BUILDLIST[@]}"; do
-	cat src/$file >> composer.js
+if [ "${target}" == "" ]; then
+	target="browser"
+fi
+
+case "${target}" in
+	"browser")
+		out=composer.js
+		buildlist=(
+			util.js
+			class.js
+			event.js
+			base.js
+			model.js
+			collection.js
+			adapter.js
+			controller.js
+			listcontroller.js
+			router.js
+			relational.js
+			filtercollection.js
+		)
+		min="yes"
+		;;
+	"node")
+		out=loader.js
+		buildlist=(
+			util.js
+			class.js
+			event.js
+			base.js
+			model.js
+			collection.js
+			relational.js
+			filtercollection.js
+		)
+		;;
+esac
+
+echo -n '' > "${out}"
+for file in "${buildlist[@]}"; do
+	cat src/$file >> "${out}"
 done
 
-cat composer.js | jsmin > composer.min.js
+if [ "${min}" == "yes" ]; then
+	cat "${out}" | jsmin > "$(basename "${out}" .js).min.js"
+fi
 
