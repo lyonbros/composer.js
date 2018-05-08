@@ -40,12 +40,33 @@ case "${target}" in
 		;;
 esac
 
+if [ "${out}" == "" ]; then
+	echo "Usage: $0 <browser|node>"
+	exit 1
+fi
+
+echo "Remember to run me *after* changing version in package.json"
+sleep 1
+version=$(cat package.json | grep '"version":' | awk '{print $2}' | sed 's|[^0-9a-z\._-]||g')
+
 echo -n '' > "${out}"
 for file in "${buildlist[@]}"; do
 	cat src/$file >> "${out}"
 done
+echo "Setting version => ${version}"
+sed -i "s|version: 'GITHEAD'|version: '${version}'|" ${out}
 
+read -r -d '' COPYRIGHT <<EOFLOL
+/*
+ * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ *
+ * Licensed under The MIT License.
+ * Redistributions of files must retain the above copyright notice.
+ */
+EOFLOL
 if [ "${min}" == "yes" ]; then
-	cat "${out}" | jsmin > "$(basename "${out}" .js).min.js"
+	minfile="$(basename "${out}" .js).min.js"
+	echo -n "$COPYRIGHT" > "${minfile}"
+	cat "${out}" | jsmin >> "${minfile}"
 fi
 

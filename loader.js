@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: 'GITHEAD',
+			version: '1.3.2',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
