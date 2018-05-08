@@ -10,5 +10,6 @@
   "contributors": [
     "Jeff Lyon <jeff@lyonbros.com>",
     "Andrew Lyon <andrew@lyonbros.com>"
-  ]
+  ],
+  "repository": {"type": "git", "url": "https://github.com/lyonbros/composer.js"}
 }
