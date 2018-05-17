@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: '1.3.2',
+			version: '1.3.3',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
@@ -1755,6 +1755,1314 @@
 		}
 	});
 	Composer.exp0rt({ Collection: Collection });
+}).apply((typeof exports != 'undefined') ? exports : this);
+
+/**
+ * adapter.js
+ *
+ * A jQuery/MooTools adapter for various DOM operations.
+ * -----------------------------------------------------------------------------
+ *
+ * Composer.js is an MVC framework for creating and organizing javascript 
+ * applications. For documentation, please visit:
+ *
+ *     http://lyonbros.github.com/composer.js/
+ * 
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * 
+ * Licensed under The MIT License. 
+ * Redistributions of files must retain the above copyright notice.
+ */
+(function() {
+	"use strict";
+	var Composer = this.Composer;
+	var global = this;
+	var document = global.document || {_blank: true};
+
+	var has_sizzle = !!global.Sizzle;
+	var has_jquery = !!global.jQuery;
+	var has_slick = !!global.Slick;
+
+	var which_adapter = function(types) {
+		var wrap = function(fn) {
+			return function(context, selector) {
+				context || (context = document);
+				if(types.native && context instanceof global.DocumentFragment) {
+					return types.native(context, selector);
+				} else {
+					return fn(context, selector);
+				}
+			};
+		};
+		if(has_slick && types.slick) return wrap(types.slick);
+		if(has_sizzle && types.sizzle) return wrap(types.sizzle);
+		if(has_jquery && types.jquery) return wrap(types.jquery);
+		if('querySelector' in document && types.native) return wrap(types.native);
+		if(document._blank) return function() {};
+		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer (or use a modern browser with document.querySelector).');
+	};
+
+	var find = which_adapter({
+		slick: function(context, selector) {
+			return Slick.find(context, selector);
+		},
+		sizzle: function(context, selector) {
+			return Sizzle.select(selector, context)[0];
+		},
+		jquery: function(context, selector) {
+			return jQuery(context).find(selector)[0];
+		},
+		native: (function() {
+			var scope = false;
+			try { document.querySelector(':scope > h1'); scope = true; }
+			catch(e) {}
+
+			return function(context, selector) {
+				if(scope && !(context instanceof global.DocumentFragment)) selector = ':scope '+selector;
+				return context.querySelector(selector);
+			};
+		})()
+	});
+
+	var match = which_adapter({
+		slick: function(context, selector) {
+			return Slick.match(context, selector);
+		},
+		sizzle: function(context, selector) {
+			return Sizzle.matchesSelector(context, selector);
+		},
+		jquery: function(context, selector) {
+			return jQuery(context).is(selector);
+		},
+		native: function(context, selector) {
+			if('matches' in context) var domatch = context.matches;
+			if('msMatchesSelector' in context) var domatch = context.msMatchesSelector;
+			if('mozMatchesSelector' in context) var domatch = context.mozMatchesSelector;
+			if('webkitMatchesSelector' in context) var domatch = context.webkitMatchesSelector;
+			return domatch.call(context, selector);
+		}
+	});
+
+	var captured_events = {
+		'focus': true,
+		'blur': true
+	};
+	var add_event = (function() {
+		return function(el, ev, fn, selector) {
+			var capture = captured_events[ev] || false;
+			if(selector) {
+				el.addEventListener(ev, function(event) {
+					// if we have a mootools event class, wrap the event in it
+					if(event && global.MooTools && global.DOMEvent) event = new DOMEvent(event);
+					var target = event.target || event.srcElement;
+					while(target) {
+						if(match(target, selector)) {
+							fn.apply(this, [event].concat(event.params || []));
+							break;
+						}
+						target = target.parentNode;
+						if(target == el.parentNode || target == document.body.parentNode) {
+							target = false;
+						}
+					}
+				}, capture);
+			} else {
+				el.addEventListener(ev, function(event) {
+					// if we have a mootools event class, wrap the event in it
+					if(event && global.MooTools && global.DOMEvent) event = new DOMEvent(event);
+					fn.apply(this, [event].concat(event.params || []));
+				}, capture);
+			}
+		};
+	})();
+
+	var remove_event = (function() {
+		return function(el, ev, fn) {
+			el.removeEventListener(ev, fn, false);
+		};
+	})();
+
+	var fire_event = (function() {
+		/**
+		 * NOTE: taken from http://stackoverflow.com/a/2381862/236331
+		 *
+		 * Fire an event handler to the specified node. Event handlers can
+		 * detect that the event was fired programatically by testing for a
+		 * 'synthetic=true' property on the event object
+		 *
+		 * @param {HTMLNode} node The node to fire the event handler on.
+		 * @param {String} eventName The name of the event without the "on" (e.g., "focus")
+		 */
+		return function(el, type, options) {
+			options || (options = {});
+
+			if(type == 'click' && el.click) {
+				return el.click();
+			}
+
+			var ev = new CustomEvent(type, options.args);
+			el.dispatchEvent(ev);
+		};
+	})();
+
+	var find_parent = function(selector, element, stop) {
+		if(!element) return false;
+		if(element == stop) return false;
+		if(match(element, selector)) return element;
+		var par = element.parentNode;
+		return find_parent(selector, par);
+	};
+
+	var frame = function(cb) { global.requestAnimationFrame(cb); };
+
+	/**
+	 * our xdom system! provides hooks for diffing/patching the DOM, and also
+	 * allows parts of itself to be replaced by different implementations.
+	 */
+	var xdom = {
+		/**
+		 * diff two DOM elements. in the default case, we use morphdom which
+		 * does the diffing/patching in one call so we don't really need to do
+		 * anything here, but other DOM patching libs may have discrete steps so
+		 * we want to have a hook for it.
+		 */
+		diff: function(from, to, options) {
+			return [from, to];
+		},
+
+		/**
+		 * patch the DOM! uses morphdom by default. takes a root DOM node to
+		 * patch and a patch to apply to it.
+		 */
+		patch: function(root, diff, options) {
+			options || (options = {});
+
+			if(!root || !diff[1]) return;
+			var ignore_elements = options.ignore_elements || [];
+			var ignore_children = options.ignore_children || [];
+			return morphdom(root, diff[1], {
+				// this callback preserves form input values (text, checkboxes,
+				// radios, textarea, selects)
+				onBeforeElUpdated: function(from, to) {
+					if(options.reset_inputs) return;
+
+					if(options.before_update instanceof Function) {
+						options.before_update(from, to);
+					}
+
+					var tag = from.tagName.toLowerCase();
+					var from_type = from.getAttribute('type');
+					var to_tag = to.tagName.toLowerCase();
+					var to_type = to.getAttribute('type');
+					// we treat files differently, because you cannot
+					// programmatically set the value of a file input. so
+					// instead, we copy all the attributes from the `to`
+					// element into the `from` (except `value`, obvis) and
+					// then block morphdom from updating the from el by
+					// returning false.
+					if(to_tag == 'input' && to_type == 'file') {
+						if(tag == 'input' && from_type == 'file') {
+							// copy traits from to -> from
+							var attrs = to.attributes;
+							for(var i = 0, n = attrs.length; i < n; i++) {
+								var key = attrs.item(i).name;
+								// don't copy the value
+								if(key == 'value') continue;
+								from.setAttribute(key, to.getAttribute(key));
+							}
+							// block the update
+							return false;
+						}
+						// to is a file, from isn't. don't bother trying to
+						// preserve anything, just let the change happen
+						return;
+					}
+
+					switch(tag)
+					{
+					case 'input':
+					case 'textarea':
+						to.checked = from.checked;
+						to.value = from.value;
+						break;
+					case 'select':
+						to.value = from.value;
+						break;
+					}
+				},
+				onBeforeNodeDiscarded: function(node) {
+					if(ignore_elements.indexOf(node) >= 0) return false;
+				},
+				onBeforeElChildrenUpdated: function(from, to) {
+					if(ignore_children.indexOf(from) >= 0) return false;
+				},
+				childrenOnly: options.children_only
+			});
+		},
+
+		/**
+		 * allows hooking in your own DOM diffing/patching library
+		 */
+		hooks: function(options) {
+			options || (options = {});
+			var diff = options.diff;
+			var patch = options.patch;
+
+			if(diff) xdom.diff = diff;
+			if(patch) xdom.patch = patch;
+		}
+	};
+
+	Composer.exp0rt({
+		find: find,
+		match: match,
+		add_event: add_event,
+		fire_event: fire_event,
+		remove_event: remove_event,
+		find_parent: find_parent,
+		frame: frame,
+		xdom: xdom
+	});
+}).apply((typeof exports != 'undefined') ? exports : this);
+
+/**
+ * controller.js
+ *
+ * Provides the glue between the DOM/UI and our data layer (models)
+ * -----------------------------------------------------------------------------
+ *
+ * Composer.js is an MVC framework for creating and organizing javascript 
+ * applications. For documentation, please visit:
+ *
+ *     http://lyonbros.github.com/composer.js/
+ * 
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * 
+ * Licensed under The MIT License. 
+ * Redistributions of files must retain the above copyright notice.
+ */
+(function() {
+	"use strict";
+	var Composer = this.Composer;
+
+	// whether or not to enable xdom rendering
+	var xdom = false;
+
+	/**
+	 * This function is responsible for
+	 *  - diffing elements via our xdom object
+	 *  - scheduling rendering/patching of the DOM
+	 *  - batching patches so they happen on the browser's animation frame
+	 *  - patching the DOM using the diff we got
+	 *  - letting the callers know when the updates happened
+	 */
+	var schedule_render = (function() {
+		var diffs = [];
+		var scheduled = false;
+		return function(from, to, options, callback) {
+			options || (options = {});
+
+			diffs.push([from, Composer.xdom.diff(from, to, options), options, callback]);
+			if(scheduled) return;
+			scheduled = true;
+			Composer.frame(function() {
+				scheduled = false;
+				var diff_clone = diffs.slice(0);
+				diffs = [];
+				var cbs = [];
+				diff_clone.forEach(function(entry) {
+					var from = entry[0];
+					var diff = entry[1];
+					var options = entry[2];
+					var cb = entry[3];
+					Composer.xdom.patch(from, diff, options);
+					if(cb) cbs.push(cb);
+				});
+				// run our callbacks after we run our DOM updates
+				cbs.forEach(function(cb) { cb(); });
+			});
+		};
+	})();
+
+	/**
+	 * The controller class sits between views and your models/collections.
+	 * Controllers bind events to your data objects and update views when the data
+	 * changes. Controllers are also responsible for rendering views.
+	 */
+	var Controller = Composer.Base.extend({
+		/**
+		 * Track this object's type. Useful for debugging, mainly
+		 */
+		__composer_type: 'controller',
+
+		// tracks if this controller has been released
+		_released: false,
+
+		// holds events bound with with_bind
+		_bound_events: [],
+
+		// tracks sub-controllers
+		_subcontrollers: {},
+
+		// if true, enables XDOM just for this controller
+		xdom: false,
+
+		// the DOM element to tie this controller to (a container element)
+		el: false,
+
+		// if this is set to a DOM *selector*, then this.el will be ignored and
+		// instantiated as a new Element(this.tag), then injected into the element
+		// referened by the this.inject selector. this allows you to inject
+		// controllers into the DOM
+		inject: false,
+
+		// if this.el is empty, create a new element of this type as the container
+		tag: 'div',
+
+		// the initial className to assign to the controller's element (this.el)
+		class_name: false,
+
+		// elements to assign to this controller
+		elements: {},
+
+		// events to bind to this controllers sub-items.
+		events: {},
+
+		/**
+		 * CTOR. instantiate main container element (this.el), setup events and
+		 * elements, and call init()
+		 */
+		initialize: function(params, options) {
+			options || (options = {});
+
+			for(var x in params) {
+				this[x] = params[x];
+			}
+
+			// call Base.initialize
+			this.parent();
+
+			// make sure we have an el
+			this._ensure_el();
+
+			if(this.inject) this.attach(options);
+
+			// backwards compat
+			if(this.className) this.class_name = this.className;
+			if(this.class_name) {
+				this.el.className += ' '+this.class_name;
+			}
+
+			this.refresh_elements();
+			this.delegate_events();
+
+			this.init();
+		},
+
+		/**
+		 * override
+		 */
+		init: function() {},		// lol
+
+		/**
+		 * override. not OFFICIALLY used by the framework, but it's good to use it AND
+		 * return "this" when you're done with it.
+		 */
+		render: function() { return this; },
+
+		/**
+		 * replace this.el's html with the given test, also refresh the controllers
+		 * elements.
+		 */
+		html: function(obj, options) {
+			options || (options = {});
+			if(!this.el) this._ensure_el();
+
+			var append = function(el, child) {
+				if(typeof(child) == 'string') {
+					el.innerHTML = child;
+				} else {
+					el.innerHTML = '';
+					el.appendChild(child);
+				}
+			};
+
+			if(xdom || this.xdom) {
+				var el = document.createElement(this.tag);
+				append(el, obj);
+				var cb = options.complete;
+				var ignore_elements = options.ignore_elements || [];
+				var ignore_children = options.ignore_children || [];
+				ignore_elements = ignore_elements.concat(
+					Object.keys(this._subcontrollers)
+						.map(function(name) { return this._subcontrollers[name].el; }.bind(this))
+						.filter(function(el) { return !!el; })
+				);
+				options.ignore_elements = ignore_elements;
+				options.children_only = true;
+				schedule_render(this.el, el, options, function() {
+					// if we released mid-render (yes, this happens) then skip
+					// the rest of the render
+					if(this._released) return;
+					this.refresh_elements();
+					if(cb) cb();
+					this.trigger('xdom:render');
+				}.bind(this));
+			} else {
+				append(this.el, obj);
+				this.refresh_elements();
+			}
+		},
+
+		/**
+		 * injects the controller's element into the DOM.
+		 */
+		attach: function(options) {
+			options || (options = {});
+
+			// make sure we have an el
+			this._ensure_el();
+
+			var container = typeof(this.inject) == 'string' ?
+									Composer.find(document, this.inject) :
+									this.inject;
+			if(!container) return false;
+
+			if(options.clean_injection) container.innerHTML = '';
+			container.appendChild(this.el);
+		},
+
+		/**
+		 * legwork function what runs the actual bind
+		 */
+		_with_binder: function(bind_fn, object, ev, fn, name) {
+			name || (name = false);
+			var wrapped = function() {
+				if(this._released) return;
+				fn.apply(this, arguments);
+			}.bind(this);
+			bind_fn.call(object, ev, wrapped, name);
+			this._bound_events.push([object, ev, wrapped]);
+		},
+
+		/**
+		 * bind an event that the controller tracks and unbinds on release
+		 */
+		with_bind: function(object, ev, fn, name) {
+			return this._with_binder(object.bind, object, ev, fn, name);
+		},
+
+		/**
+		 * bind a event that the controller tracks and unbinds on release or
+		 * that unbinds itself once it fires once
+		 */
+		with_bind_once: function(object, ev, fn, name) {
+			return this._with_binder(object.bind_once, object, ev, fn, name);
+		},
+
+		/**
+		 * keep track of a sub controller that will release when this controller
+		 * does. If no creation function given, return the subcontroller under
+		 * the given name.
+		 */
+		sub: function(name, create_fn) {
+			if(!create_fn) return this._subcontrollers[name] || false;
+
+			// if we have an existing controller with the same name, release and
+			// remove it.
+			this.remove(name);
+
+			// create the new controller, track it, and make sure if it's
+			// released we untrack it
+			var instance = create_fn();
+			instance.bind('release', this.remove.bind(this, name, {skip_release: true}));
+			this._subcontrollers[name] = instance;
+			return instance;
+		},
+
+		/**
+		 * remove a subcontroller from tracking and (by default) release it
+		 */
+		remove: function(name, options) {
+			options || (options = {});
+			if(!this._subcontrollers[name]) return
+			if(!options.skip_release) this._subcontrollers[name].release();
+			delete this._subcontrollers[name];
+		},
+
+		/**
+		 * DEPRECATED. use sub()/remove()
+		 */
+		track_subcontroller: function() { return this.sub.apply(this, arguments); },
+		get_subcontroller: function(name) { return this.sub.apply(this, arguments); },
+		remove_subcontroller: function() { return this.remove.apply(this, arguments); },
+
+		/**
+		 * make sure el is defined as an HTML element
+		 */
+		_ensure_el: function() {
+			// allow this.el to be a string selector (selecting a single element) instad
+			// of a DOM object. this allows the defining of a controller before the DOM
+			// element the selector refers to exists, but this.el will be updated upon
+			// instantiation of the controller (presumably when the DOM object DOES
+			// exist).
+			if(typeof(this.el) == 'string') {
+				this.el = Composer.find(document, this.el);
+			}
+
+			// if this.el is null (bad selector or no item given), create a new DOM
+			// object from this.tag
+			this.el || (this.el = document.createElement(this.tag));
+		},
+
+		/**
+		 * remove the controller from the DOM and trigger its release event
+		 */
+		release: function(options) {
+			options || (options = {});
+			if(this.el && this.el.parentNode) this.el.parentNode.removeChild(this.el);
+			this.el = false;
+
+			// auto-remove bound events
+			this._bound_events.forEach(function(binding) {
+				var obj = binding[0];
+				var ev = binding[1];
+				var fn = binding[2];
+				obj.unbind(ev, fn);
+			});
+			this._bound_events = [];
+
+			// auto-release/remove sub-controllers
+			Object.keys(this._subcontrollers).forEach(function(key) {
+				this._subcontrollers[key].release();
+			}.bind(this));
+			this._subcontrollers = {};
+
+			this.fire_event('release', options, this);
+
+			// remove all events from controller
+			if(!options.keep_events) this.unbind();
+			this._released = true;
+		},
+
+		/**
+		 * replace this controller's container element (this.el) with another element.
+		 * also refreshes the events/elements associated with the controller
+		 */
+		replace: function(element) {
+			if(this.el.parentNode) this.el.parentNode.replaceChild(element, this.el);
+			this.el = element;
+
+			this.refresh_elements();
+			this.delegate_events();
+
+			return element;
+		},
+
+		/**
+		 * set up the events (by delegation) to this controller (events are stored
+		 * under this.events).
+		 */
+		delegate_events: function() {
+			// setup the events given
+			for(var ev in this.events) {
+				var fn = this[this.events[ev]];
+				if(typeof(fn) != 'function') {
+					// easy, easy, whoa, you gotta calm down there, chuck
+					continue;
+				}
+				fn = fn.bind(this);
+
+				var match = ev.match(/^(\w+)\s*(.*)$/);
+				var evname = match[1].trim();
+				var selector = match[2].trim();
+
+				if(selector == '') {
+					Composer.remove_event(this.el, evname, fn);
+					Composer.add_event(this.el, evname, fn);
+				} else {
+					Composer.add_event(this.el, evname, fn, selector);
+				}
+			}
+		},
+
+		/**
+		 * re-init the elements into the scope of the controller (uses this.elements)
+		 */
+		refresh_elements: function() {
+			// setup given elements as instance variables
+			if(!this.elements) return false;
+			Object.keys(this.elements).forEach(function(key) {
+				var iname = this.elements[key];
+				this[iname] = Composer.find(this.el, key);
+			}.bind(this));
+		}
+	});
+
+	Controller.xdomify = function() { xdom = true; };
+
+	Composer.merge_extend(Controller, ['events', 'elements']);
+	Composer.exp0rt({ Controller: Controller });
+}).apply((typeof exports != 'undefined') ? exports : this);
+
+/**
+ * listcontroller.js
+ *
+ * Provides a useful abstraction for controllers have have arbitrary lists of
+ * sub-controllers. Especially useful with rendering based off of a collection.
+ * -----------------------------------------------------------------------------
+ *
+ * Composer.js is an MVC framework for creating and organizing javascript
+ * applications. For documentation, please visit:
+ *
+ *     http://lyonbros.github.com/composer.js/
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ *
+ * Licensed under The MIT License.
+ * Redistributions of files must retain the above copyright notice.
+ */
+(function() {
+	"use strict";
+	var Composer = this.Composer;
+
+	/**
+	 * The ListController extends the Controller object to provide a way of
+	 * tracking a collection and keeping its models in-sync with a set of
+	 * controllers that are injected into the DOM.
+	 */
+	var ListController = Composer.Controller.extend({
+		/**
+		 * Track this object's type. Useful for debugging, mainly
+		 */
+		__composer_type: 'listcontroller',
+
+		// tracks sub-controllers
+		_subcontroller_list: [],
+		_subcontroller_idx: {},
+
+		// the collection we're tracking
+		_collection: null,
+
+		// holds our empty state
+		_empty: true,
+
+		// note that these options are mainly set by track()
+		options: {
+			// bind to the collection's `reset` event (on top of add/remove).
+			// generally this isn't needed but there are certainly cases where
+			// yuu would want a collection.trigger('reset') to re-render the
+			// children completely.
+			bind_reset: false,
+
+			// passed into the collection's sort_index and sort_at functions
+			// when adding items
+			accurate_sort: false,
+
+			// points to the DOM element that all our subcontrollers will be
+			// placed into. this is set by options.container and although it's
+			// not stricly needed for rendering, it's very useful when using
+			// XDOM so the render system knows to ignore the children of the
+			// container (so calling html() on a listcontroller doesn't remove
+			// its children from the DOM).
+			container: null
+		},
+
+		/**
+		 * Set up tracking on the given collection. When models are added or
+		 * removed to the collection, the change is reflected in the
+		 * subcontrollers. `create_fn` is a function that is given a model and
+		 * must return an instantiated controller (this is used to create the
+		 * actual subcontrollers that are tracked).
+		 */
+		track: function(collection, create_fn, options) {
+			options || (options = {});
+			this.set_options(options);
+			this._collection = collection;
+
+			// empty state tracking
+			if(collection.size() > 0) this._empty = false;
+			this.with_bind(collection, ['clear', 'add', 'remove', 'reset'], function() {
+				var empty = collection.size() == 0;
+				if(this._empty && !empty) this.trigger('list:notempty');
+				if(!this._empty && empty) this.trigger('list:empty');
+				this._empty = empty;
+			}.bind(this));
+			// trigger the initial empty state event
+			this.trigger('list:'+(this._empty ? 'empty' : 'notempty'));
+
+			this.with_bind(collection, 'clear', function(options) {
+				this._clear_subcontrollers();
+			}.bind(this));
+			this.with_bind(collection, 'add', function(model, _, options) {
+				this._add_subcontroller(model, create_fn, options);
+			}.bind(this));
+			this.with_bind(collection, 'remove', function(model) {
+				this._remove_subcontroller(model);
+			}.bind(this));
+			if(options.bind_reset) {
+				this.with_bind(collection, 'reset', function(options) {
+					this._reset_subcontrollers(create_fn, options);
+				}.bind(this));
+			}
+
+			this._reset_subcontrollers(create_fn);
+		},
+
+		release: function() {
+			// move the el to a fragment, which keeps a bunch of reflows from
+			// happening on release
+			var fragment = document.createDocumentFragment();
+			fragment.appendChild(this.el);
+
+			// do an async wipe of the subcontrollers
+			this._clear_subcontrollers({async: true});
+			return this.parent.apply(this, arguments);
+		},
+
+		/**
+		 * extend Controller.html() such that if we're using xdom, pass this
+		 * instances options.container into the XDOM ignore-children list so the
+		 * subcontrollers' DOM elements are preserved on render. this allows us
+		 * to call html() until the cows come home without having to re-init our
+		 * list controller
+		 */
+		html: function(obj, options) {
+			options || (options = {});
+			var container = this.options.container;
+			if(container instanceof Function) container = container();
+			if(container) {
+				var ignore_children = options.ignore_children || [];
+				ignore_children.push(container);
+				options.ignore_children = ignore_children;
+			}
+			return this.parent.apply(this, arguments);
+		},
+
+		/**
+		 * Index a controller so it can be looked up by the model is wraps
+		 */
+		_index_controller: function(model, controller) {
+			if(!model) return false;
+			this._subcontroller_idx[model.cid()] = controller;
+			this._subcontroller_list.push(controller);
+		},
+
+		/**
+		 * Unindex a model -> controller lookup
+		 */
+		_unindex_controller: function(model, controller) {
+			if(!model) return false;
+			delete this._subcontroller_idx[model.cid()];
+			this._subcontroller_list = this._subcontroller_list.filter(function(c) {
+				return c != controller;
+			});
+		},
+
+		/**
+		 * Lookup a controller by its model
+		 */
+		_lookup_controller: function(model) {
+			if(!model) return false;
+			return this._subcontroller_idx[model.cid()];
+		},
+
+		/**
+		 * Untrack all subcontrollers, releasing each one
+		 */
+		_clear_subcontrollers: function(options) {
+			options || (options = {});
+
+			// we allow an async option here, which clears out subcontrollers
+			// in batches. this is more favorable than doing it sync because we
+			// don't have to block the interface while removing all our subs.
+			if(options.async) {
+				// clone the subcon list in case someone else makes mods to it
+				// while we're clearing.
+				var subs = this._subcontroller_list.slice(0);
+				var batch = 10;
+				var idx = 0;
+				var next = function() {
+					for(var i = 0; i < batch; i++) {
+						var con = subs[idx];
+						if(!con) return;
+						idx++;
+						try {
+							con.release();
+						}
+						catch(e) {}
+					}
+					setTimeout(next);
+				}.bind(this);
+				setTimeout(next);
+			} else {
+				this._subcontroller_list.forEach(function(con) {
+					con.release();
+				});
+			}
+			this._subcontroller_list = [];
+			this._subcontroller_idx = {};
+		},
+
+		/**
+		 * Sync the tracked subcontrollers with the items in the wrapped
+		 * collection
+		 */
+		_reset_subcontrollers: function(create_fn, options) {
+			options || (options = {});
+
+			this._clear_subcontrollers();
+
+			var reset_fragment = this.options.container;
+			if(reset_fragment) {
+				var fragment = document.createDocumentFragment();
+				options = Composer.object.clone(options);
+				options.fragment = fragment;
+				options.container = fragment;
+			}
+
+			this._collection.each(function(model) {
+				this._add_subcontroller(model, create_fn, options);
+			}, this);
+
+			if(reset_fragment && fragment.children && fragment.children.length > 0) {
+				var container = reset_fragment instanceof Function ?
+					reset_fragment() :
+					reset_fragment;
+				container.appendChild(fragment);
+			}
+		},
+
+		/**
+		 * Given a model, create a subcontroller that wraps it and inject the
+		 * subcontroller at the correct spot in the DOM (based on the model's
+		 * sort order).
+		 */
+		_add_subcontroller: function(model, create_fn, options) {
+			// add our container into the options (non-destructively)
+			options = Composer.object.clone(options);
+			options.container = this.options.container;
+			if(options.container instanceof Function) options.container = options.container();
+
+			var con = create_fn(model, options);
+			this._index_controller(model, con);
+
+			// if the subcontroller releases itself, be sure to remove it from
+			// tracking
+			con.bind('release', function() {
+				this._unindex_controller(model, con);
+			}.bind(this));
+
+			// inject the controller at the correct position, according to the
+			// collection's sortfn
+			var sort_idx = this._collection.sort_index(model, options);
+			var before_model = this._collection.sort_at(sort_idx - 1, options) || false;
+			var before_con = this._lookup_controller(before_model);
+
+			// place the subcontroller into the right place in the DOM base on
+			// its model's sort order
+			var parent = con.el.parentNode;
+			if(sort_idx == 0) {
+				parent.insertBefore(con.el, parent.firstChild);
+			} else if(before_con && before_con.el.parentNode == parent) {
+				parent.insertBefore(con.el, before_con.el.nextSibling);
+			} else {
+				parent.appendChild(con.el);
+			}
+		},
+
+		/**
+		 * Given a model, lookup the subcontroller that wraps it and release it,
+		 * also untracking that subcontroller.
+		 */
+		_remove_subcontroller: function(model) {
+			var con = this._lookup_controller(model);
+			if(!con) return false;
+			con.release();
+			this._unindex_controller(model, con);
+		}
+	});
+	Composer.exp0rt({ ListController: ListController });
+}).apply((typeof exports != 'undefined') ? exports : this);
+
+/**
+ * router.js
+ *
+ * Provides tie-ins to URL state changes to route URLs to actions.
+ * -----------------------------------------------------------------------------
+ *
+ * Composer.js is an MVC framework for creating and organizing javascript 
+ * applications. For documentation, please visit:
+ *
+ *     http://lyonbros.github.com/composer.js/
+ * 
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * 
+ * Licensed under The MIT License. 
+ * Redistributions of files must retain the above copyright notice.
+ */
+(function(global, undefined) {
+	"use strict";
+	var Composer = this.Composer;
+	var global = this;
+
+	/**
+	 * The Router class is a utility that helps in the routing of requests to
+	 * certain parts of your application. It works either by history.pushState
+	 * (which is highly recommended) or by falling back onto hashbang url
+	 * support (not recommended).
+	 *
+	 * Note that if you do want to use pushState, you have to include History.js
+	 * before instantiating the Router class:
+	 *
+	 *   https://github.com/balupton/History.js/
+	 */
+	var Router = Composer.Base.extend({
+		/**
+		 * Track this object's type. Useful for debugging, mainly
+		 */
+		__composer_type: 'router',
+
+		last_path:	false,
+		_last_url:	null,
+		routes: {},
+
+		options: {
+			suppress_initial_route: false,
+			enable_cb: function(url) { return true; },
+			process_querystring: false,
+			base: false
+		},
+
+		/**
+		 * initialize the routes your app uses. this is really the only public
+		 * function that exists in the router, since it takes care of everything for
+		 * you after instantiation.
+		 */
+		initialize: function(routes, options) {
+			this.set_options(options);
+
+			this.routes = routes;
+			this.bind('route', this._do_route.bind(this));
+
+			// in case History.js isn't loaded
+			if(!global.History) global.History = {enabled: false};
+			if(!History.enabled) throw 'History.js is *required* for proper router operation: https://github.com/browserstate/history.js';
+
+			// set up our bindings
+			this.bind('statechange', this.state_change.bind(this));
+			this.bind_once('destroy', function() {
+				Object.keys(History.Adapter.handlers).forEach(function(key) {
+					delete History.Adapter.handlers[key];
+				});
+				delete global['onstatechange'];
+			});
+
+			History.Adapter.bind(global, 'statechange', function(data) {
+				data || (data = [this.cur_path()]);
+				var url = data[0];
+				var force = data[1];
+				this.trigger('statechange', url, force);
+			}.bind(this));
+
+			if(!this.options.suppress_initial_route) {
+				// run the initial route
+				History.Adapter.trigger(global, 'statechange', [this.cur_path()]);
+			}
+		},
+
+		/**
+		 * remove all router bindings and perform any cleanup. note that once
+		 * this is called, the router can no longer be used and a new one must
+		 * be created.
+		 */
+		destroy: function() {
+			this.trigger('destroy');
+			this.unbind();
+		},
+
+		debasify: function(path) {
+			if(this.options.base && path.indexOf(this.options.base) == 0) {
+				path = path.substr(this.options.base.length);
+			}
+			return path;
+		},
+
+		/**
+		 * get the current url path
+		 */
+		cur_path: function() {
+			if(History.emulated.pushState) {
+				var path = '/' + new String(global.location.hash).toString().replace(/^[#!\/]+/, '');
+			} else {
+				var path = global.location.pathname+global.location.search;
+			}
+			return this.debasify(decodeURIComponent(path));
+		},
+
+		/**
+		 * Get a value (by key) out of the current query string
+		 */
+		get_param: function(search, key) {
+			key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			var regex = new RegExp("[\\?&]" + key + "=([^&#]*)");
+			var results = regex.exec(search);
+			return results == null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
+		},
+
+		/**
+		 * wrapper around the routing functionality. basically, instead of doing a
+		 *   window.location = '/my/route';
+		 * you can do
+		 *   router.route('/my/route');
+		 *
+		 * Note that the latter isn't necessary, but it provides a useful abstraction.
+		 */
+		route: function(url, options) {
+			url || (url = this.cur_path());
+			options || (options = {});
+			options.state || (options.state = {});
+
+			var base = (this.options.base || '');
+			var newpath = url.trim().replace(/^[a-z]+:\/\/.*?\//, '').replace(/^[#!\/]+/, '');
+			if(!options.raw) newpath = decodeURIComponent(newpath);
+			var href = base + '/' + newpath;
+			var old = base + this.cur_path();
+			var title = options.title || (this.options.default_title || '');
+			if(old == href) {
+				this.trigger('statechange', href, true);
+			} else if(History.emulated.pushState) {
+				// we're using hashbangs, which are async (if we use
+				// History.pushState). we really want sync behavior so let's
+				// fool History into thinking it already routed this hash (so it
+				// doesn't double-fire) then trigger the event manually.
+				History.saveHash(url);		// makes History.js not fire on hash
+				window.location.hash = '#'+href;
+				this.trigger('statechange', href, true);
+			} else {
+				if(options.replace_state) {
+					History.replaceState(options.state, title, href);
+				} else {
+					History.pushState(options.state, title, href);
+				}
+			}
+		},
+
+		/**
+		 * given a url, route it within the given routes the router was instantiated
+		 * with. if none fit, do nothing =]
+		 *
+		 * *internal only* =]
+		 */
+		_do_route: function(url, routes) {
+			if(!this.options.enable_cb(url)) {
+				return false;
+			}
+
+			// allow passing in of routes manually, otherwise default to internal route table
+			routes || (routes = this.routes);
+
+			var routematch = this.find_matching_route(url, routes);
+			if(!routematch) {
+				return this.trigger('fail', {url: url, route: false, handler_exists: false, action_exists: false});
+			}
+
+			// pass the found route object (whatever it may be) and our matched
+			// arguments in verbatim to process_match
+			return this.process_match(url, routematch);
+		},
+
+		/**
+		 * when a matching route is found, it is passed here, regardless of its
+		 * format. this function will do its best to find a suitable function to
+		 * call given the matched route.
+		 *
+		 * note that this function can be overridden for custom routing
+		 * behavior.
+		 */
+		process_match: function(url, routematch) {
+			var route = routematch.route;
+			var match = routematch.args;
+			var routefn;
+			if(route instanceof Function) {
+				routefn = route;
+			} else if(typeof(route) == 'object') {
+				var obj = route[0];
+				var action = route[1];
+				if (typeof(obj) != 'object') {
+					if(!global[obj]) {
+						return this.trigger('fail', {url: url, route: route, handler_exists: false, action_exists: false});
+					}
+					var obj = global[obj];
+				}
+				if(!obj[action] || typeof(obj[action]) != 'function') {
+					return this.trigger('fail', {url: url, route: route, handler_exists: true, action_exists: false});
+				}
+				routefn = function() { return obj[action].apply(obj, arguments); };
+			} else {
+				return this.trigger('fail', {url: url, route: route, handler_exists: false, action_exists: false});
+			}
+			var args = match;
+			args.shift();
+			this._last_url = url;	// save the last successfully routed url
+			this.trigger('route-success', route);
+			routefn.apply(this, args);
+		},
+
+		/**
+		 * Stateless function for finding the best matching route for a URL and given
+		 * set of routes.
+		 */
+		find_matching_route: function(url, routes) {
+			var url = '/' + url.replace(/^!?\//g, '');
+			var route = false;
+			var match = [];
+			var regex = null;
+			var matched_re = null;
+			for(var re in routes) {
+				regex = new RegExp('^' + re.replace(/\//g, '\\\/') + '$');
+				match = regex.exec(url);
+				if(match) {
+					route = routes[re];
+					matched_re = re;
+					break;
+				}
+			}
+			if(!route) return false;
+
+			return {route: route, args: match, regex: regex, key: matched_re};
+		},
+
+		/**
+		 * attached to the pushState event. fires the `route` event on success
+		 * which in turns runs any attached handlers.
+		 */
+		state_change: function(path, force) {
+			if(path && path.stop != undefined) path = false;
+			if(path) path = this.debasify(path);
+			if(!path) path = this.cur_path();
+			force = !!force;
+
+			// check if we are routing to the same exact page. if we are, return
+			// (unless we force the route)
+			if(this.last_path == path && !force) {
+				// no need to reload
+				return false;
+			}
+
+			this.last_path = path;
+
+			// remove querystring from the url if we have set the Router to
+			// ignore it. Note that this happens after the same-page check since
+			// we still want to take QS into account when comparing URLs.
+			if(!this.options.process_querystring) path = path.replace(/\?.*/, '');
+
+			// allow preroute to modify the path before sending out to the
+			// actualy route-matching function.
+			path = new String(path);
+			var boxed = {path: path};
+			this.trigger('preroute', boxed);
+			this.trigger('route', boxed.path);
+		},
+
+		/**
+		 * Returns the full, last successfully routed URL that the Router found
+		 * a match for.
+		 */
+		last_url: function() {
+			return this._last_url;
+		},
+
+		/**
+		 * Bind the pushState to any links that don't have the options.exclude_class
+		 * className in them.
+		 */
+		bind_links: function(options) {
+			options || (options = {});
+
+			// bind all <a>'s
+			var selector = 'a';
+			if(options.selector) {
+				// use specified selector
+				selector = options.selector;
+			} else if(options.exclude_class) {
+				// exclude <a> tags with given classname
+				selector = 'a:not([class~="'+options.exclude_class+'"])';
+			}
+
+			var bind_element = options.bind_element || document.body;
+
+			// bind our heroic pushState to the <a> tags we specified. this
+			// hopefully be that LAST event called for any <a> tag because it's
+			// so high up the DOM chain. this means if a composer event wants to
+			// override this action, it can just call event.stop().
+			var route_link = function(e) {
+				if(e.defaultPrevented) return;
+				if(e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+
+				var a = Composer.find_parent(selector, e.target);
+				var button = typeof(e.button) != 'undefined' ? e.button : e.event.button;
+
+				// don't trap links that are meant to open new windows, and don't
+				// trap middle mouse clicks (or anything more than left click)
+				if(a.target == '_blank' || button > 0) return;
+
+				// don't run JS links
+				if(a.href.match(/^javascript:/)) return;
+
+				// don't run mailto links
+				if(a.href.match(/^mailto:/)) return;
+
+				// don't run tel links
+				if(a.href.match(/^tel:/)) return;
+
+				// this is an <a href="#"> link, ignore it
+				if(History.emulated.pushState && a.href.replace(/^.*?#/, '') == '') return;
+
+				var curhost = global.location.host;
+				var linkhost = a.href.match(/^[a-z]+:\/\//) ? a.href.replace(/[a-z]+:\/\/(.*?)\/.*/i, '$1') : curhost;
+
+				// if we're routing to a different domain/host, don't trap the click
+				if(curhost != linkhost) return;
+
+				// if our do_state_change exists and returns false, bail
+				if(options.do_state_change && !options.do_state_change(a)) return;
+
+				if(e) e.preventDefault();
+
+				// turn:
+				//  - https://my-domain.com/nerd/city
+				//  - http://slappy.com/#!/nerd/city
+				//  - file:///D:/nerd/city
+				// into:
+				//  nerd/city
+				var href = a.href
+					.replace(/^file:\/\/(\/)?([a-z]:)?\//i, '')
+					.replace(/^[a-z-]+:\/\/.*?\//i, '')
+					.replace(/^[#!\/]+/, '');
+				if(options.filter_trailing_slash) href = href.replace(/\/$/, '');
+				href = '/'+href;
+
+				// if we have a rewrite function, apply it.
+				if(options.rewrite) href = options.rewrite(href);
+
+				this.route(href, {state: options.global_state});
+				return;
+			}.bind(this);
+
+			Composer.add_event(bind_element, 'click', route_link, selector);
+		}
+	});
+
+	Composer.exp0rt({ Router: Router });
 }).apply((typeof exports != 'undefined') ? exports : this);
 
 /**
