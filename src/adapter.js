@@ -20,6 +20,7 @@
 	"use strict";
 	var Composer = this.Composer;
 	var global = this;
+	var document = global.document || {_blank: true};
 
 	var has_sizzle = !!global.Sizzle;
 	var has_jquery = !!global.jQuery;
@@ -29,7 +30,7 @@
 		var wrap = function(fn) {
 			return function(context, selector) {
 				context || (context = document);
-				if(types.native && context instanceof window.DocumentFragment) {
+				if(types.native && context instanceof global.DocumentFragment) {
 					return types.native(context, selector);
 				} else {
 					return fn(context, selector);
@@ -40,6 +41,7 @@
 		if(has_sizzle && types.sizzle) return wrap(types.sizzle);
 		if(has_jquery && types.jquery) return wrap(types.jquery);
 		if('querySelector' in document && types.native) return wrap(types.native);
+		if(document._blank) return function() {};
 		throw new Error('No selector engine present. Include Sizzle/jQuery or Slick/Mootools before loading composer (or use a modern browser with document.querySelector).');
 	};
 
@@ -59,7 +61,7 @@
 			catch(e) {}
 
 			return function(context, selector) {
-				if(scope && !(context instanceof window.DocumentFragment)) selector = ':scope '+selector;
+				if(scope && !(context instanceof global.DocumentFragment)) selector = ':scope '+selector;
 				return context.querySelector(selector);
 			};
 		})()
@@ -94,7 +96,7 @@
 			if(selector) {
 				el.addEventListener(ev, function(event) {
 					// if we have a mootools event class, wrap the event in it
-					if(event && window.MooTools && window.DOMEvent) event = new DOMEvent(event);
+					if(event && global.MooTools && global.DOMEvent) event = new DOMEvent(event);
 					var target = event.target || event.srcElement;
 					while(target) {
 						if(match(target, selector)) {
@@ -110,7 +112,7 @@
 			} else {
 				el.addEventListener(ev, function(event) {
 					// if we have a mootools event class, wrap the event in it
-					if(event && window.MooTools && window.DOMEvent) event = new DOMEvent(event);
+					if(event && global.MooTools && global.DOMEvent) event = new DOMEvent(event);
 					fn.apply(this, [event].concat(event.params || []));
 				}, capture);
 			}

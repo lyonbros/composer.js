@@ -6,37 +6,27 @@ if [ "${target}" == "" ]; then
 	target="browser"
 fi
 
+buildlist=(
+	util.js
+	class.js
+	event.js
+	base.js
+	model.js
+	collection.js
+	adapter.js
+	controller.js
+	listcontroller.js
+	router.js
+	relational.js
+	filtercollection.js
+)
 case "${target}" in
 	"browser")
 		out=composer.js
-		buildlist=(
-			util.js
-			class.js
-			event.js
-			base.js
-			model.js
-			collection.js
-			adapter.js
-			controller.js
-			listcontroller.js
-			router.js
-			relational.js
-			filtercollection.js
-		)
 		min="yes"
 		;;
 	"node")
 		out=loader.js
-		buildlist=(
-			util.js
-			class.js
-			event.js
-			base.js
-			model.js
-			collection.js
-			relational.js
-			filtercollection.js
-		)
 		;;
 esac
 
