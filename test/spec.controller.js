@@ -366,5 +366,34 @@ describe('Composer.Controller', function() {
 		expect(sub_release).toBe(3);
 
 	});
+
+	it('only fires a element event once even if there are multiple targets', function() {
+		var ClickerController = Composer.Controller.extend({
+			events: {
+				'click .clickme': 'clicked',
+			},
+
+			count: 0,
+
+			init: function() {
+				this.render();
+			},
+
+			render: function() {
+				this.html([
+					'<div rel="first" class="clickme">Hello</div>',
+					'<div rel="second" class="clickme">Hello</div>',
+				].join('\n'));
+			},
+
+			clicked: function(e) {
+				this.count++;
+			},
+		});
+		var con = new ClickerController();
+		var el = Composer.find(con.el, '.clickme');
+		Composer.fire_event(el, 'click');
+		expect(con.count).toBe(1);
+	});
 });
 
