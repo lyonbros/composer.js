@@ -1,6 +1,6 @@
 {
   "name": "@lyonbros/composer",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "main": "loader.js",
   "description": "A set of stackable libraries for building complex single-page apps",
   "author": "Andrew Lyon <andrew@lyonbros.com>",
