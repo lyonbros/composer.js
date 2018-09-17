@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: '1.3.3',
+			version: '1.3.4',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
@@ -1381,7 +1381,11 @@
 					var data_id_map = {}
 					var id_key = (new this.model()).id_key;
 					data.forEach(function(item) {
-						var id = item[id_key];
+						if(item instanceof Composer.Model) {
+							var id = item.id();
+						} else {
+							var id = item[id_key];
+						}
 						data_id_map[id] = true;
 					});
 					var missing = [];
