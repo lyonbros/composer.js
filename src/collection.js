@@ -262,7 +262,11 @@
 					var data_id_map = {}
 					var id_key = (new this.model()).id_key;
 					data.forEach(function(item) {
-						var id = item[id_key];
+						if(item instanceof Composer.Model) {
+							var id = item.id();
+						} else {
+							var id = item[id_key];
+						}
 						data_id_map[id] = true;
 					});
 					var missing = [];
