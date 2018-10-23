@@ -265,6 +265,14 @@
 			delete this._subcontrollers[name];
 		},
 
+		trigger_subs: function(_) {
+			var args = Array.prototype.slice.call(arguments, 0);
+			Object.keys(this._subcontrollers).forEach(function(name) {
+				var con = this.sub(name);
+				if(con) con.trigger.apply(con, args);
+			}.bind(this));
+		},
+
 		/**
 		 * DEPRECATED. use sub()/remove()
 		 */
