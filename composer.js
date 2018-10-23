@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: '1.3.4',
+			version: '1.3.5',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
@@ -2296,6 +2296,14 @@
 			if(!this._subcontrollers[name]) return
 			if(!options.skip_release) this._subcontrollers[name].release();
 			delete this._subcontrollers[name];
+		},
+
+		trigger_subs: function(_) {
+			var args = Array.prototype.slice.call(arguments, 0);
+			Object.keys(this._subcontrollers).forEach(function(name) {
+				var con = this.sub(name);
+				if(con) con.trigger.apply(con, args);
+			}.bind(this));
 		},
 
 		/**
