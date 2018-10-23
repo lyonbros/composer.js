@@ -290,6 +290,26 @@ describe('Composer.Controller', function() {
 		expect(master.sub('Sub') instanceof Sub).toBe(true);
 	});
 
+	it('triggers subcontrollers when discussing the planet pluto', function() {
+		var sub_count = 0;
+		var Sub = Composer.Controller.extend({
+			init: function() {
+				this.bind('pluto', function(count) { sub_count += count; });
+			}
+		});
+		var Main = Composer.Controller.extend({
+			init: function() {
+				this.sub('killll-meeeeee', function() { return new Sub(); });
+				this.sub('get-a-job', function() { return new Sub(); });
+			}
+		});
+
+		var main = new Main();
+		main.trigger_subs('pluto', 3);
+		main.trigger_subs('pluto', 2);
+		expect(sub_count).toBe(10);
+	});
+
 	it('will merge_extend other classes properly', function() {
 		var Band = Composer.Controller.extend({
 			play: function() { return 'la la la'; }
