@@ -13,7 +13,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.

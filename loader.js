@@ -13,7 +13,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: '1.3.3',
+			version: '1.3.5',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
@@ -279,7 +279,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  *
  * Licensed under The MIT License.
  * Redistributions of files must retain the above copyright notice.
@@ -452,7 +452,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
@@ -603,7 +603,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
@@ -711,7 +711,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
@@ -1130,7 +1130,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
@@ -1381,7 +1381,11 @@
 					var data_id_map = {}
 					var id_key = (new this.model()).id_key;
 					data.forEach(function(item) {
-						var id = item[id_key];
+						if(item instanceof Composer.Model) {
+							var id = item.id();
+						} else {
+							var id = item[id_key];
+						}
 						data_id_map[id] = true;
 					});
 					var missing = [];
@@ -1770,7 +1774,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
@@ -2040,7 +2044,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
@@ -2294,6 +2298,14 @@
 			delete this._subcontrollers[name];
 		},
 
+		trigger_subs: function(_) {
+			var args = Array.prototype.slice.call(arguments, 0);
+			Object.keys(this._subcontrollers).forEach(function(name) {
+				var con = this.sub(name);
+				if(con) con.trigger.apply(con, args);
+			}.bind(this));
+		},
+
 		/**
 		 * DEPRECATED. use sub()/remove()
 		 */
@@ -2423,7 +2435,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  *
  * Licensed under The MIT License.
  * Redistributions of files must retain the above copyright notice.
@@ -2704,7 +2716,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
@@ -3078,7 +3090,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
@@ -3349,7 +3361,7 @@
  * 
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2011, Lyon Bros Enterprises, LLC. (http://www.lyonbros.com)
+ * Copyright (c) 2011, Lyon Bros LLC. (http://www.lyonbros.com)
  * 
  * Licensed under The MIT License. 
  * Redistributions of files must retain the above copyright notice.
