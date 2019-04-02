@@ -235,7 +235,7 @@
 		 */
 		_add_subcontroller: function(model, create_fn, options) {
 			// add our container into the options (non-destructively)
-			options = Composer.object.clone(options);
+			options = Composer.object.clone(options || {});
 			options.container = this.options.container;
 			if(options.container instanceof Function) options.container = options.container();
 
