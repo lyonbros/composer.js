@@ -23,7 +23,7 @@
 
 	if(!this.Composer) {
 		var Composer = {
-			version: '1.3.5',
+			version: '1.3.6',
 
 			// note: this used to be "export" but IE is a whiny little bitch, so now
 			// we're sup3r 1337 h4x0r5
@@ -2658,7 +2658,7 @@
 		 */
 		_add_subcontroller: function(model, create_fn, options) {
 			// add our container into the options (non-destructively)
-			options = Composer.object.clone(options);
+			options = Composer.object.clone(options || {});
 			options.container = this.options.container;
 			if(options.container instanceof Function) options.container = options.container();
 
