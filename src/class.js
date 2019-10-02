@@ -67,7 +67,7 @@
 	/**
 	 * Create a new class prototype from the given base class.
 	 */
-	var create = function(base) {
+	var create = function(base, mixins) {
 		if('create' in Object) {
 			// create the new object from the prototype
 			var prototype = Object.create(base.prototype);
@@ -83,6 +83,7 @@
 			// don't run the ctor if we're just trying to get a prototype
 			if(cls.$initializing) return this;
 
+			process_mixins(this, mixins);
 			// if we don't copy the objects in the prototype, then if we have an
 			// object in the prototype like so:
 			// {
@@ -121,7 +122,7 @@
 	};
 
 	const process_mixins = function(obj, mixins) {
-		if(!Array.isArray(mixins) || mixins.length == 0) return obj;
+		if(!Array.isArray(mixins) || mixins.length == 0) return;
 		const is_obj = function(o) { return typeof(o) == 'object' && !Array.isArray(o); };
 		const newobj = {};
 		const do_mixin = function(mixin) {
@@ -137,8 +138,14 @@
 		mixins.forEach(function(mixin) {
 			do_mixin(mixin.prototype);
 		});
-		do_mixin(obj);
-		return newobj;
+		Object.keys(newobj).forEach(function(k) {
+			const val = newobj[k];
+			if(typeof(obj[k]) == 'undefined') {
+				obj[k] = val;
+			} else if(is_obj(obj[k]) && is_obj(val)) {
+				obj[k] = Object.assign(val, obj[k]);
+			}
+		});
 	};
 
 	/**
@@ -164,10 +171,9 @@
 	 */
 	Base.extend = function(obj) {
 		var base = this;
-		var cls = create(base);
 		const mixins = obj._mixins ? obj._mixins() : [];
 		delete obj._mixins;
-		obj = process_mixins(obj, mixins);
+		var cls = create(base, mixins);
 		do_extend(cls.prototype, obj);
 		cls.extend = Base.extend;
 
