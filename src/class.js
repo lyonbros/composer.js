@@ -67,7 +67,7 @@
 	/**
 	 * Create a new class prototype from the given base class.
 	 */
-	var create = function(base, mixins) {
+	var create = function(base, mixinsfn) {
 		if('create' in Object) {
 			// create the new object from the prototype
 			var prototype = Object.create(base.prototype);
@@ -83,7 +83,7 @@
 			// don't run the ctor if we're just trying to get a prototype
 			if(cls.$initializing) return this;
 
-			process_mixins(this, mixins);
+			process_mixins(this, mixinsfn && mixinsfn());
 			// if we don't copy the objects in the prototype, then if we have an
 			// object in the prototype like so:
 			// {
@@ -171,9 +171,9 @@
 	 */
 	Base.extend = function(obj) {
 		var base = this;
-		const mixins = obj._mixins ? obj._mixins() : [];
+		const mixinsfn = obj._mixins ? obj._mixins : false;
 		delete obj._mixins;
-		var cls = create(base, mixins);
+		var cls = create(base, mixinsfn);
 		do_extend(cls.prototype, obj);
 		cls.extend = Base.extend;
 
