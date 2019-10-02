@@ -193,7 +193,7 @@ describe('Composer.Class', function() {
 			zing: function() { zing++; },
 		});
 		const Person = Composer.Class({
-			mixins: function() { return [Shouter]; },
+			_mixins: function() { return [Shouter]; },
 			events: {
 				'hoot': 'hoot',
 			},
