@@ -187,12 +187,12 @@ describe('Composer.Class', function() {
 		var zing = 0;
 		var hoot = 0;
 
-		const Shouter = Composer.Class({
+		const Shouter = Composer.Class.extend({
 			events: { 'shout': 'shout', },
 			shout: function() { ahh++; },
 			zing: function() { zing++; },
 		});
-		const Person = Composer.Class({
+		const Person = Composer.Class.extend({
 			_mixins: function() { return [Shouter]; },
 			events: {
 				'hoot': 'hoot',
