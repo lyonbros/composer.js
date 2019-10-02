@@ -118,3 +118,28 @@ var dog = new Dog();
 alert(JSON.stringify(dog.actions));  // ['sit', 'bite']
 {% endhighlight %}
 
+## Mixins
+
+The class system supports mixins. When using these, it will merge in objects
+from the mixins and the object being created. This can be useful for extending
+the functionality of classes without using inheritance structures.
+
+Mixins are defined as a special key in the class, `mixins`, which is a function
+that returns an array of mixin objects:
+
+{% highlight js %}
+const Shouter = Composer.Class.extend({
+    events: {'shout': 'shout'},
+    shout: function() { return 'AHHH'; },
+});
+const Person = Composer.Class.extend({
+    mixins: function() { return [Shouter]; },
+    events: {'yell': 'yell'},
+    yell: function() { return 'HEY!'; },
+});
+
+var person = new Person();
+var output = [person.shout(), person.yell(), JSON.stringify(person.events)].join(' :: ');
+alert(output);
+{% endhighlight %}
+
