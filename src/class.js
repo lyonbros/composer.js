@@ -120,6 +120,27 @@
 		};
 	};
 
+	const process_mixins = function(obj, mixins) {
+		if(!Array.isArray(mixins) || mixins.length == 0) return obj;
+		const is_obj = function(o) { return typeof(o) == 'object' && !Array.isArray(o); };
+		const newobj = {};
+		const do_mixin = function(mixin) {
+			Object.keys(mixin).forEach(function(k) {
+				const val = mixin[k];
+				if(is_obj(val)) {
+					newobj[k] = Object.assign({}, newobj[k] || {}, val);
+				} else {
+					newobj[k] = val;
+				}
+			});
+		};
+		mixins.forEach(function(mixin) {
+			do_mixin(mixin.prototype);
+		});
+		do_mixin(obj);
+		return newobj;
+	};
+
 	/**
 	 * Takes care of "parentizing" overridden methods when merging prototypes
 	 */
@@ -144,6 +165,9 @@
 	Base.extend = function(obj) {
 		var base = this;
 		var cls = create(base);
+		const mixins = obj.mixins ? obj.mixins() : [];
+		delete obj.mixins;
+		obj = process_mixins(obj, mixins);
 		do_extend(cls.prototype, obj);
 		cls.extend = Base.extend;
 

@@ -180,5 +180,36 @@ describe('Composer.Class', function() {
 		expect(shiba.sound()[0]).toBe('woof');
 		expect(shiba.sound()[1]).toBe('harrrr');
 	});
+
+	it('supports mixins', function() {
+		var ahh = 0;
+		var arg = 0;
+		var zing = 0;
+		var hoot = 0;
+
+		const Shouter = Composer.Class({
+			events: { 'shout': 'shout', },
+			shout: function() { ahh++; },
+			zing: function() { zing++; },
+		});
+		const Person = Composer.Class({
+			mixins: function() { return [Shouter]; },
+			events: {
+				'hoot': 'hoot',
+			},
+			shout: function() { arg++; },
+			hoot: function() { hoot++; },
+		});
+
+		var person = new Person();
+		expect(person.events).toEqual({'shout': 'shout', 'hoot': 'hoot'});
+		person.shout();
+		person.hoot();
+		person.zing();
+		expect(ahh).toBe(0);
+		expect(arg).toBe(1);
+		expect(zing).toBe(1);
+		expect(hoot).toBe(1);
+	});
 });
 
