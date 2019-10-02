@@ -165,8 +165,8 @@
 	Base.extend = function(obj) {
 		var base = this;
 		var cls = create(base);
-		const mixins = obj.mixins ? obj.mixins() : [];
-		delete obj.mixins;
+		const mixins = obj._mixins ? obj._mixins() : [];
+		delete obj._mixins;
 		obj = process_mixins(obj, mixins);
 		do_extend(cls.prototype, obj);
 		cls.extend = Base.extend;
